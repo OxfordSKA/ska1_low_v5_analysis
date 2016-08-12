@@ -22,3 +22,4 @@ analysis.
 - `antenna_layout_plots/`: Plots of the antenna layouts for each of the models
 being considered. 
 
+- `uv_grid_image_0h/`: Plots of the snapshot zenith uv-coverage.
