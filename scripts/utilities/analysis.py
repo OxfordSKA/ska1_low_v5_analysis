@@ -399,24 +399,19 @@ class TelescopeAnalysis(telescope.Telescope):
             plt.show()
             plt.close(fig)
 
-    def cable_length(self, plot=False, plot_filename=None):
+    def eval_cable_length(self, plot=False, plot_filename=None, plot_r=None):
         cluster_cable_length = 0.0
-        spiral_cable_length = 0.0
+        expended_cable_length = 0.0
+        r_max_expanded = 0.0
         if plot:
-            fig, ax = plt.subplots(figsize=(12, 12))
+            fig, ax = plt.subplots(figsize=(8, 8))
             ax.set_aspect('equal')
         for key in self.layouts.keys():
-            # print('%-20s' % key, end=' ')
             if key == 'ska1_v5':
-                # print(': CORE')
                 layout = self.layouts[key]
                 if plot:
                     ax.plot(layout['x'], layout['y'], 'k.', ms=2, alpha=0.5)
-                    ax.add_artist(plt.Circle((0, 0), layout['r_max'],
-                                             fill=False, color='0.5',
-                                             linestyle='--', lw=0.5))
-            elif 'log_spiral_section' in key:
-                # print(': SPIRAL')
+            elif '_cluster' in key:
                 layout = self.layouts[key]
                 cx, cy = (layout['cx'], layout['cy'])
                 x, y = (layout['x'], layout['y'])
@@ -432,14 +427,18 @@ class TelescopeAnalysis(telescope.Telescope):
                     if plot:
                         ax.plot([x_, cx], [y_, cy], 'k--', alpha=0.5)
                 if plot:
-                    ax.text(cx, cy + self.station_diameter_m / 2,
-                            '%.1f' % cluster_total, fontsize='x-small')
-                spiral_cable_length += cluster_total
+                    ax.text(cx + self.station_diameter_m * 6,
+                            cy + self.station_diameter_m * 6,
+                            '%.1f' % cluster_total,
+                            va='center', ha='center',
+                            fontsize='xx-small')
+                cluster_cable_length += cluster_total
             else:
-                # print(': CLUSTER')
                 layout = self.layouts[key]
                 cx, cy = (layout['cx'], layout['cy'])
                 x, y = (layout['x'], layout['y'])
+                cr = (cx**2 + cy**2)**0.5
+                r_max_expanded = max(cr, r_max_expanded)
                 if plot:
                     ax.plot(x, y, 'b+', mew=1.5)
                     ax.plot(cx, cy, 'ro', mew=1.5, mec='None')
@@ -452,20 +451,66 @@ class TelescopeAnalysis(telescope.Telescope):
                     if plot:
                         ax.plot([x_, cx], [y_, cy], 'k--', alpha=0.5)
                 if plot:
-                    ax.text(cx, cy + self.station_diameter_m / 2,
-                            '%.1f' % cluster_total, fontsize='x-small')
-                cluster_cable_length += cluster_total
+                    ax.text(cx + self.station_diameter_m * 6,
+                            cy + self.station_diameter_m * 6,
+                            '%.1f' % cluster_total,
+                            va='center', ha='center',
+                            fontsize='xx-small')
+                expended_cable_length += cluster_total
         if plot:
+            cx, cy = self.get_centres_enu()
+            cr = (cx**2 + cy**2)**0.5
+            ax.add_artist(plt.Circle((0, 0), cr.max(), fill=False, lw=0.5,
+                                     color='0.3', linestyle=':'))
+            ax.add_artist(plt.Circle((0, 0), r_max_expanded, fill=False, lw=0.5,
+                                     color='g', linestyle='-', alpha=0.5))
+            ax.set_xlabel('east (m)')
+            ax.set_xlabel('north (m)')
+            if plot_r is not None:
+                ax.set_xlim(-plot_r, plot_r)
+                ax.set_ylim(-plot_r, plot_r)
             if plot_filename is not None:
                 fig.savefig(plot_filename)
             else:
                 plt.show()
             plt.close(fig)
-        total_cable_length = cluster_cable_length + spiral_cable_length
-        print('cluster cable length:', cluster_cable_length)
-        print('spiral cable length:', spiral_cable_length)
-        print('total cable length:', total_cable_length)
+        total_cable_length = cluster_cable_length + expended_cable_length
         return total_cable_length
+
+    def eval_cable_length_2(self, plot=False, plot_filename=None):
+        # TODO(BM) need to consider all 3 at once ...
+
+        cluster_size = 6
+        # Extract all cluster centres
+        x, y, _ = self.get_coords_enu()
+        cx, cy = self.get_centres_enu()
+        cr = (cx**2 + cy**2)**0.5
+        sorted_idx = np.argsort(cr)[::-1]
+        cx = cx[sorted_idx]
+        cy = cy[sorted_idx]
+        fig, ax = plt.subplots()
+        ax.plot(cx, cy, 'r+', ms=10)
+        ax.plot(x, y, 'kx', ms=5)
+
+        for ci, (cx_, cy_) in enumerate(zip(cx, cy)):
+            if ci != 0:
+                continue
+            print(ci, cx_, cy_)
+            dx = cx_ - x
+            dy = cy_ - y
+            dr = (dx**2 + dy**2)**0.5
+            sorted_idx = np.argsort(dr)
+            ax.plot(cx_, cy_, 'bo', ms=10, mfc='None', mew=1.5, mec='b')
+            x_ = x[sorted_idx[:6]]
+            y_ = y[sorted_idx[:6]]
+            for px, py in zip(x_, y_):
+                ax.plot([cx_, px], [cy_, py], '--', c='0.5')
+
+        plt.show()
+
+        return 0.0
+
+
 
 
 class SKA1_low_analysis(TelescopeAnalysis):

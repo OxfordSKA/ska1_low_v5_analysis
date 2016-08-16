@@ -227,7 +227,7 @@ class Telescope(object):
         x, y = Layout.rotate_coords(x, y, theta0_deg)
         keys = self.layouts.keys()
         self.layouts['log_spiral_section' + str(len(keys))] = {
-            'x': x, 'y': y, 'cx': cx, 'cy': cy}
+            'x': x, 'y': y, 'cx': cx, 'cy': cy, 'r_min': r0, 'r_max': r1}
 
     def add_log_spiral_clusters(self, num_clusters, num_arms, r0, r1, b,
                                 stations_per_cluster, cluster_radius_m,
@@ -327,9 +327,22 @@ class Telescope(object):
             i += n0
         return x, y, z
 
+    def get_centres_enu(self):
+        if not self.layouts:
+            raise RuntimeError('No layout defined!')
+        n = self.num_stations()
+        cx, cy = list(), list()
+        i = 0
+        for name in self.layouts:
+            layout = self.layouts[name]
+            if 'cx' in layout and 'cy' in layout:
+                cx.append(layout['cx'])
+                cy.append(layout['cy'])
+        return np.array(cx), np.array(cy)
+
     def plot_layout(self, filename=None, mpl_ax=None,
                     show_decorations=False, plot_radii=[],
-                    x_lim=None, y_lim=None, plot_r=None, color='k'):
+                    xy_lim=None, color='k'):
         plot_nearest = False
         if not self.layouts:
             raise RuntimeError('No layout defined, nothing to plot!')
@@ -351,19 +364,6 @@ class Telescope(object):
                 c = Circle(xy, radius=radius, fill=filled, color=colour)
                 ax.add_artist(c)
 
-            # leg = ax.legend()
-            # # Update the legend
-            # handles, labels = ax.get_legend_handles_labels()
-            # print(labels)
-            # h = plt.Line2D(range(1), range(1), markeredgecolor=colour,
-            #                linestyle='none',
-            #                marker='o', markersize=5, markeredgewidth=1.0,
-            #                markerfacecolor='none')
-            # handles.append(h)
-            # labels.append(self.name)
-            # ax.legend(handles, labels, numpoints=1, loc='best')
-            # print(labels)
-
             if show_decorations:
                 if 'r_min' in layout and layout['r_min'] is not None:
                     ax.add_artist(Circle((0, 0), layout['r_min'], fill=False,
@@ -379,8 +379,8 @@ class Telescope(object):
                 if 'cx' in layout and 'cy' in layout and 'cr' in layout:
                     for xy in zip([layout['cx']], [layout['cy']]):
                         ax.add_artist(Circle(xy, radius=layout['cr'],
-                                                 fill=False, color='b',
-                                                 alpha=0.5))
+                                             fill=False, color='b',
+                                             alpha=0.5))
 
                 # Plot cluster centres, if present
                 if 'cx' in layout and 'cy' in layout:
@@ -397,7 +397,7 @@ class Telescope(object):
                                                  alpha=0.5))
 
                 if plot_nearest and 'info' in layout and \
-                                'attempt_id' in layout['info']:
+                            'attempt_id' in layout['info']:
                     info = layout['info']
                     attempt_id = info['attempt_id']
                     if 'i_min' in info[attempt_id]:
@@ -416,16 +416,13 @@ class Telescope(object):
             radius = r[0] if isinstance(r, tuple) else r
             ax.add_artist(plt.Circle((0, 0), radius, fill=False, color=color))
 
-        if plot_r:
-            r_max = plot_r
-        if x_lim is None:
-            ax.set_xlim(-r_max*1.1, r_max*1.1)
+        if xy_lim:
+            ax.set_xlim(-xy_lim, xy_lim)
+            ax.set_ylim(-xy_lim, xy_lim)
         else:
-            ax.set_xlim(x_lim)
-        if y_lim is None:
-            ax.set_ylim(-r_max*1.1, r_max*1.1)
-        else:
-            ax.set_ylim(y_lim)
+            ax.set_xlim(-r_max * 1.1, r_max * 1.1)
+            ax.set_ylim(-r_max * 1.1, r_max * 1.1)
+
         ax.set_aspect('equal')
         if filename is not None and mpl_ax is None:
             ax.set_ylabel('North (m)')
