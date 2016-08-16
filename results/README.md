@@ -23,3 +23,8 @@ analysis.
 being considered. 
 
 - `uv_grid_image_0h/`: Plots of the snapshot zenith uv-coverage.
+
+- `cable_lengths/`: Cable lengths for connecting stations to cluster centres.
+Both debugging plots and txt data files of unwrap (cluster replacement) radius
+vs cable length. Currently cluster cable lengths calculated using worse
+case simplistic matching.
