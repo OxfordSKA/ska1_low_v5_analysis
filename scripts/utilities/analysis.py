@@ -18,12 +18,15 @@ from astropy import constants as const
 from astropy.visualization import (HistEqStretch, SqrtStretch,
                                    LogStretch)
 from astropy.visualization.mpl_normalize import ImageNormalize
+from sklearn.neighbors import NearestNeighbors
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
 from scipy.spatial.distance import pdist, squareform
+from collections import Counter
 
 
 class TelescopeAnalysis(telescope.Telescope):
+    """Telescope analysis functions."""
     def __init__(self, name=''):
         telescope.Telescope.__init__(self, name)
         self.dec_deg = 0
@@ -39,8 +42,10 @@ class TelescopeAnalysis(telescope.Telescope):
         self.uv_grid = None
         self.tree = None
         self.tree_length = 0
+        self.hist_bins = None
         self.hist_n = None
         self.hist_x = None
+        self.cum_hist_n = None
         self.psf_rms = 0
         self.psf_rms_r = None
         self.psf_rms_r_x = None
@@ -120,7 +125,7 @@ class TelescopeAnalysis(telescope.Telescope):
                                % (norm, self.uu_m.shape[0] * 2))
 
     def plot_grid(self, filename=None, show=False, plot_radii=[],
-                  x_lim=None, y_lim=None):
+                  xy_lim=None):
         if self.uv_grid is None:
             self.grid_uvw_coords()
         grid_size = self.uv_grid.shape[0]
@@ -151,10 +156,10 @@ class TelescopeAnalysis(telescope.Telescope):
             ax.add_artist(plt.Circle((0, 0), r, fill=False, color='r'))
         ax.set_xlabel('uu (m)')
         ax.set_ylabel('vv (m)')
-        if not x_lim is None:
-            ax.set_xlim(x_lim)
-        if not y_lim is None:
-            ax.set_ylim(y_lim)
+        ax.grid(True)
+        if xy_lim is not None:
+            ax.set_xlim(-xy_lim, xy_lim)
+            ax.set_ylim(-xy_lim, xy_lim)
         if filename is not None:
             fig.savefig(filename)
         if show:
@@ -185,19 +190,50 @@ class TelescopeAnalysis(telescope.Telescope):
             fig, ax = plt.subplots(figsize=(8, 8))
             if bar:
                 ax.bar(self.hist_x, self.hist_n, width=np.diff(bins),
-                       alpha=0.8, align='center', lw=0.5)
+                       alpha=0.8, align='center', lw=0, color='0.2')
             else:
                 ax.plot(self.hist_x, self.hist_n)
             if log_bins:
                 ax.set_xscale('log')
             ax.set_xlabel('baseline length (m)')
-            ax.set_ylabel('Number of baselines')
+            ax.set_ylabel('Number of baselines per bin')
             ax.set_xlim(0, b_max * 1.1)
+            ax.grid()
             if filename is not None:
                 fig.savefig(filename)
             else:
                 plt.show()
             plt.close(fig)
+
+    def uv_cum_hist(self, filename, log_x=False):
+        if self.hist_n is None:
+            self.uv_hist(make_plot=False)
+
+        self.cum_hist_n = np.cumsum(self.hist_n) / self.uu_m.size
+        fig, ax = plt.subplots(figsize=(8, 8))
+        ax.plot(self.hist_bins[1:], self.cum_hist_n, 'k-')
+        i_half = np.argmax(self.cum_hist_n >= 0.5)
+        bin_width_i_half = self.hist_bins[i_half+1] - self.hist_bins[i_half]
+        xy = (self.hist_bins[i_half], 0.5)
+        xy_text = (self.hist_bins[i_half] * 2, 0.45)
+        ax.annotate('%.1f $\pm$ %.1f m' %
+                    (self.hist_bins[i_half], bin_width_i_half),
+                    xy=xy, xytext=xy_text, ha='left', va='top',
+                    arrowprops=dict(facecolor='k', width=0.0001, headwidth=5),
+                    fontsize='small')
+        ax.set_xlabel('baseline length (m)')
+        ax.set_ylabel('Fraction of baselines')
+        ax.grid()
+        ax.set_ylim(0, 1.05)
+        if log_x:
+            ax.set_xlim(self.hist_bins[0], self.hist_bins[-1])
+            ax.set_xscale('log')
+        else:
+            ax.set_xlim(0, self.hist_bins[-1])
+        ax.plot(ax.get_xlim(), [0.5, 0.5], '--', color='0.5')
+        fig.savefig(filename)
+        plt.close(fig)
+
 
     def uv_sensitivity(self, num_bins=100, b_min=None, b_max=None,
                        log_bins=True):
@@ -230,14 +266,13 @@ class TelescopeAnalysis(telescope.Telescope):
         plt.show()
         plt.close(fig)
 
-
     def network_graph(self):
         x, y, _ = self.get_coords_enu()
         coords = np.transpose(np.vstack([x, y]))
         self.tree = minimum_spanning_tree(squareform(pdist(coords))).toarray()
         self.tree_length = np.sum(self.tree)
 
-    def plot_network(self):
+    def plot_network(self, filename, plot_r=None):
         if self.tree is None:
             self.network_graph()
         x, y, _ = self.get_coords_enu()
@@ -248,7 +283,13 @@ class TelescopeAnalysis(telescope.Telescope):
                 if self.tree[i, j] > 0:
                     ax.plot([x[i], x[j]], [y[i], y[j]], 'g-', alpha=0.5,
                             lw=1.0)
-        plt.show()
+        ax.grid()
+        ax.set_xlabel('East (m)')
+        ax.set_ylabel('North (m)')
+        if plot_r:
+            ax.set_xlim(-plot_r, plot_r)
+            ax.set_ylim(-plot_r, plot_r)
+        fig.savefig(filename)
         plt.close(fig)
 
     def eval_psf_rms(self, num_bins=100, b_min=None, b_max=None):
@@ -400,6 +441,9 @@ class TelescopeAnalysis(telescope.Telescope):
             plt.close(fig)
 
     def eval_cable_length(self, plot=False, plot_filename=None, plot_r=None):
+        """Get cable lengths using simple direct links to cluster centres."""
+        # FIXME(BM) check bug where there are not 6 coordinates in a cluster ?!
+        num_clusters = 0
         cluster_cable_length = 0.0
         expended_cable_length = 0.0
         r_max_expanded = 0.0
@@ -410,14 +454,21 @@ class TelescopeAnalysis(telescope.Telescope):
             if key == 'ska1_v5':
                 layout = self.layouts[key]
                 if plot:
-                    ax.plot(layout['x'], layout['y'], 'k.', ms=2, alpha=0.5)
+                    for p in zip(layout['x'], layout['y']):
+                        ax.add_artist(plt.Circle(p, self.station_diameter_m / 2,
+                                                 fill=False, color='k',
+                                                 alpha=0.2))
             elif '_cluster' in key:
+                num_clusters += 1
                 layout = self.layouts[key]
                 cx, cy = (layout['cx'], layout['cy'])
                 x, y = (layout['x'], layout['y'])
+                # print(x.size)
                 if plot:
-                    ax.plot(x, y, 'b+')
-                    ax.plot(cx, cy, 'rx', lw=2, ms=5)
+                    for p in zip(x, y):
+                        ax.add_artist(plt.Circle(p, self.station_diameter_m / 2,
+                                                 fill=False, color='k'))
+                    ax.plot(cx, cy, 'r+', ms=10)
                 cluster_total = 0.0
                 for x_, y_ in zip(x, y):
                     dx = x_ - cx
@@ -425,7 +476,7 @@ class TelescopeAnalysis(telescope.Telescope):
                     r = (dx**2 + dy**2)**0.5
                     cluster_total += r
                     if plot:
-                        ax.plot([x_, cx], [y_, cy], 'k--', alpha=0.5)
+                        ax.plot([x_, cx], [y_, cy], ':', color='0.5')
                 if plot:
                     ax.text(cx + self.station_diameter_m * 6,
                             cy + self.station_diameter_m * 6,
@@ -433,6 +484,7 @@ class TelescopeAnalysis(telescope.Telescope):
                             va='center', ha='center',
                             fontsize='xx-small')
                 cluster_cable_length += cluster_total
+                # print('Custer %i = %.2f m' % (num_clusters, cluster_total))
             else:
                 layout = self.layouts[key]
                 cx, cy = (layout['cx'], layout['cy'])
@@ -440,8 +492,10 @@ class TelescopeAnalysis(telescope.Telescope):
                 cr = (cx**2 + cy**2)**0.5
                 r_max_expanded = max(cr, r_max_expanded)
                 if plot:
-                    ax.plot(x, y, 'b+', mew=1.5)
-                    ax.plot(cx, cy, 'ro', mew=1.5, mec='None')
+                    for p in zip(x, y):
+                        ax.add_artist(plt.Circle(p, self.station_diameter_m / 2,
+                                                 fill=False, color='k'))
+                    ax.plot(cx, cy, 'r+', ms=10)
                 cluster_total = 0.0
                 for x_, y_ in zip(x, y):
                     dx = x_ - cx
@@ -449,7 +503,7 @@ class TelescopeAnalysis(telescope.Telescope):
                     r = (dx**2 + dy**2)**0.5
                     cluster_total += r
                     if plot:
-                        ax.plot([x_, cx], [y_, cy], 'k--', alpha=0.5)
+                        ax.plot([x_, cx], [y_, cy], ':', color='0.5')
                 if plot:
                     ax.text(cx + self.station_diameter_m * 6,
                             cy + self.station_diameter_m * 6,
@@ -457,15 +511,19 @@ class TelescopeAnalysis(telescope.Telescope):
                             va='center', ha='center',
                             fontsize='xx-small')
                 expended_cable_length += cluster_total
+        total_cable_length = cluster_cable_length + expended_cable_length
         if plot:
-            cx, cy = self.get_centres_enu()
-            cr = (cx**2 + cy**2)**0.5
-            ax.add_artist(plt.Circle((0, 0), cr.max(), fill=False, lw=0.5,
-                                     color='0.3', linestyle=':'))
-            ax.add_artist(plt.Circle((0, 0), r_max_expanded, fill=False, lw=0.5,
-                                     color='g', linestyle='-', alpha=0.5))
+            # cx, cy = self.get_centres_enu()
+            # cr = (cx**2 + cy**2)**0.5
+            # ax.add_artist(plt.Circle((0, 0), cr.max(), fill=False, lw=0.5,
+            #                          color='0.3', linestyle=':'))
+            # ax.add_artist(plt.Circle((0, 0), r_max_expanded, fill=False, lw=0.5,
+            #                          color='g', linestyle='-', alpha=0.5))
             ax.set_xlabel('east (m)')
-            ax.set_xlabel('north (m)')
+            ax.set_ylabel('north (m)')
+            ax.text(0.05, 0.95, 'Total: %.2f km' % (total_cable_length / 1e3),
+                    transform=ax.transAxes, va='top', ha='left',
+                    fontsize='small')
             if plot_r is not None:
                 ax.set_xlim(-plot_r, plot_r)
                 ax.set_ylim(-plot_r, plot_r)
@@ -474,43 +532,119 @@ class TelescopeAnalysis(telescope.Telescope):
             else:
                 plt.show()
             plt.close(fig)
-        total_cable_length = cluster_cable_length + expended_cable_length
+        # print(cluster_cable_length, num_clusters)
         return total_cable_length
 
-    def eval_cable_length_2(self, plot=False, plot_filename=None):
-        # TODO(BM) need to consider all 3 at once ...
-
-        cluster_size = 6
-        # Extract all cluster centres
-        x, y, _ = self.get_coords_enu()
+    def eval_cable_length_2(self, cluster_size=6, plot=False,
+                            plot_filename=None, plot_r=None):
+        # Get cluster centres
         cx, cy = self.get_centres_enu()
-        cr = (cx**2 + cy**2)**0.5
-        sorted_idx = np.argsort(cr)[::-1]
-        cx = cx[sorted_idx]
-        cy = cy[sorted_idx]
-        fig, ax = plt.subplots()
-        ax.plot(cx, cy, 'r+', ms=10)
-        ax.plot(x, y, 'kx', ms=5)
 
-        for ci, (cx_, cy_) in enumerate(zip(cx, cy)):
-            if ci != 0:
+        # Get all station coordinates not in the core
+        x, y = np.array(list()), np.array(list())
+        cluster_count = 0
+        for name in self.layouts:
+            layout = self.layouts[name]
+            if name == 'ska1_v5':  # This key is the core
                 continue
-            print(ci, cx_, cy_)
-            dx = cx_ - x
-            dy = cy_ - y
-            dr = (dx**2 + dy**2)**0.5
-            sorted_idx = np.argsort(dr)
-            ax.plot(cx_, cy_, 'bo', ms=10, mfc='None', mew=1.5, mec='b')
-            x_ = x[sorted_idx[:6]]
-            y_ = y[sorted_idx[:6]]
-            for px, py in zip(x_, y_):
-                ax.plot([cx_, px], [cy_, py], '--', c='0.5')
+            # print(name, layout['x'].shape)
+            x = np.hstack([x, layout['x']])
+            y = np.hstack([y, layout['y']])
+            cluster_count += 1
+        x = np.array(x)
+        y = np.array(y)
 
-        plt.show()
+        # Find 6 stations for each cluster.
+        # Algorithm:
+        #   Loop over cluster centres 6 times.
+        #   On each loop each cluster grabs its closet point.
 
-        return 0.0
+        # Radial distance of each point from each cluster centre.
+        dcr = np.zeros((cx.size, x.size))
+        xy_idx = np.arange(x.size, dtype=np.int)
+        for c in range(cx.size):
+            dcr[c, :] = ((cx[c] - x)**2 + (cy[c] - y)**2)**0.5
 
+        total_cable_length = 0
+        c_idx = np.empty((cx.size, cluster_size), dtype=np.int)
+        # Loop over stations (s) in cluster
+        for s in range(cluster_size):
+            # Loop over clusters (c)
+            for c in range(cx.size):
+                # Add the closest point to the cluster (by radius)
+                ii = dcr[c, :].argmin()
+                total_cable_length += dcr[c, ii]
+                c_idx[c, s] = xy_idx[ii]
+                # Remove this point from contention
+                dcr = np.delete(dcr, ii, axis=1)
+                xy_idx = np.delete(xy_idx, ii, axis=0)
 
+        # from scipy.io import savemat
+        # mcx = np.array([])
+        # mcy = np.array([])
+        # mpx = np.array([])
+        # mpy = np.array([])
+        # for c in range(cx.size):
+        #     print('c', c)
+        #     mcx = np.hstack((mcx, cx[c]))
+        #     mcy = np.hstack((mcy, cy[c]))
+        #     px_ = np.zeros(6)
+        #     py_ = np.zeros(6)
+        #     for s in range(cluster_size):
+        #         print('s', s)
+        #         px_[s] = x[c_idx[c, s]]
+        #         py_[s] = y[c_idx[c, s]]
+        #     if mpx.size == 0:
+        #         mpx = px_
+        #         mpy = py_
+        #     else:
+        #         mpy = np.vstack((mpy, py_))
+        #         mpx = np.vstack((mpx, px_))
+        # print(mpx.shape)
+        # print(mcx)
+        # savemat('test.mat', dict(centre_x=mcx, centre_y=mcy,
+        #                          antennas_x=mpx, antennas_y=mpy))
+
+        fig, ax = plt.subplots(figsize=(8, 8))
+        ax.set_aspect('equal')
+        for p in zip(x, y):
+            ax.add_artist(plt.Circle(p, self.station_diameter_m/2,
+                                     fill=False, color='k'))
+        ax.plot(cx, cy, 'r+', ms=10)
+        for c in range(cx.size):
+            cluster_cable_length = 0
+            for s in range(cluster_size):
+                dx = cx[c] - x[c_idx[c, s]]
+                dy = cy[c] - y[c_idx[c, s]]
+                dr = (dx**2 + dy**2)**0.5
+                cluster_cable_length += dr
+                ax.plot([cx[c], x[c_idx[c, s]]],
+                        [cy[c], y[c_idx[c, s]]], ':', color='0.5')
+            ax.text(cx[c] + self.station_diameter_m * 6,
+                    cy[c] + self.station_diameter_m * 6,
+                    '%.1f' % cluster_cable_length,
+                    va='center', ha='center',
+                    fontsize='xx-small')
+
+        for p in zip(self.layouts['ska1_v5']['x'], self.layouts['ska1_v5']['y']):
+            ax.add_artist(plt.Circle(p, self.station_diameter_m / 2,
+                                     fill=False, color='k',
+                                     alpha=0.2))
+
+        ax.set_xlabel('east (m)')
+        ax.set_ylabel('north (m)')
+        ax.text(0.05, 0.95, 'Total: %.2f km' % (total_cable_length / 1e3),
+                transform=ax.transAxes, va='top', ha='left',
+                fontsize='small')
+        if plot_r is not None:
+            ax.set_xlim(-plot_r, plot_r)
+            ax.set_ylim(-plot_r, plot_r)
+        if plot_filename is not None:
+            fig.savefig(plot_filename)
+        else:
+            plt.show()
+        plt.close(fig)
+        return total_cable_length
 
 
 class SKA1_low_analysis(TelescopeAnalysis):

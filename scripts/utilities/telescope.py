@@ -126,6 +126,13 @@ class Telescope(object):
             x, y, arm_index = x[idx], y[idx], arm_index[idx]
         return x, y, arm_index
 
+    @staticmethod
+    def cluster_radii_ska_v5(r_min=None, r_max=None):
+        """Return cluster radii for the SKA1 v5 configuration"""
+        cluster_x, cluster_y, arm_index = \
+            Telescope.cluster_centres_ska_v5(r_min, r_max)
+        cluster_r = (cluster_x**2 + cluster_y**2)**0.5
+        return cluster_r[::3]
 
     @staticmethod
     def log_spiral(n, r0, r1, b):
