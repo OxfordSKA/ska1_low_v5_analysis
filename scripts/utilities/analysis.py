@@ -247,7 +247,7 @@ class TelescopeAnalysis(telescope.Telescope):
             for j in range(x.size):
                 if self.tree[i, j] > 0:
                     ax.plot([x[i], x[j]], [y[i], y[j]], 'g-', alpha=0.5,
-                                   lw=1.0)
+                            lw=1.0)
         plt.show()
         plt.close(fig)
 
