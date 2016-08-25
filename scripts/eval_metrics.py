@@ -77,6 +77,7 @@ class Metrics(object):
         # type: (TelescopeAnalysis, float) -> None
 
         self.tel_r.append(tel_r)
+        tel.save_enu(join(self.out_dir, '%s_enu.txt' % tel.name))
 
         # filename = '%s_clusters.mat' % tel.name
         # Metrics.__write_matlab_clusters(tel, filename)
@@ -101,32 +102,32 @@ class Metrics(object):
         # filename = join(self.out_dir, '%s_uv_grid.png' % tel.name)
         # tel.plot_grid(filename, xy_lim=13e3)
 
-        tel.gen_uvw_coords()
-        # num_bins = int((13e3 - tel.station_diameter_m) //
-        #                tel.station_diameter_m)
-        num_bins = 100
-        filename = join(self.out_dir, '%s_uv_hist_log.png' % tel.name)
-        tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=True,
-                    bar=True, b_min=tel.station_diameter_m / 2,
-                    b_max=13e3)
-        filename = join(self.out_dir, '%s_uv_cum_hist_log.png' % tel.name)
-        tel.uv_cum_hist(filename, log_x=True)
-        self.uv_hist[tel.name] = dict(log=dict())
-        self.uv_hist[tel.name]['log'] = dict(hist_n=tel.hist_n,
-                                             hist_x=tel.hist_x,
-                                             hist_bins=tel.hist_bins,
-                                             cum_hist_n=tel.cum_hist_n)
-
-        filename = join(self.out_dir, '%s_uv_hist_lin.png' % tel.name)
-        tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=False,
-                    bar=True, b_min=tel.station_diameter_m / 2,
-                    b_max=13e3)
-        filename = join(self.out_dir, '%s_uv_cum_hist_lin.png' % tel.name)
-        tel.uv_cum_hist(filename, log_x=False)
-        self.uv_hist[tel.name]['lin'] = dict(hist_n=tel.hist_n,
-                                             hist_x=tel.hist_x,
-                                             hist_bins=tel.hist_bins,
-                                             cum_hist_n=tel.cum_hist_n)
+        # tel.gen_uvw_coords()
+        # # num_bins = int((13e3 - tel.station_diameter_m) //
+        # #                tel.station_diameter_m)
+        # num_bins = 100
+        # filename = join(self.out_dir, '%s_uv_hist_log.png' % tel.name)
+        # tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=True,
+        #             bar=True, b_min=tel.station_diameter_m / 2,
+        #             b_max=13e3)
+        # filename = join(self.out_dir, '%s_uv_cum_hist_log.png' % tel.name)
+        # tel.uv_cum_hist(filename, log_x=True)
+        # self.uv_hist[tel.name] = dict(log=dict())
+        # self.uv_hist[tel.name]['log'] = dict(hist_n=tel.hist_n,
+        #                                      hist_x=tel.hist_x,
+        #                                      hist_bins=tel.hist_bins,
+        #                                      cum_hist_n=tel.cum_hist_n)
+        #
+        # filename = join(self.out_dir, '%s_uv_hist_lin.png' % tel.name)
+        # tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=False,
+        #             bar=True, b_min=tel.station_diameter_m / 2,
+        #             b_max=13e3)
+        # filename = join(self.out_dir, '%s_uv_cum_hist_lin.png' % tel.name)
+        # tel.uv_cum_hist(filename, log_x=False)
+        # self.uv_hist[tel.name]['lin'] = dict(hist_n=tel.hist_n,
+        #                                      hist_x=tel.hist_x,
+        #                                      hist_bins=tel.hist_bins,
+        #                                      cum_hist_n=tel.cum_hist_n)
 
         # filename = join(self.out_dir, '%s_network.png' % tel.name)
         # if not isfile(filename):

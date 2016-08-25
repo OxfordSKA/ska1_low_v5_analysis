@@ -30,12 +30,12 @@ class Telescope(object):
     def clear_layouts(self):
         self.layouts.clear()
 
-    def save(self, filename):
+    def save_enu(self, filename):
         """Save the telescope model as ascii CSV file."""
         x, y, z = self.get_coords_enu()
         coords = np.vstack([x, y, z]).T
-        print(coords.shape)
-        np.savetxt(filename, coords, fmt=b'%.12e,%.12e,%.12e')
+        #np.savetxt(filename, coords, fmt=b'%.12e %.12e %.12e')
+        np.savetxt(filename, coords, fmt=b'%.12e')
 
     def save_iantconfig(self, filename_root):
         x, y, _ = self.get_coords_enu()

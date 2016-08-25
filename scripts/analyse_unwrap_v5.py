@@ -157,17 +157,17 @@ class UnwrapV5(object):
 
 if __name__ == '__main__':
     unwrap_v5 = UnwrapV5(remove_existing_results=False)
-    # unwrap_v5.model01(add_core=True)
-    # unwrap_v5.model02()
-    # unwrap_v5.model03()
+    unwrap_v5.model01(add_core=True)
+    unwrap_v5.model02(add_core=True)
+    unwrap_v5.model03(add_core=True)
 
-    name = 'model01'
-    data_file = join(unwrap_v5.out_dir, '%s_metrics.npz' % name)
-    filename = join(unwrap_v5.out_dir, '%s_uv_hist_compare_log_lin_1.png' % name)
-    Metrics.compare_uv_hist(data_file, filename, log_x=True)
-    filename = join(unwrap_v5.out_dir, '%s_uv_hist_compare_lin_lin_1.png' % name)
-    Metrics.compare_uv_hist(data_file, filename, log_x=False)
-    filename = join(unwrap_v5.out_dir, '%s_uv_cum_hist_compare_lin_1.png' % name)
-    Metrics.compare_uv_cum_hist(data_file, filename, log_x=False)
-    filename = join(unwrap_v5.out_dir, '%s_uv_cum_hist_compare_log_1.png' % name)
-    Metrics.compare_uv_cum_hist(data_file, filename, log_x=True)
+    # name = 'model01'
+    # data_file = join(unwrap_v5.out_dir, '%s_metrics.npz' % name)
+    # filename = join(unwrap_v5.out_dir, '%s_uv_hist_compare_log_lin_1.png' % name)
+    # Metrics.compare_uv_hist(data_file, filename, log_x=True)
+    # filename = join(unwrap_v5.out_dir, '%s_uv_hist_compare_lin_lin_1.png' % name)
+    # Metrics.compare_uv_hist(data_file, filename, log_x=False)
+    # filename = join(unwrap_v5.out_dir, '%s_uv_cum_hist_compare_lin_1.png' % name)
+    # Metrics.compare_uv_cum_hist(data_file, filename, log_x=False)
+    # filename = join(unwrap_v5.out_dir, '%s_uv_cum_hist_compare_log_1.png' % name)
+    # Metrics.compare_uv_cum_hist(data_file, filename, log_x=True)
