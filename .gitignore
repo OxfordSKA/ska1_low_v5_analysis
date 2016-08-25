@@ -1,3 +1,5 @@
 *.pyc
 /.idea/
 /scripts/results*
+
+results/iantconfig/Iantconfig_text_results/~$Antconfig_results_overview.xlsx
