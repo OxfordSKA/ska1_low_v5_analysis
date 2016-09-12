@@ -51,6 +51,7 @@ class TelescopeAnalysis(telescope.Telescope):
         self.psf_rms_r_x = None
         self.psf = None
         self.psf_fov_deg = 0
+        self.psf_1d = dict()
 
     def clear_layouts(self):
         super(TelescopeAnalysis, self).clear_layouts()
@@ -68,6 +69,7 @@ class TelescopeAnalysis(telescope.Telescope):
         self.psf_rms_r_x = None
         self.psf = None
         self.psf_fov_deg = 0
+        self.psf_1d = dict()
 
     def gen_uvw_coords(self):
         """Generate uvw coordinates"""
@@ -234,7 +236,6 @@ class TelescopeAnalysis(telescope.Telescope):
         fig.savefig(filename)
         plt.close(fig)
 
-
     def uv_sensitivity(self, num_bins=100, b_min=None, b_max=None,
                        log_bins=True):
         if self.hist_n is None:
@@ -320,34 +321,38 @@ class TelescopeAnalysis(telescope.Telescope):
                 np.sqrt(np.sum(pixels.real**2)) / uv_count
         self.psf_rms_r_x = r_bins[1:]
 
-        fig, ax = plt.subplots(figsize=(8, 8))
-        ax.plot(self.psf_rms_r_x, self.psf_rms_r)
-        ax.set_xscale('log')
-        ax.set_yscale('log')
-        ax.set_xlabel('radius (m)')
-        ax.set_ylabel('PSFRMS')
-        ax.set_xlim(10**floor(log10(self.psf_rms_r_x[0])),
-                    10**ceil(log10(self.psf_rms_r_x[-1])))
-        ax.set_ylim(10**floor(log10(self.psf_rms_r.min())), 1.05)
-        ax.grid(True)
-        plt.show()
+        # fig, ax = plt.subplots(figsize=(8, 8))
+        # ax.plot(self.psf_rms_r_x, self.psf_rms_r)
+        # ax.set_xscale('log')
+        # ax.set_yscale('log')
+        # ax.set_xlabel('radius (m)')
+        # ax.set_ylabel('PSFRMS')
+        # ax.set_xlim(10**floor(log10(self.psf_rms_r_x[0])),
+        #             10**ceil(log10(self.psf_rms_r_x[-1])))
+        # ax.set_ylim(10**floor(log10(self.psf_rms_r.min())), 1.05)
+        # ax.grid(True)
+        # plt.show()
 
     def uvgap(self):
         pass
 
-    def eval_psf(self, im_size=None, fov_deg=None, plot2d=False, plot1d=True):
+    def eval_psf(self, im_size=None, fov_deg=None, plot2d=False, plot1d=True,
+                 filename_root=None, num_bins=100):
+        """Evaluate and plot the PSF."""
         if self.uu_m is None:
             self.gen_uvw_coords()
 
-        # Evaluate grid size and fov if needed.
+        # Work out a usable grid size.
         if im_size is None:
             b_max = self.r_uv_m.max()
             grid_size = int(ceil(b_max / self.grid_cell_size_m)) * 2 + \
-                        self.station_diameter_m
+                self.station_diameter_m
             if grid_size % 2 == 1:
                 grid_size += 1
         else:
             grid_size = im_size
+
+        # Work out the FoV
         wavelength = const.c.value / self.freq_hz
         if fov_deg is None:
             cellsize_wavelengths = self.grid_cell_size_m / wavelength
@@ -361,8 +366,7 @@ class TelescopeAnalysis(telescope.Telescope):
         vv = self.vv_m / wavelength
         ww = self.ww_m / wavelength
         amp = np.ones_like(uu, dtype='c8')
-        psf = Imager.make_image(uu, vv, ww, np.ones_like(uu, dtype='c8'),
-                                fov_deg, grid_size)
+        psf = Imager.make_image(uu, vv, ww, amp, fov_deg, grid_size)
         extent = Imager.image_extent_lm(fov_deg, grid_size)
         self.psf = psf
         self.psf_fov_deg = fov_deg
@@ -370,9 +374,11 @@ class TelescopeAnalysis(telescope.Telescope):
         # --- Plotting ----
         if plot2d:
             fig, ax = plt.subplots(figsize=(8, 8))
-            norm = SymLogNorm(linthresh=0.05, linscale=1.0, vmin=-0.05, vmax=0.5,
-                              clip=False)
-            opts = dict(interpolation='nearest', origin='lower', cmap='gray_r',
+            norm = SymLogNorm(linthresh=0.01, linscale=1.0, vmin=-0.02,
+                              vmax=1.0, clip=False)
+            # opts = dict(interpolation='nearest', origin='lower', cmap='gray_r',
+            #             extent=extent, norm=norm)
+            opts = dict(interpolation='nearest', origin='lower', cmap='inferno',
                         extent=extent, norm=norm)
             im = ax.imshow(psf, **opts)
             divider = make_axes_locatable(ax)
@@ -381,8 +387,10 @@ class TelescopeAnalysis(telescope.Telescope):
             cbar.ax.tick_params(labelsize='small')
             ax.set_xlabel('l')
             ax.set_ylabel('m')
-            plt.savefig('psf.png')
-            plt.show()
+            if filename_root:
+                plt.savefig('%s_2d.png' % filename_root)
+            else:
+                plt.show()
             plt.close(fig)
 
         if plot1d:
@@ -401,13 +409,13 @@ class TelescopeAnalysis(telescope.Telescope):
             fig.savefig('TEST_psf1d.png')
             plt.close(fig)
 
-            num_bins = 100  # FIXME(BM) make this a function arg
             psf_1d_mean = np.zeros(num_bins)
             psf_1d_abs_mean = np.zeros(num_bins)
             psf_1d_abs_max = np.zeros(num_bins)
             psf_1d_min = np.zeros(num_bins)
             psf_1d_max = np.zeros(num_bins)
             psf_1d_std = np.zeros(num_bins)
+            psf_1d_rms = np.zeros(num_bins)
             bin_edges = np.linspace(r_lm[0], r_lm[-1], num_bins + 1)
             # bin_edges = np.logspace(log10(r_lm[1]), log10(r_lm[-1]),
             #                         num_bins + 1)
@@ -422,6 +430,16 @@ class TelescopeAnalysis(telescope.Telescope):
                     psf_1d_min[i - 1] = np.min(values)
                     psf_1d_max[i - 1] = np.max(values)
                     psf_1d_std[i - 1] = np.std(values)
+                    psf_1d_rms[i - 1] = np.mean(values**2)**0.5
+
+            self.psf_1d['r'] = psf_1d_bin_r
+            self.psf_1d['min'] = psf_1d_min
+            self.psf_1d['max'] = psf_1d_max
+            self.psf_1d['mean'] = psf_1d_mean
+            self.psf_1d['std'] = psf_1d_std
+            self.psf_1d['rms'] = psf_1d_rms
+            self.psf_1d['abs_mean'] = psf_1d_abs_mean
+            self.psf_1d['abs_max'] = psf_1d_abs_max
 
             fig, ax = plt.subplots(figsize=(8, 8))
             ax.plot(psf_1d_bin_r, psf_1d_abs_mean, '-', c='b', lw=1, label='abs mean')
@@ -437,7 +455,10 @@ class TelescopeAnalysis(telescope.Telescope):
             # ax.set_ylabel('PSF amplitude')
             ax.set_title('Azimuthally averaged PSF (FoV: %.2f)' % fov_deg)
             ax.legend()
-            plt.show()
+            if filename_root:
+                plt.savefig('%s_1d.png' % filename_root)
+            else:
+                plt.show()
             plt.close(fig)
 
     def eval_cable_length(self, plot=False, plot_filename=None, plot_r=None):
