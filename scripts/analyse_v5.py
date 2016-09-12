@@ -172,6 +172,12 @@ class AnalyseUnwrapV5(object):
         # metrics.plot_cable_length_compare()
         metrics.plot_comparisons()
 
+    def model04(self, name='model04', add_core=True):
+        """Model04 == replace clusters with circles then perturbed circles"""
+        #
+        metrics = Metrics(self.out_dir)
+
+        pass
 
 def main():
     unwrap_v5 = AnalyseUnwrapV5(remove_existing_results=True)
