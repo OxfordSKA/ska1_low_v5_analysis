@@ -226,6 +226,21 @@ class Telescope(object):
         self.layouts['circular_arc' + str(len(keys))] = {
             'x': x, 'y': y, 'cx': cx, 'cy': cy}
 
+    def add_circular_arc_perturbed(self, n, cx, cy, delta_theta, r0, r1, perturb_r0, perturb_r1):
+        r = (cx**2 + cy**2)**0.5
+        t = degrees(atan2(cy, cx))
+        x, y = self.circular_arc(n, r, delta_theta)
+        x, y = Layout.rotate_coords(x, y, t)
+        scale = perturb_r0 + (perturb_r1 - perturb_r0) * ((r - r0) / (r1 - r0))
+        for i in range(len(x)):
+            t = np.random.rand() * 2 * np.pi
+            rt = np.random.rand() * scale
+            x[i] += rt * cos(t)
+            y[i] += rt * sin(t)
+        keys = self.layouts.keys()
+        self.layouts['circular_arc' + str(len(keys))] = {
+            'x': x, 'y': y, 'cx': cx, 'cy': cy}
+
     def add_log_spiral_section(self, n, r0_ref, cx, cy, b, delta_theta,
                                theta0_deg, theta_offset=0):
         r0, r1 = self.r_range_for_centre(cx, cy, r0_ref, delta_theta, b,

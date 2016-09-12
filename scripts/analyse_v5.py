@@ -3,6 +3,7 @@ from __future__ import (print_function, division, absolute_import,
                         unicode_literals)
 import os
 import shutil
+import numpy as np
 from utilities.telescope import Telescope
 from utilities.analysis import SKA1_low_analysis
 from utilities.eval_metrics import Metrics
@@ -174,19 +175,52 @@ class AnalyseUnwrapV5(object):
 
     def model04(self, name='model04', add_core=True):
         """Model04 == replace clusters with circles then perturbed circles"""
-        #
+        # Initialise metrics class
         metrics = Metrics(self.out_dir)
+        r0 = 500
+        r1 = 6400
+        perturb_r0 = 100
+        perturb_r1 = 0.5 * (self.cluster_r[-1] - self.cluster_r[-2])
+        np.random.seed(6)
 
-        pass
+        # Loop over cluster radii
+        for i in range(self.cluster_r.size):
+            # Create the telescope model (v5 core & clusters not being replaced)
+            tel = self.__add_v5_core_clusters(name, i, add_core)
+
+            # Loop over cluster radii we are replacing
+            for j in range(i + 1):
+                delta_theta_deg = self.delta_theta_deg_inner if j <= 3 else \
+                    self.delta_theta_deg_outer
+                for k in range(self.num_arms):
+                    idx = self.num_arms * j + k
+                    if j >= 5:
+                        tel.add_circular_arc_perturbed(
+                            self.stations_per_cluster,
+                            self.cluster_x[idx],
+                            self.cluster_y[idx], self.d_theta,
+                            r0, r1, perturb_r0, perturb_r1)
+                    else:
+                        tel.add_circular_arc(
+                            self.stations_per_cluster,
+                            self.cluster_x[idx],
+                            self.cluster_y[idx], self.d_theta)
+            metrics.analyse_telescope(tel, self.cluster_r[i])
+
+        metrics.save_results(name)
+        # metrics.plot_cable_length_compare()
+        metrics.plot_comparisons()
 
 def main():
-    unwrap_v5 = AnalyseUnwrapV5(remove_existing_results=True)
+    unwrap_v5 = AnalyseUnwrapV5(remove_existing_results=False)
     unwrap_v5.model01(add_core=True)
     unwrap_v5.model02(add_core=True)
-    unwrap_v5.model03(add_core=True)
+    # unwrap_v5.model03(add_core=True)
+    unwrap_v5.model04(add_core=True)
     analyse_v5()
 
 if __name__ == '__main__':
     # main()
-    Metrics.compare_cum_hist(join('TEMP_results'), log_axis=False)
-    Metrics.compare_hist(join('TEMP_results'), log_axis=False)
+    # Metrics.compare_cum_hist(join('TEMP_results'), log_axis=False)
+    # Metrics.compare_hist(join('TEMP_results'), log_axis=False)
+    Metrics.compare_psf_1d(join('TEMP_results'))

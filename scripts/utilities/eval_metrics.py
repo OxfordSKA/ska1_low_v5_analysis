@@ -86,10 +86,10 @@ class Metrics(object):
         # filename = '%s_clusters.mat' % tel.name
         # Metrics.__write_matlab_clusters(tel, filename)
 
-        # filename = join(self.out_dir, '%s_stations.png' % tel.name)
-        # if not isfile(filename):
-        #     tel.plot_layout(filename=filename, xy_lim=7e3,
-        #                     show_decorations=False)
+        filename = join(self.out_dir, '%s_stations.png' % tel.name)
+        if not isfile(filename):
+            tel.plot_layout(filename=filename, xy_lim=7e3,
+                            show_decorations=False)
 
         # # Simplistic cluster cable length assignment
         # filename = join(self.out_dir, '%s_cables.png' % tel.name)
@@ -103,36 +103,36 @@ class Metrics(object):
         #                              plot_r=7e3)
         # self.cable_length_2[tel_r] = l_
         #
-        # filename = join(self.out_dir, '%s_uv_grid.png' % tel.name)
-        # tel.plot_grid(filename, xy_lim=13e3)
+        filename = join(self.out_dir, '%s_uv_grid.png' % tel.name)
+        tel.plot_grid(filename, xy_lim=13e3)
 
         # tel.gen_uvw_coords()
-        num_bins = int((13e3 - tel.station_diameter_m) //
-                       tel.station_diameter_m)
-        # num_bins = 100
-        filename = join(self.out_dir, '%s_uv_hist_log.png' % tel.name)
-        tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=True,
-                    bar=True, b_min=tel.station_diameter_m / 2,
-                    b_max=13e3)
-        filename = join(self.out_dir, '%s_uv_cum_hist_log.png' % tel.name)
-        tel.uv_cum_hist(filename, log_x=True)
-        self.uv_hist[tel.name] = dict(log=dict())
-        self.uv_hist[tel.name]['log'] = dict(
-            hist_n=tel.hist_n,
-            hist_x=tel.hist_x,
-            hist_bins=tel.hist_bins,
-            cum_hist_n=tel.cum_hist_n)
-
-        filename = join(self.out_dir, '%s_uv_hist_lin.png' % tel.name)
-        tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=False,
-                    bar=True, b_min=tel.station_diameter_m / 2,
-                    b_max=13e3)
-        filename = join(self.out_dir, '%s_uv_cum_hist_lin.png' % tel.name)
-        tel.uv_cum_hist(filename, log_x=False)
-        self.uv_hist[tel.name]['lin'] = dict(hist_n=tel.hist_n,
-                                             hist_x=tel.hist_x,
-                                             hist_bins=tel.hist_bins,
-                                             cum_hist_n=tel.cum_hist_n)
+        # num_bins = int((13e3 - tel.station_diameter_m) //
+        #                tel.station_diameter_m)
+        # # num_bins = 100
+        # filename = join(self.out_dir, '%s_uv_hist_log.png' % tel.name)
+        # tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=True,
+        #             bar=True, b_min=tel.station_diameter_m / 2,
+        #             b_max=13e3)
+        # filename = join(self.out_dir, '%s_uv_cum_hist_log.png' % tel.name)
+        # tel.uv_cum_hist(filename, log_x=True)
+        # self.uv_hist[tel.name] = dict(log=dict())
+        # self.uv_hist[tel.name]['log'] = dict(
+        #     hist_n=tel.hist_n,
+        #     hist_x=tel.hist_x,
+        #     hist_bins=tel.hist_bins,
+        #     cum_hist_n=tel.cum_hist_n)
+        #
+        # filename = join(self.out_dir, '%s_uv_hist_lin.png' % tel.name)
+        # tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=False,
+        #             bar=True, b_min=tel.station_diameter_m / 2,
+        #             b_max=13e3)
+        # filename = join(self.out_dir, '%s_uv_cum_hist_lin.png' % tel.name)
+        # tel.uv_cum_hist(filename, log_x=False)
+        # self.uv_hist[tel.name]['lin'] = dict(hist_n=tel.hist_n,
+        #                                      hist_x=tel.hist_x,
+        #                                      hist_bins=tel.hist_bins,
+        #                                      cum_hist_n=tel.cum_hist_n)
 
         # filename = join(self.out_dir, '%s_network.png' % tel.name)
         # if not isfile(filename):
@@ -146,22 +146,22 @@ class Metrics(object):
         # print(tel.psf_rms_r_x)
         # print(tel.psf_rms_r)
 
-        # filename = join(self.out_dir, '%s_psf' % tel.name)
-        # # tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
-        # #              fov_deg=10, im_size=2048, num_bins=50)
+        filename = join(self.out_dir, '%s_psf' % tel.name)
+        tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
+                     fov_deg=5, im_size=2048, num_bins=400)
         # tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
         #              fov_deg=5, im_size=2048, num_bins=50)
-        # self.psf[tel.name] = dict()
-        # # self.psf[tel.name]['image'] = tel.psf
-        # self.psf[tel.name]['fov'] = tel.psf_fov_deg
-        # self.psf[tel.name]['1d_r'] = tel.psf_1d['r']
-        # self.psf[tel.name]['1d_min'] = tel.psf_1d['min']
-        # self.psf[tel.name]['1d_max'] = tel.psf_1d['max']
-        # self.psf[tel.name]['1d_std'] = tel.psf_1d['std']
-        # self.psf[tel.name]['1d_rms'] = tel.psf_1d['rms']
-        # self.psf[tel.name]['1d_mean'] = tel.psf_1d['mean']
-        # self.psf[tel.name]['1d_abs_mean'] = tel.psf_1d['abs_mean']
-        # self.psf[tel.name]['1d_abs_max'] = tel.psf_1d['abs_max']
+        self.psf[tel.name] = dict()
+        # self.psf[tel.name]['image'] = tel.psf
+        self.psf[tel.name]['fov'] = tel.psf_fov_deg
+        self.psf[tel.name]['1d_r'] = tel.psf_1d['r']
+        self.psf[tel.name]['1d_min'] = tel.psf_1d['min']
+        self.psf[tel.name]['1d_max'] = tel.psf_1d['max']
+        self.psf[tel.name]['1d_std'] = tel.psf_1d['std']
+        self.psf[tel.name]['1d_rms'] = tel.psf_1d['rms']
+        self.psf[tel.name]['1d_mean'] = tel.psf_1d['mean']
+        self.psf[tel.name]['1d_abs_mean'] = tel.psf_1d['abs_mean']
+        self.psf[tel.name]['1d_abs_max'] = tel.psf_1d['abs_max']
 
         # TODO(BM)
         # Comparison of histogram and cumulative histogram (overplotted lines (not bars))
@@ -355,7 +355,8 @@ class Metrics(object):
         fig, ax = plt.subplots(figsize=(8, 6))
         fig.subplots_adjust(left=0.1,  bottom=0.1, right=0.95, top=0.95)
         idx = 0
-        models = ['ska1_v5', 'model01', 'model02', 'model03']
+        # models = ['ska1_v5', 'model01', 'model02', 'model03']
+        models = ['ska1_v5', 'model01', 'model02', 'model04']
         unwrap_levels = ['r08']
         # models = ['ska1_v5', 'model01']
         for model in models:
@@ -373,24 +374,30 @@ class Metrics(object):
                     ax.plot(x, y, color=style['color'],
                             linestyle='-',
                             label=tel + ' max')
-                    y = psf[tel]['1d_abs_mean']
+                    y = psf[tel]['1d_min']
                     ax.plot(x, y, color=style['color'],
                             linestyle='--',
-                            label=tel + ' mean')
-                    y = psf[tel]['1d_rms']
-                    ax.plot(x, y, color=style['color'],
-                            linestyle=':',
-                            label=tel + ' rms')
+                            label=tel + ' min')
+                    # y = psf[tel]['1d_abs_mean']
+                    # ax.plot(x, y, color=style['color'],
+                    #         linestyle='-',
+                    #         label=tel + ' mean')
+                    # y = psf[tel]['1d_rms']
+                    # ax.plot(x, y, color=style['color'],
+                    #         linestyle='-',
+                    #         label=tel + ' rms')
                     idx += 1
 
         ax.legend(loc='best', fontsize='x-small', ncol=4)
         ax.set_xlabel('lm distance')
         ax.set_ylabel('PSF peak, average, and rms')
         ax.set_xlim(0, x.max())
-        ax.set_ylim(1e-3, 0.15)
-        ax.set_yscale('log')
+        # ax.set_ylim(1e-3, 0.15)
+        # ax.set_ylim(1e-3, 0.02)
+        ax.set_ylim(-0.02, 0.02)
+        # ax.set_yscale('log')
         ax.grid()
-        fig.savefig(join(results_dir, 'compare_%s.png' %
+        fig.savefig(join(results_dir, 'compare_range_%s.png' %
                          '_'.join(unwrap_levels)))
         # plt.show()
         plt.close(fig)

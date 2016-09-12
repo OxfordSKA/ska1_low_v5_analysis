@@ -416,7 +416,7 @@ class TelescopeAnalysis(telescope.Telescope):
             psf_1d_max = np.zeros(num_bins)
             psf_1d_std = np.zeros(num_bins)
             psf_1d_rms = np.zeros(num_bins)
-            bin_edges = np.linspace(r_lm[0], r_lm[-1], num_bins + 1)
+            bin_edges = np.linspace(r_lm[0], r_lm[-1] * 2**(-0.5), num_bins + 1)
             # bin_edges = np.logspace(log10(r_lm[1]), log10(r_lm[-1]),
             #                         num_bins + 1)
             psf_1d_bin_r = (bin_edges[1:] + bin_edges[:-1]) / 2
