@@ -27,7 +27,7 @@ def analyse_v5(out_dir='TEMP_results'):
     metrics.save_results(name)
 
 
-class UnwrapV5(object):
+class AnalyseUnwrapV5(object):
     """Class to unwrap v5 clusters and analyse the result."""
     def __init__(self, out_dir='TEMP_results', remove_existing_results=True):
         self.out_dir = out_dir
@@ -174,7 +174,7 @@ class UnwrapV5(object):
 
 
 def main():
-    unwrap_v5 = UnwrapV5(remove_existing_results=True)
+    unwrap_v5 = AnalyseUnwrapV5(remove_existing_results=True)
     unwrap_v5.model01(add_core=True)
     unwrap_v5.model02(add_core=True)
     unwrap_v5.model03(add_core=True)
