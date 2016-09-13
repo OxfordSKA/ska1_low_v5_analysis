@@ -87,9 +87,8 @@ class Metrics(object):
         # Metrics.__write_matlab_clusters(tel, filename)
 
         filename = join(self.out_dir, '%s_stations.png' % tel.name)
-        if not isfile(filename):
-            tel.plot_layout(filename=filename, xy_lim=7e3,
-                            show_decorations=False)
+        tel.plot_layout(filename=filename, xy_lim=7e3,
+                        show_decorations=False)
 
         # # Simplistic cluster cable length assignment
         # filename = join(self.out_dir, '%s_cables.png' % tel.name)
@@ -103,8 +102,8 @@ class Metrics(object):
         #                              plot_r=7e3)
         # self.cable_length_2[tel_r] = l_
         #
-        filename = join(self.out_dir, '%s_uv_grid.png' % tel.name)
-        tel.plot_grid(filename, xy_lim=13e3)
+        # filename = join(self.out_dir, '%s_uv_grid.png' % tel.name)
+        # tel.plot_grid(filename, xy_lim=13e3)
 
         # tel.gen_uvw_coords()
         # num_bins = int((13e3 - tel.station_diameter_m) //
@@ -146,22 +145,22 @@ class Metrics(object):
         # print(tel.psf_rms_r_x)
         # print(tel.psf_rms_r)
 
-        filename = join(self.out_dir, '%s_psf' % tel.name)
-        tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
-                     fov_deg=5, im_size=2048, num_bins=400)
+        # filename = join(self.out_dir, '%s_psf' % tel.name)
         # tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
-        #              fov_deg=5, im_size=2048, num_bins=50)
-        self.psf[tel.name] = dict()
-        # self.psf[tel.name]['image'] = tel.psf
-        self.psf[tel.name]['fov'] = tel.psf_fov_deg
-        self.psf[tel.name]['1d_r'] = tel.psf_1d['r']
-        self.psf[tel.name]['1d_min'] = tel.psf_1d['min']
-        self.psf[tel.name]['1d_max'] = tel.psf_1d['max']
-        self.psf[tel.name]['1d_std'] = tel.psf_1d['std']
-        self.psf[tel.name]['1d_rms'] = tel.psf_1d['rms']
-        self.psf[tel.name]['1d_mean'] = tel.psf_1d['mean']
-        self.psf[tel.name]['1d_abs_mean'] = tel.psf_1d['abs_mean']
-        self.psf[tel.name]['1d_abs_max'] = tel.psf_1d['abs_max']
+        #              fov_deg=5, im_size=2048, num_bins=400)
+        # # tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
+        # #              fov_deg=5, im_size=2048, num_bins=50)
+        # self.psf[tel.name] = dict()
+        # # self.psf[tel.name]['image'] = tel.psf
+        # self.psf[tel.name]['fov'] = tel.psf_fov_deg
+        # self.psf[tel.name]['1d_r'] = tel.psf_1d['r']
+        # self.psf[tel.name]['1d_min'] = tel.psf_1d['min']
+        # self.psf[tel.name]['1d_max'] = tel.psf_1d['max']
+        # self.psf[tel.name]['1d_std'] = tel.psf_1d['std']
+        # self.psf[tel.name]['1d_rms'] = tel.psf_1d['rms']
+        # self.psf[tel.name]['1d_mean'] = tel.psf_1d['mean']
+        # self.psf[tel.name]['1d_abs_mean'] = tel.psf_1d['abs_mean']
+        # self.psf[tel.name]['1d_abs_max'] = tel.psf_1d['abs_max']
 
         # TODO(BM)
         # Comparison of histogram and cumulative histogram (overplotted lines (not bars))

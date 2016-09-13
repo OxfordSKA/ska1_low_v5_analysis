@@ -4,8 +4,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import os
 
-from math import (log, radians, cos, sin, pi, acosh, atan2, exp, degrees, sqrt,
-                  ceil)
+from math import (log, log10, radians, cos, sin, pi, acosh, atan2, exp,
+                  degrees, sqrt, ceil)
 from os.path import join
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import Circle
@@ -226,7 +226,8 @@ class Telescope(object):
         self.layouts['circular_arc' + str(len(keys))] = {
             'x': x, 'y': y, 'cx': cx, 'cy': cy}
 
-    def add_circular_arc_perturbed(self, n, cx, cy, delta_theta, r0, r1, perturb_r0, perturb_r1):
+    def add_circular_arc_perturbed(self, n, cx, cy, delta_theta, r0, r1,
+                                   perturb_r0, perturb_r1):
         r = (cx**2 + cy**2)**0.5
         t = degrees(atan2(cy, cx))
         x, y = self.circular_arc(n, r, delta_theta)
@@ -240,6 +241,60 @@ class Telescope(object):
         keys = self.layouts.keys()
         self.layouts['circular_arc' + str(len(keys))] = {
             'x': x, 'y': y, 'cx': cx, 'cy': cy}
+
+    def add_random_profile(self, n, cx, cy, r0, r1, num_selected):
+        r = np.logspace(log10(r0), log10(r1), n)
+
+        # Scale profile to maximum radius.
+        r = np.sort(r)
+        r *= (r1 / np.max(r))
+
+        # Allocate space for modified x,y coordinates.
+        x = np.zeros(n)
+        y = np.zeros(n)
+        np.random.seed(5)
+
+        # Loop over radial positions to generate non-overlapping x,y
+        # coordinates.
+        for i in range(n):
+            trial = 0
+            while True:
+                # Generate theta (uniform from 0 to 2pi)
+                theta = 2.0 * pi * np.random.uniform()
+                t_x = r[i] * cos(theta)
+                t_y = r[i] * sin(theta)
+
+                # Check distance to all other stations up to this one.
+                min_dist = 1e100
+                for j in range(i):
+                    d_x = x[j] - t_x
+                    d_y = y[j] - t_y
+                    d = sqrt(d_x * d_x + d_y * d_y)
+                    if d < min_dist:
+                        min_dist = d
+
+                # If minimum distance is greater than the required minimum
+                # separation, store coordinates and go to the next point.
+                # Otherwise, keep trying.
+                if min_dist >= self.station_diameter_m:
+                    x[i] = t_x
+                    y[i] = t_y
+                    break
+                else:
+                    trial += 1
+
+                # Check if we've exceeded the maximum number of trials at
+                # this radius.
+                if trial > 500:
+                    r[i] += 1
+                    print("  Increasing radius to %.2f m" % (r[i]))
+
+        x = x[0:num_selected]
+        y = y[0:num_selected]
+        for i in range(len(cx)):
+            keys = self.layouts.keys()
+            self.layouts['random_profile' + str(len(keys))] = {
+                'x': x[i*6:(i+1)*6], 'y': y[i*6:(i+1)*6], 'cx': cx[i], 'cy': cy[i]}
 
     def add_log_spiral_section(self, n, r0_ref, cx, cy, b, delta_theta,
                                theta0_deg, theta_offset=0):
