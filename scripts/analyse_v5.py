@@ -179,19 +179,17 @@ class AnalyseUnwrapV5(object):
         metrics = Metrics(self.out_dir)
         r0 = 500
         r1 = 6400
-        perturb_r0 = 100
-        perturb_r1 = 0.5 * (self.cluster_r[-1] - self.cluster_r[-2])
-        np.random.seed(6)
+        perturb_r0 = 300
+        perturb_r1 = 0.8 * (self.cluster_r[-1] - self.cluster_r[-2])
 
         # Loop over cluster radii
         for i in range(self.cluster_r.size):
+            np.random.seed(5)
             # Create the telescope model (v5 core & clusters not being replaced)
             tel = self.__add_v5_core_clusters(name, i, add_core)
 
             # Loop over cluster radii we are replacing
             for j in range(i + 1):
-                delta_theta_deg = self.delta_theta_deg_inner if j <= 3 else \
-                    self.delta_theta_deg_outer
                 for k in range(self.num_arms):
                     idx = self.num_arms * j + k
                     if j >= 5:
@@ -211,16 +209,43 @@ class AnalyseUnwrapV5(object):
         # metrics.plot_cable_length_compare()
         metrics.plot_comparisons()
 
+    def model05(self, name='model05', add_core=True):
+        """Model05 == random radial profile"""
+        # Initialise metrics class
+        metrics = Metrics(self.out_dir)
+
+        # Loop over cluster radii
+        for i in range(self.cluster_r.size):
+            # Create the telescope model (v5 core & clusters not being replaced)
+            tel = self.__add_v5_core_clusters(name, i, add_core)
+
+            # Add random radial profile.
+            c_x = self.cluster_x[0:self.num_arms * (i + 1)]
+            c_y = self.cluster_y[0:self.num_arms * (i + 1)]
+            tel.add_random_profile(self.num_arms * self.cluster_r.size * 6,
+                                   c_x, c_y,
+                                   self.core_radius,
+                                   self.outer_radius,
+                                   self.num_arms * (i + 1) * 6)
+            metrics.analyse_telescope(tel, self.cluster_r[i])
+
+        metrics.save_results(name)
+        # metrics.plot_cable_length_compare()
+        metrics.plot_comparisons()
+
+
 def main():
+    # analyse_v5()
     unwrap_v5 = AnalyseUnwrapV5(remove_existing_results=False)
     # unwrap_v5.model01(add_core=True)
-    unwrap_v5.model02(add_core=True)
+    # unwrap_v5.model02(add_core=True)
     # unwrap_v5.model03(add_core=True)
-    # unwrap_v5.model04(add_core=True)
-    # analyse_v5()
+    unwrap_v5.model04(add_core=True)
+    unwrap_v5.model05(add_core=True)
+
 
 if __name__ == '__main__':
-    # main()
+    main()
     # Metrics.compare_cum_hist(join('TEMP_results'), log_axis=False)
     # Metrics.compare_hist(join('TEMP_results'), log_axis=False)
-    Metrics.compare_psf_1d(join('TEMP_results'))
+    # Metrics.compare_psf_1d(join('TEMP_results'))

@@ -179,6 +179,7 @@ class Metrics(object):
             self.psf[tel.name]['1d_abs_mean'] = tel.psf_1d['abs_mean']
             self.psf[tel.name]['1d_abs_max'] = tel.psf_1d['abs_max']
 
+
     def plot_comparisons(self, psf_1d=False):
         """Generate comparison plots."""
         if self.psf_rms:  # Checks if self.psf_rms is empty

@@ -11,17 +11,19 @@ min_sep = 35 # metres
 # max_radius = 1700 # metres
 
 # Whole telescope.
-num_points = 512
-max_radius = 40000 # metres
+num_points = 162
+min_radius = 500 # metres
+max_radius = 6400 # metres
 
 # Generate normalised radial profile according to chosen distribution.
-r = numpy.random.lognormal(sigma=1.0, size=num_points)
+# r = numpy.random.lognormal(sigma=1.0, size=num_points)
+r = numpy.logspace(math.log10(500), math.log10(max_radius), num_points)
 
 # Scale profile to maximum radius.
 r = numpy.sort(r)
 r *= (max_radius / numpy.max(r))
 
-# Allocate space for modified x,y coordinates. 
+# Allocate space for modified x,y coordinates.
 x = numpy.zeros(num_points)
 y = numpy.zeros(num_points)
 
@@ -44,7 +46,7 @@ for i in range(num_points):
             if d < min_dist:
                 min_dist = d
 
-        # If minimum distance is greater than the required minimum separation, 
+        # If minimum distance is greater than the required minimum separation,
         # store coordinates and go to the next point.
         # Otherwise, keep trying.
         if min_dist >= min_sep:
