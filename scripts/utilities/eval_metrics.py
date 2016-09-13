@@ -64,9 +64,10 @@ class Metrics(object):
         # Enable or disable analysis
         # =====================================================================
         layout_matlab = False
-        layout_pickle = True
+        layout_pickle = False
         layout_plot = True
         layout_enu = False
+        layout_iantconfig = True
         cable_length_1 = False
         cable_length_2 = False
         uv_grid = False
@@ -89,7 +90,7 @@ class Metrics(object):
 
         # -------- Layout pickle file -----------------------------------------
         if layout_pickle:
-            filename = join(self.out_dir, '%s_layout.p')
+            filename = join(self.out_dir, '%s_layout.p' % tel.name)
             tel.save_pickle(filename)
 
         # -------- Layout plot ------------------------------------------------
@@ -97,6 +98,10 @@ class Metrics(object):
             filename = join(self.out_dir, '%s_stations.png' % tel.name)
             tel.plot_layout(filename=filename, xy_lim=7e3,
                             show_decorations=False)
+
+        if layout_iantconfig:
+            filename = join(self.out_dir, '%s' % tel.name)
+            tel.save_iantconfig(filename)
 
         # -------- Simplistic cluster cable length assignment -----------------
         if cable_length_1:
@@ -179,7 +184,6 @@ class Metrics(object):
             self.psf[tel.name]['1d_abs_mean'] = tel.psf_1d['abs_mean']
             self.psf[tel.name]['1d_abs_max'] = tel.psf_1d['abs_max']
 
-
     def plot_comparisons(self, psf_1d=False):
         """Generate comparison plots."""
         if self.psf_rms:  # Checks if self.psf_rms is empty
@@ -200,10 +204,10 @@ class Metrics(object):
 
     def save_results(self, name):
         """Save metrics to disk"""
-        # All metrics in npz format
-        filename = join(self.out_dir, '%s_metrics.npz' % name)
-        np.savez(filename, tel_r=self.tel_r, cable_length=self.cable_length,
-                 cable_length_2=self.cable_length_2, uv_hist=self.uv_hist)
+        # metrics in npz format
+        # filename = join(self.out_dir, '%s_metrics.npz' % name)
+        # np.savez(filename, tel_r=self.tel_r, cable_length=self.cable_length,
+        #          cable_length_2=self.cable_length_2, uv_hist=self.uv_hist)
 
         if self.cable_length:  # Empty dict() evaluate to False
             # ASCII CSV table of radius vs cable length

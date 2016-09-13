@@ -240,7 +240,16 @@ class Telescope(object):
         t = degrees(atan2(cy, cx))
         x, y = self.circular_arc(n, r, delta_theta)
         x, y = Layout.rotate_coords(x, y, t)
-        scale = perturb_r0 + (perturb_r1 - perturb_r0) * ((r - r0) / (r1 - r0))
+
+        # Linear scaling
+        # scale = perturb_r0 + (perturb_r1 - perturb_r0) * ((r - r0) / (r1 - r0))
+        # Log scaling
+        a = r1 - r
+        b = r - r0
+        f = b / (a + b)
+        scale = perturb_r1**f * perturb_r0**(1 - f)
+        # print(r0, r1, perturb_r0, perturb_r1, r, scale)
+
         for i in range(len(x)):
             t = np.random.rand() * 2 * np.pi
             rt = np.random.rand() * scale
