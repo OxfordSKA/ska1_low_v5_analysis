@@ -213,11 +213,11 @@ class AnalyseUnwrapV5(object):
 
 def main():
     unwrap_v5 = AnalyseUnwrapV5(remove_existing_results=False)
-    unwrap_v5.model01(add_core=True)
+    # unwrap_v5.model01(add_core=True)
     unwrap_v5.model02(add_core=True)
     # unwrap_v5.model03(add_core=True)
-    unwrap_v5.model04(add_core=True)
-    analyse_v5()
+    # unwrap_v5.model04(add_core=True)
+    # analyse_v5()
 
 if __name__ == '__main__':
     # main()

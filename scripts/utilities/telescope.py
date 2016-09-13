@@ -10,6 +10,7 @@ from os.path import join
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import Circle
 import numpy as np
+import pickle
 from .layout import Layout
 
 
@@ -34,10 +35,10 @@ class Telescope(object):
         """Save the telescope model as ascii CSV file."""
         x, y, z = self.get_coords_enu()
         coords = np.vstack([x, y, z]).T
-        #np.savetxt(filename, coords, fmt=b'%.12e %.12e %.12e')
         np.savetxt(filename, coords, fmt=b'%.12e')
 
     def save_iantconfig(self, filename_root):
+        """Save the telescope model as an iantconfig layout file"""
         x, y, _ = self.get_coords_enu()
         d = np.ones_like(x)  # set to 1 to avoid shadowing in iantconfig
         coords = np.vstack([d, x, y]).T
@@ -45,7 +46,15 @@ class Telescope(object):
         np.savetxt('%s.enu.%ix%i.txt' % (filename_root, x.size, 3),
                    coords, fmt=b'%-5i %.12f %.12f')
 
+    def save_pickle(self, filename):
+        """Save the positions and centres as a pickle."""
+        x, y, _ = self.get_coords_enu()
+        cx, cy = self.get_centres_enu()
+        coords = dict(x=x, y=y, cx=cx, cy=cy)
+        pickle.dump(coords, open(filename, 'wb'))
+
     def to_oskar_telescope_model(self, filename):
+        """Save the telescope model as an oskar telescope directory."""
         pass
 
     def add_uniform_core(self, num_stations, r_max_m, r_min_m=0):
@@ -73,7 +82,6 @@ class Telescope(object):
             self.seed = layout_.info['final_seed']
         except RuntimeError as e:
             print('*** ERROR ***:', e.message)
-
 
     def add_hex_core(self, r_max_m, theta0_deg=0.0):
         """Add hexagonal lattice to the core"""

@@ -38,7 +38,6 @@ class Metrics(object):
     def __write_matlab_clusters(tel, filename):
         # type: (TelescopeAnalysis, str) -> None
         """Write clusters to a MATLAB mat file"""
-        coords = np.array([])
         centre_x = np.array([])
         centre_y = np.array([])
         points_x = np.array([])
@@ -47,22 +46,6 @@ class Metrics(object):
             if name == 'ska1_v5':
                 continue
             layout = tel.layouts[name]
-            # -----------
-            # coords = np.hstack((coords, layout['cx']))
-            # coords = np.hstack((coords, layout['cy']))
-            # coords = np.hstack((coords, layout['x']))
-            # coords = np.hstack((coords, layout['y']))
-            # -----------
-            # coords_ = np.array([])
-            # coords_ = np.hstack((coords_, layout['cx']))
-            # coords_ = np.hstack((coords_, layout['cy']))
-            # coords_ = np.hstack((coords_, layout['x']))
-            # coords_ = np.hstack((coords_, layout['y']))
-            # if coords.size == 0:
-            #     coords = coords_
-            # else:
-            #     coords = np.vstack((coords, coords_))
-            # -----------
             centre_x = np.hstack((centre_x, layout['cx']))
             centre_y = np.hstack((centre_y, layout['cy']))
             if points_x.size == 0:
@@ -71,8 +54,6 @@ class Metrics(object):
             else:
                 points_x = np.vstack((points_x, layout['x']))
                 points_y = np.vstack((points_y, layout['y']))
-
-        # savemat(filename, dict(coords=coords))
         savemat(filename, dict(centre_x=centre_x, centre_y=centre_y,
                                antennas_x=points_x, antennas_y=points_y))
 
@@ -80,94 +61,123 @@ class Metrics(object):
         # type: (TelescopeAnalysis, float) -> None
         """Produce analysis metrics for the supplied telescope."""
 
+        # Enable or disable analysis
+        # =====================================================================
+        layout_matlab = False
+        layout_pickle = True
+        layout_plot = True
+        layout_enu = False
+        cable_length_1 = False
+        cable_length_2 = False
+        uv_grid = False
+        uv_hist = False
+        mst_network = False
+        psf_rms = False
+        psf = False
+        # =====================================================================
+
         self.tel_r.append(tel_r)
-        # tel.save_enu(join(self.out_dir, '%s_enu.txt' % tel.name))
 
-        # filename = '%s_clusters.mat' % tel.name
-        # Metrics.__write_matlab_clusters(tel, filename)
+        # -------- ENU layout file --------------------------------------------
+        if layout_enu:
+            tel.save_enu(join(self.out_dir, '%s_enu.txt' % tel.name))
 
-        filename = join(self.out_dir, '%s_stations.png' % tel.name)
-        if not isfile(filename):
+        # -------- MATLAB layout file ----------------------------------------
+        if layout_matlab:
+            filename = '%s_layout.mat' % tel.name
+            Metrics.__write_matlab_clusters(tel, filename)
+
+        # -------- Layout pickle file -----------------------------------------
+        if layout_pickle:
+            filename = join(self.out_dir, '%s_layout.p')
+            tel.save_pickle(filename)
+
+        # -------- Layout plot ------------------------------------------------
+        if layout_plot:
+            filename = join(self.out_dir, '%s_stations.png' % tel.name)
             tel.plot_layout(filename=filename, xy_lim=7e3,
                             show_decorations=False)
 
-        # # Simplistic cluster cable length assignment
-        # filename = join(self.out_dir, '%s_cables.png' % tel.name)
-        # l_ = tel.eval_cable_length(plot=True, plot_filename=filename,
-        #                            plot_r=7e3)
-        # self.cable_length[tel_r] = l_
+        # -------- Simplistic cluster cable length assignment -----------------
+        if cable_length_1:
+            filename = join(self.out_dir, '%s_cables.png' % tel.name)
+            l_ = tel.eval_cable_length(plot=True, plot_filename=filename,
+                                       plot_r=7e3)
+            self.cable_length[tel_r] = l_
 
-        # # Cluster cable length with attempt at better clustering
-        # filename = join(self.out_dir, '%s_cables_2.png' % tel.name)
-        # l_ = tel.eval_cable_length_2(plot=True, plot_filename=filename,
-        #                              plot_r=7e3)
-        # self.cable_length_2[tel_r] = l_
-        #
-        filename = join(self.out_dir, '%s_uv_grid.png' % tel.name)
-        tel.plot_grid(filename, xy_lim=13e3)
+        # -------- Cluster cable length with attempt at better clustering -----
+        if cable_length_2:
+            filename = join(self.out_dir, '%s_cables_2.png' % tel.name)
+            l_ = tel.eval_cable_length_2(plot=True, plot_filename=filename,
+                                         plot_r=7e3)
+            self.cable_length_2[tel_r] = l_
 
-        # tel.gen_uvw_coords()
-        # num_bins = int((13e3 - tel.station_diameter_m) //
-        #                tel.station_diameter_m)
-        # # num_bins = 100
-        # filename = join(self.out_dir, '%s_uv_hist_log.png' % tel.name)
-        # tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=True,
-        #             bar=True, b_min=tel.station_diameter_m / 2,
-        #             b_max=13e3)
-        # filename = join(self.out_dir, '%s_uv_cum_hist_log.png' % tel.name)
-        # tel.uv_cum_hist(filename, log_x=True)
-        # self.uv_hist[tel.name] = dict(log=dict())
-        # self.uv_hist[tel.name]['log'] = dict(
-        #     hist_n=tel.hist_n,
-        #     hist_x=tel.hist_x,
-        #     hist_bins=tel.hist_bins,
-        #     cum_hist_n=tel.cum_hist_n)
-        #
-        # filename = join(self.out_dir, '%s_uv_hist_lin.png' % tel.name)
-        # tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=False,
-        #             bar=True, b_min=tel.station_diameter_m / 2,
-        #             b_max=13e3)
-        # filename = join(self.out_dir, '%s_uv_cum_hist_lin.png' % tel.name)
-        # tel.uv_cum_hist(filename, log_x=False)
-        # self.uv_hist[tel.name]['lin'] = dict(hist_n=tel.hist_n,
-        #                                      hist_x=tel.hist_x,
-        #                                      hist_bins=tel.hist_bins,
-        #                                      cum_hist_n=tel.cum_hist_n)
+        # -------- Generate and plot the uv grid ------------------------------
+        if uv_grid:
+            filename = join(self.out_dir, '%s_uv_grid.png' % tel.name)
+            tel.plot_grid(filename, xy_lim=13e3)
 
-        # filename = join(self.out_dir, '%s_network.png' % tel.name)
-        # if not isfile(filename):
-        #     tel.network_graph()
-        #     tel.plot_network(filename)
+        # -------- Generate and plot the uv histograms ------------------------
+        if uv_hist:
+            tel.gen_uvw_coords()
+            num_bins = int((13e3 - tel.station_diameter_m) //
+                           tel.station_diameter_m)
+            # num_bins = 100
+            filename = join(self.out_dir, '%s_uv_hist_log.png' % tel.name)
+            tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=True,
+                        bar=True, b_min=tel.station_diameter_m / 2,
+                        b_max=13e3)
+            filename = join(self.out_dir, '%s_uv_cum_hist_log.png' % tel.name)
+            tel.uv_cum_hist(filename, log_x=True)
+            self.uv_hist[tel.name] = dict(log=dict())
+            self.uv_hist[tel.name]['log'] = dict(
+                hist_n=tel.hist_n,
+                hist_x=tel.hist_x,
+                hist_bins=tel.hist_bins,
+                cum_hist_n=tel.cum_hist_n)
 
-        # tel.eval_psf_rms_r(num_bins=20, b_min=500, b_max=10000)
-        # self.psf_rms[tel.name] = dict()
-        # self.psf_rms[tel.name]['x'] = tel.psf_rms_r_x
-        # self.psf_rms[tel.name]['y'] = tel.psf_rms_r
-        # print(tel.psf_rms_r_x)
-        # print(tel.psf_rms_r)
+            filename = join(self.out_dir, '%s_uv_hist_lin.png' % tel.name)
+            tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=False,
+                        bar=True, b_min=tel.station_diameter_m / 2,
+                        b_max=13e3)
+            filename = join(self.out_dir, '%s_uv_cum_hist_lin.png' % tel.name)
+            tel.uv_cum_hist(filename, log_x=False)
+            self.uv_hist[tel.name]['lin'] = dict(hist_n=tel.hist_n,
+                                                 hist_x=tel.hist_x,
+                                                 hist_bins=tel.hist_bins,
+                                                 cum_hist_n=tel.cum_hist_n)
 
-        filename = join(self.out_dir, '%s_psf' % tel.name)
-        tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
-                     fov_deg=5, im_size=2048, num_bins=400)
-        # tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
-        #              fov_deg=5, im_size=2048, num_bins=50)
-        self.psf[tel.name] = dict()
-        # self.psf[tel.name]['image'] = tel.psf
-        self.psf[tel.name]['fov'] = tel.psf_fov_deg
-        self.psf[tel.name]['1d_r'] = tel.psf_1d['r']
-        self.psf[tel.name]['1d_min'] = tel.psf_1d['min']
-        self.psf[tel.name]['1d_max'] = tel.psf_1d['max']
-        self.psf[tel.name]['1d_std'] = tel.psf_1d['std']
-        self.psf[tel.name]['1d_rms'] = tel.psf_1d['rms']
-        self.psf[tel.name]['1d_mean'] = tel.psf_1d['mean']
-        self.psf[tel.name]['1d_abs_mean'] = tel.psf_1d['abs_mean']
-        self.psf[tel.name]['1d_abs_max'] = tel.psf_1d['abs_max']
+        # -------- Generate and plot MST network ------------------------------
+        if mst_network:
+            filename = join(self.out_dir, '%s_network.png' % tel.name)
+            tel.network_graph()
+            tel.plot_network(filename)
 
-        # TODO(BM)
-        # Comparison of histogram and cumulative histogram (overplotted lines (not bars))
-        # psf (2d, radial profile)
-        # uvgap?
-        pass
+        # -------- Generate and plot PSFRMS -----------------------------------
+        if psf_rms:
+            tel.eval_psf_rms_r(num_bins=20, b_min=500, b_max=10000)
+            self.psf_rms[tel.name] = dict()
+            self.psf_rms[tel.name]['x'] = tel.psf_rms_r_x
+            self.psf_rms[tel.name]['y'] = tel.psf_rms_r
+
+        # -------- Generate and plot PSF -----------------------------------
+        if psf:
+            filename = join(self.out_dir, '%s_psf' % tel.name)
+            tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
+                         fov_deg=5, im_size=2048, num_bins=400)
+            # tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
+            #              fov_deg=5, im_size=2048, num_bins=50)
+            self.psf[tel.name] = dict()
+            # self.psf[tel.name]['image'] = tel.psf
+            self.psf[tel.name]['fov'] = tel.psf_fov_deg
+            self.psf[tel.name]['1d_r'] = tel.psf_1d['r']
+            self.psf[tel.name]['1d_min'] = tel.psf_1d['min']
+            self.psf[tel.name]['1d_max'] = tel.psf_1d['max']
+            self.psf[tel.name]['1d_std'] = tel.psf_1d['std']
+            self.psf[tel.name]['1d_rms'] = tel.psf_1d['rms']
+            self.psf[tel.name]['1d_mean'] = tel.psf_1d['mean']
+            self.psf[tel.name]['1d_abs_mean'] = tel.psf_1d['abs_mean']
+            self.psf[tel.name]['1d_abs_max'] = tel.psf_1d['abs_max']
 
     def plot_comparisons(self, psf_1d=False):
         """Generate comparison plots."""
@@ -198,7 +208,8 @@ class Metrics(object):
             # ASCII CSV table of radius vs cable length
             filename = join(self.out_dir, '%s_cables.txt' % name)
             if not isfile(filename):
-                data = np.array([[k, v] for k, v in self.cable_length.iteritems()])
+                data = np.array([[k, v] for k, v in
+                                 self.cable_length.iteritems()])
                 data = np.sort(data, axis=0)
                 np.savetxt(filename, data, fmt=b'%.10f %.10f')
 
@@ -206,7 +217,8 @@ class Metrics(object):
             # ASCII CSV table of radius vs cable length
             filename = join(self.out_dir, '%s_cables_2.txt' % name)
             if not isfile(filename):
-                data = np.array([[k, v] for k, v in self.cable_length_2.iteritems()])
+                data = np.array([[k, v] for k, v in
+                                 self.cable_length_2.iteritems()])
                 data = np.sort(data, axis=0)
                 np.savetxt(filename, data, fmt=b'%.10f %.10f')
 
@@ -219,7 +231,6 @@ class Metrics(object):
         if self.uv_hist:
             filename = join(self.out_dir, '%s_uv_hist.p' % name)
             pickle.dump(self.uv_hist, open(filename, 'wb'))
-
 
     def plot_cable_length_compare(self):
         data = [[k, v] for k, v in self.cable_length.iteritems()]
