@@ -405,20 +405,19 @@ class Telescope(object):
             n += layout['x'].shape[0]
         return n
 
-    def get_coords_enu(self):
+    def get_coords_enu(self, include_core=True):
+        """Return enu coordinates for the telescope"""
         if not self.layouts:
             raise RuntimeError('No layout defined!')
-        n = self.num_stations()
-        x, y, z = np.zeros(n), np.zeros(n), np.zeros(n)
-        i = 0
+        x, y, z = np.array([]), np.array([]), np.array([])
         for name in self.layouts:
+            if not include_core and name == 'ska1_v5':
+                continue
             layout = self.layouts[name]
-            n0 = layout['x'].shape[0]
-            x[i:i+n0] = layout['x']
-            y[i:i+n0] = layout['y']
+            x = np.hstack((x, layout['x']))
+            y = np.hstack((y, layout['y']))
             if 'z' in layout:
-                z[i:i+n0] = layout['z']
-            i += n0
+                z = np.hstack((z, layout['z']))
         return x, y, z
 
     def get_centres_enu(self):

@@ -5,7 +5,7 @@ import os
 import shutil
 import numpy as np
 from utilities.telescope import Telescope
-from utilities.analysis import SKA1_low_analysis
+from utilities.telescope_analysis import SKA1_low_analysis
 from utilities.eval_metrics import Metrics
 from os.path import join, isdir
 from os import makedirs
@@ -15,7 +15,7 @@ def analyse_v5(out_dir='TEMP_results'):
     """Generate and analyse reference v5 layout."""
     # -------------- Options --------------------------------------------------
     name = 'ska1_v5'  # Name of the telescope model (prefix in file names)
-    outer_radius = 6400
+    outer_radius = 6400 + 90
     # -------------------------------------------------------------------------
     if not isdir(out_dir):
         makedirs(out_dir)
@@ -23,6 +23,7 @@ def analyse_v5(out_dir='TEMP_results'):
     # Current SKA1 V5 design.
     tel = SKA1_low_analysis(name)
     tel.add_ska1_v5(r_max=outer_radius)
+
     metrics = Metrics(out_dir)
     metrics.analyse_telescope(tel, 0.0)
     metrics.save_results(name)
@@ -235,14 +236,13 @@ class AnalyseUnwrapV5(object):
 
 
 def main():
-    # analyse_v5()
-    unwrap_v5 = AnalyseUnwrapV5(remove_existing_results=False)
-    # unwrap_v5.model01(add_core=True)
-    # unwrap_v5.model02(add_core=True)
-    # unwrap_v5.model03(add_core=True)
+    unwrap_v5 = AnalyseUnwrapV5(remove_existing_results=True)
+    unwrap_v5.model01(add_core=True)
+    unwrap_v5.model02(add_core=True)
+    unwrap_v5.model03(add_core=True)
     unwrap_v5.model04(add_core=True)
     unwrap_v5.model05(add_core=True)
-
+    analyse_v5()
 
 if __name__ == '__main__':
     main()

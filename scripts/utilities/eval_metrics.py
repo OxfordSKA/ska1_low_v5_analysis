@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
 import numpy as np
 from math import ceil, floor, log10
-from utilities.analysis import TelescopeAnalysis
+from utilities.telescope_analysis import TelescopeAnalysis
 from scipy.io import savemat
 from collections import OrderedDict
 import pickle
@@ -30,6 +30,7 @@ class Metrics(object):
         self.tel_r = list()
         self.cable_length = dict()
         self.cable_length_2 = dict()
+        self.cable_length_3 = dict()
         self.uv_hist = dict()
         self.psf_rms = dict()
         self.psf = dict()
@@ -63,13 +64,14 @@ class Metrics(object):
 
         # Enable or disable analysis
         # =====================================================================
+        layout_plot = True
         layout_matlab = False
         layout_pickle = False
-        layout_plot = True
         layout_enu = False
         layout_iantconfig = True
         cable_length_1 = False
         cable_length_2 = False
+        cable_length_3 = True
         uv_grid = False
         uv_hist = False
         mst_network = False
@@ -85,7 +87,7 @@ class Metrics(object):
 
         # -------- MATLAB layout file ----------------------------------------
         if layout_matlab:
-            filename = '%s_layout.mat' % tel.name
+            filename = join(self.out_dir, '%s_layout.mat' % tel.name)
             Metrics.__write_matlab_clusters(tel, filename)
 
         # -------- Layout pickle file -----------------------------------------
@@ -105,7 +107,7 @@ class Metrics(object):
 
         # -------- Simplistic cluster cable length assignment -----------------
         if cable_length_1:
-            filename = join(self.out_dir, '%s_cables.png' % tel.name)
+            filename = join(self.out_dir, '%s_cables_1.png' % tel.name)
             l_ = tel.eval_cable_length(plot=True, plot_filename=filename,
                                        plot_r=7e3)
             self.cable_length[tel_r] = l_
@@ -116,6 +118,12 @@ class Metrics(object):
             l_ = tel.eval_cable_length_2(plot=True, plot_filename=filename,
                                          plot_r=7e3)
             self.cable_length_2[tel_r] = l_
+
+        if cable_length_3:
+            filename = join(self.out_dir, '%s_cables.png' % tel.name)
+            l_ = tel.eval_cable_length_3(plot_filename=filename, plot_r=7e3)
+            self.cable_length_3[tel_r] = l_
+            # print('  * cable_length = %.2f km' % (l_/1e3))
 
         # -------- Generate and plot the uv grid ------------------------------
         if uv_grid:
@@ -156,7 +164,10 @@ class Metrics(object):
         if mst_network:
             filename = join(self.out_dir, '%s_network.png' % tel.name)
             tel.network_graph()
-            tel.plot_network(filename)
+            tel.plot_network(filename, plot_r=7e3)
+            filename = join(self.out_dir, '%s_network_2.png' % tel.name)
+            tel.network_graph_2()
+            tel.plot_network_2(filename, plot_r=7e3)
 
         # -------- Generate and plot PSFRMS -----------------------------------
         if psf_rms:
@@ -212,20 +223,25 @@ class Metrics(object):
         if self.cable_length:  # Empty dict() evaluate to False
             # ASCII CSV table of radius vs cable length
             filename = join(self.out_dir, '%s_cables.txt' % name)
-            if not isfile(filename):
-                data = np.array([[k, v] for k, v in
-                                 self.cable_length.iteritems()])
-                data = np.sort(data, axis=0)
-                np.savetxt(filename, data, fmt=b'%.10f %.10f')
+            data = np.array([[k, v] for k, v in
+                             self.cable_length.iteritems()])
+            data = np.sort(data, axis=0)
+            np.savetxt(filename, data, fmt=b'%.10f %.10f')
 
         if self.cable_length_2:  # Empty dict() evaluate to False
             # ASCII CSV table of radius vs cable length
             filename = join(self.out_dir, '%s_cables_2.txt' % name)
-            if not isfile(filename):
-                data = np.array([[k, v] for k, v in
-                                 self.cable_length_2.iteritems()])
-                data = np.sort(data, axis=0)
-                np.savetxt(filename, data, fmt=b'%.10f %.10f')
+            data = np.array([[k, v] for k, v in
+                             self.cable_length_2.iteritems()])
+            data = np.sort(data, axis=0)
+            np.savetxt(filename, data, fmt=b'%.10f %.10f')
+
+        if self.cable_length_3:  # Empty dict() evaluates to False
+            filename = join(self.out_dir, '%s_cables.txt' % name)
+            data = np.array([[k, v] for k, v in
+                             self.cable_length_3.iteritems()])
+            data = np.sort(data, axis=0)
+            np.savetxt(filename, data, fmt=b'%.10f %.10f')
 
         # Save a pickle with the PSF comparison info.
         if self.psf:
