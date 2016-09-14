@@ -12,6 +12,7 @@ from utilities.telescope_analysis import TelescopeAnalysis
 from scipy.io import savemat
 from collections import OrderedDict
 import pickle
+from pprint import pprint
 
 
 def round_up(x):
@@ -28,6 +29,7 @@ class Metrics(object):
             makedirs(out_dir)
         self.out_dir = out_dir
         self.tel_r = list()
+        self.eval_metrics = None
         self.cable_length = dict()
         self.cable_length_2 = dict()
         self.cable_length_3 = dict()
@@ -58,80 +60,68 @@ class Metrics(object):
         savemat(filename, dict(centre_x=centre_x, centre_y=centre_y,
                                antennas_x=points_x, antennas_y=points_y))
 
-    def analyse_telescope(self, tel, tel_r):
+    def analyse_telescope(self, tel, tel_r, metrics_list=dict()):
         # type: (TelescopeAnalysis, float) -> None
-        """Produce analysis metrics for the supplied telescope."""
+        """Produce analysis metrics_list for the supplied telescope."""
 
-        # Enable or disable analysis
-        # =====================================================================
-        layout_plot = True
-        layout_matlab = False
-        layout_pickle = False
-        layout_enu = False
-        layout_iantconfig = True
-        cable_length_1 = False
-        cable_length_2 = False
-        cable_length_3 = True
-        uv_grid = False
-        uv_hist = False
-        mst_network = False
-        psf_rms = False
-        psf = False
-        # =====================================================================
+        if not metrics_list:  # An empty dict evaluates to False.
+            return
+        self.eval_metrics = metrics_list
 
         self.tel_r.append(tel_r)
 
         # -------- ENU layout file --------------------------------------------
-        if layout_enu:
+        if metrics_list['layout_enu']:
             tel.save_enu(join(self.out_dir, '%s_enu.txt' % tel.name))
 
         # -------- MATLAB layout file ----------------------------------------
-        if layout_matlab:
+        if metrics_list['layout_matlab']:
             filename = join(self.out_dir, '%s_layout.mat' % tel.name)
             Metrics.__write_matlab_clusters(tel, filename)
 
         # -------- Layout pickle file -----------------------------------------
-        if layout_pickle:
+        if metrics_list['layout_pickle']:
             filename = join(self.out_dir, '%s_layout.p' % tel.name)
             tel.save_pickle(filename)
 
         # -------- Layout plot ------------------------------------------------
-        if layout_plot:
+        if metrics_list['layout_plot']:
             filename = join(self.out_dir, '%s_stations.png' % tel.name)
             tel.plot_layout(filename=filename, xy_lim=7e3,
                             show_decorations=False)
 
-        if layout_iantconfig:
+        # -------- iantconfig files -------------------------------------------
+        if metrics_list['layout_iantconfig']:
             filename = join(self.out_dir, '%s' % tel.name)
             tel.save_iantconfig(filename)
 
         # -------- Simplistic cluster cable length assignment -----------------
-        if cable_length_1:
+        if metrics_list['cable_length_1']:
             filename = join(self.out_dir, '%s_cables_1.png' % tel.name)
             l_ = tel.eval_cable_length(plot=True, plot_filename=filename,
                                        plot_r=7e3)
             self.cable_length[tel_r] = l_
 
         # -------- Cluster cable length with attempt at better clustering -----
-        if cable_length_2:
+        if metrics_list['cable_length_2']:
             filename = join(self.out_dir, '%s_cables_2.png' % tel.name)
             l_ = tel.eval_cable_length_2(plot=True, plot_filename=filename,
                                          plot_r=7e3)
             self.cable_length_2[tel_r] = l_
 
-        if cable_length_3:
+        if metrics_list['cable_length_3']:
             filename = join(self.out_dir, '%s_cables.png' % tel.name)
             l_ = tel.eval_cable_length_3(plot_filename=filename, plot_r=7e3)
             self.cable_length_3[tel_r] = l_
             # print('  * cable_length = %.2f km' % (l_/1e3))
 
         # -------- Generate and plot the uv grid ------------------------------
-        if uv_grid:
+        if metrics_list['uv_grid']:
             filename = join(self.out_dir, '%s_uv_grid.png' % tel.name)
             tel.plot_grid(filename, xy_lim=13e3)
 
         # -------- Generate and plot the uv histograms ------------------------
-        if uv_hist:
+        if metrics_list['uv_hist']:
             tel.gen_uvw_coords()
             num_bins = int((13e3 - tel.station_diameter_m) //
                            tel.station_diameter_m)
@@ -161,7 +151,7 @@ class Metrics(object):
                                                  cum_hist_n=tel.cum_hist_n)
 
         # -------- Generate and plot MST network ------------------------------
-        if mst_network:
+        if metrics_list['mst_network']:
             filename = join(self.out_dir, '%s_network.png' % tel.name)
             tel.network_graph()
             tel.plot_network(filename, plot_r=7e3)
@@ -170,14 +160,14 @@ class Metrics(object):
             tel.plot_network_2(filename, plot_r=7e3)
 
         # -------- Generate and plot PSFRMS -----------------------------------
-        if psf_rms:
+        if metrics_list['psf_rms']:
             tel.eval_psf_rms_r(num_bins=20, b_min=500, b_max=10000)
             self.psf_rms[tel.name] = dict()
             self.psf_rms[tel.name]['x'] = tel.psf_rms_r_x
             self.psf_rms[tel.name]['y'] = tel.psf_rms_r
 
         # -------- Generate and plot PSF -----------------------------------
-        if psf:
+        if metrics_list['psf']:
             filename = join(self.out_dir, '%s_psf' % tel.name)
             tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
                          fov_deg=5, im_size=2048, num_bins=400)

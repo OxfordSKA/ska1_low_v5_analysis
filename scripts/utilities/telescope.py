@@ -418,6 +418,10 @@ class Telescope(object):
             y = np.hstack((y, layout['y']))
             if 'z' in layout:
                 z = np.hstack((z, layout['z']))
+            else:
+                z = np.hstack((z, np.zeros_like(layout['x'])))
+        if z.size != x.size:
+            raise RuntimeError('ENU coordinates dimension mismatch!')
         return x, y, z
 
     def get_centres_enu(self):

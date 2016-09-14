@@ -101,6 +101,7 @@ class TelescopeAnalysis(telescope.Telescope):
         if self.uu_m is None:
             self.gen_uvw_coords()
         b_max = self.r_uv_m.max()
+
         grid_size = int(ceil(b_max / self.grid_cell_size_m)) * 2 + \
                     self.station_diameter_m
         if grid_size % 2 == 1:

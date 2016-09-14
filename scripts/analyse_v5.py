@@ -9,9 +9,11 @@ from utilities.telescope_analysis import SKA1_low_analysis
 from utilities.eval_metrics import Metrics
 from os.path import join, isdir
 from os import makedirs
+from pprint import pprint
 
 
-def analyse_v5(out_dir='TEMP_results'):
+def analyse_v5(out_dir='TEMP_results', obs_length_h=0, num_times=1,
+               eval_metrics=dict()):
     """Generate and analyse reference v5 layout."""
     # -------------- Options --------------------------------------------------
     name = 'ska1_v5'  # Name of the telescope model (prefix in file names)
@@ -23,19 +25,26 @@ def analyse_v5(out_dir='TEMP_results'):
     # Current SKA1 V5 design.
     tel = SKA1_low_analysis(name)
     tel.add_ska1_v5(r_max=outer_radius)
+    tel.obs_length_h = obs_length_h
+    tel.num_times = num_times
 
     metrics = Metrics(out_dir)
-    metrics.analyse_telescope(tel, 0.0)
+    metrics.analyse_telescope(tel, 0.0, eval_metrics)
     metrics.save_results(name)
 
 
 class AnalyseUnwrapV5(object):
     """Class to unwrap v5 clusters and analyse the result."""
-    def __init__(self, out_dir='TEMP_results', remove_existing_results=True):
+    def __init__(self, out_dir='TEMP_results', remove_existing_results=True,
+                 obs_length_h=0, num_times=1, eval_metrics=dict()):
         self.out_dir = out_dir
 
         if remove_existing_results and os.path.isdir(out_dir):
             shutil.rmtree(out_dir)
+
+        self.obs_length_h = obs_length_h
+        self.num_times = num_times
+        self.eval_metrics = eval_metrics
 
         # Generate new telescopes based on v5 by expanding each station cluster
         self.core_radius = 500
@@ -77,6 +86,9 @@ class AnalyseUnwrapV5(object):
         """Adds v5 core and clusters not being replaced"""
         # Create the telescope model and add the core (from v5)
         tel = SKA1_low_analysis('%s_r%02i' % (name, i))
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
         print('-- Telescope: %s' % tel.name)
         if add_core:
             tel.add_ska1_v5(r_max=self.core_radius)
@@ -111,7 +123,7 @@ class AnalyseUnwrapV5(object):
                         self.theta0_deg + self.arm_index[idx] * self.d_theta)
 
             # Produce analysis metrics for the telescope
-            metrics.analyse_telescope(tel, self.cluster_r[i])
+            metrics.analyse_telescope(tel, self.cluster_r[i], self.eval_metrics)
 
         # Save various comparision metrics.
         metrics.save_results(name)
@@ -135,7 +147,8 @@ class AnalyseUnwrapV5(object):
                     tel.add_circular_arc(self.stations_per_cluster,
                                          self.cluster_x[idx],
                                          self.cluster_y[idx], self.d_theta)
-            metrics.analyse_telescope(tel, self.cluster_r[i])
+            metrics.analyse_telescope(tel, self.cluster_r[i],
+                                      self.eval_metrics)
 
         metrics.save_results(name)
         # metrics.plot_cable_length_compare()
@@ -168,7 +181,8 @@ class AnalyseUnwrapV5(object):
                         tel.add_circular_arc(self.stations_per_cluster,
                                              self.cluster_x[idx],
                                              self.cluster_y[idx], self.d_theta)
-            metrics.analyse_telescope(tel, self.cluster_r[i])
+            metrics.analyse_telescope(tel, self.cluster_r[i],
+                                      self.eval_metrics)
 
         metrics.save_results(name)
         # metrics.plot_cable_length_compare()
@@ -204,7 +218,8 @@ class AnalyseUnwrapV5(object):
                             self.stations_per_cluster,
                             self.cluster_x[idx],
                             self.cluster_y[idx], self.d_theta)
-            metrics.analyse_telescope(tel, self.cluster_r[i])
+            metrics.analyse_telescope(tel, self.cluster_r[i],
+                                      self.eval_metrics)
 
         metrics.save_results(name)
         # metrics.plot_cable_length_compare()
@@ -228,7 +243,8 @@ class AnalyseUnwrapV5(object):
                                    self.core_radius,
                                    self.outer_radius,
                                    self.num_arms * (i + 1) * 6)
-            metrics.analyse_telescope(tel, self.cluster_r[i])
+            metrics.analyse_telescope(tel, self.cluster_r[i],
+                                      self.eval_metrics)
 
         metrics.save_results(name)
         # metrics.plot_cable_length_compare()
@@ -236,13 +252,47 @@ class AnalyseUnwrapV5(object):
 
 
 def main():
-    unwrap_v5 = AnalyseUnwrapV5(remove_existing_results=True)
+    # ====== Options =========================
+    snapshot = True
+    out_dir = 'TEMP_results_0h_dec0'
+    remove_existing_results = True
+    enable_metrics = dict(
+        layout_plot=True,
+        layout_matlab=False,
+        layout_pickle=False,
+        layout_enu=False,
+        layout_iantconfig=False,
+        cable_length_1=False,
+        cable_length_2=False,
+        cable_length_3=False,
+        uv_grid=True,
+        uv_hist=False,
+        mst_network=False,
+        psf_rms=False,
+        psf=False,
+    )
+    # ========================================
+
+    if snapshot:
+        obs_length_h = 0
+        num_times = 1
+    else:
+        obs_length_h = 4
+        num_times = (obs_length_h * 3600) // 60
+
+    pprint(enable_metrics)
+
+    unwrap_v5 = AnalyseUnwrapV5(out_dir=out_dir,
+                                remove_existing_results=remove_existing_results,
+                                obs_length_h=obs_length_h, num_times=num_times,
+                                eval_metrics=enable_metrics)
     unwrap_v5.model01(add_core=True)
     unwrap_v5.model02(add_core=True)
     unwrap_v5.model03(add_core=True)
     unwrap_v5.model04(add_core=True)
     unwrap_v5.model05(add_core=True)
-    analyse_v5()
+    analyse_v5(out_dir=out_dir, obs_length_h=obs_length_h, num_times=num_times,
+               eval_metrics=enable_metrics)
 
 if __name__ == '__main__':
     main()
