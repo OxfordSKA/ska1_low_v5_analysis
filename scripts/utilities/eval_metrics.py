@@ -11,6 +11,7 @@ from math import ceil, floor, log10
 from utilities.telescope_analysis import TelescopeAnalysis
 from scipy.io import savemat
 from collections import OrderedDict
+import re
 import pickle
 from pprint import pprint
 
@@ -170,9 +171,7 @@ class Metrics(object):
         if metrics_list['psf']:
             filename = join(self.out_dir, '%s_psf' % tel.name)
             tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
-                         fov_deg=5, im_size=2048, num_bins=400)
-            # tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
-            #              fov_deg=5, im_size=2048, num_bins=50)
+                         fov_deg=5.0, im_size=2048, num_bins=400)
             self.psf[tel.name] = dict()
             # self.psf[tel.name]['image'] = tel.psf
             self.psf[tel.name]['fov'] = tel.psf_fov_deg
@@ -366,9 +365,11 @@ class Metrics(object):
     def compare_psf_1d(results_dir):
         plot_style = [
             {'color': 'k', 'marker': 'none', 'lw': 1.5},
-            {'color': 'c', 'marker': 'none', 'lw': 1.5},
+            {'color': 'b', 'marker': 'none', 'lw': 1.5},
+            {'color': 'g', 'marker': 'none', 'lw': 1.5},
             {'color': 'r', 'marker': 'none', 'lw': 1.5},
-            {'color': 'y', 'marker': 'none', 'lw': 1.5}
+            {'color': 'c', 'marker': 'none', 'lw': 1.5},
+            {'color': 'm', 'marker': 'none', 'lw': 1.5}
             # {'color': 'c', 'marker': 'none', 'lw': 1.5},
             # {'color': 'm', 'marker': 'none', 'lw': 1.5},
             # {'color': 'y', 'marker': 'none', 'lw': 1.5}
@@ -378,9 +379,9 @@ class Metrics(object):
         fig.subplots_adjust(left=0.1,  bottom=0.1, right=0.95, top=0.95)
         idx = 0
         # models = ['ska1_v5', 'model01', 'model02', 'model03']
-        models = ['ska1_v5', 'model01', 'model02', 'model04']
+        models = ['ska1_v5',
+                  'model01', 'model02', 'model03', 'model04', 'model05']
         unwrap_levels = ['r08']
-        # models = ['ska1_v5', 'model01']
         for model in models:
             # Load saved psf results.
             filename = join(results_dir, '%s_psf.p' % model)
@@ -390,36 +391,40 @@ class Metrics(object):
             for tel in psf:
                 if tel == 'ska1_v5' or any(s in tel for s in unwrap_levels):
                     print(tel)
+                    if tel == 'ska1_v5':
+                        label = 'SKA1 v5'
+                    if 'model' in tel:
+                        label = 'Model ' + str(re.search(r'\d+', tel).group())
                     style = plot_style[idx % len(plot_style)]
                     x = psf[tel]['1d_r']
-                    y = psf[tel]['1d_max']
+                    # y = psf[tel]['1d_max']
+                    # ax.plot(x, y, color=style['color'],
+                    #         linestyle='-',
+                    #         label=label + ' max')
+                    # y = psf[tel]['1d_min']
+                    # ax.plot(x, y, color=style['color'],
+                    #         linestyle='--',
+                    #         label=label + ' min')
+                    y = psf[tel]['1d_abs_mean']
                     ax.plot(x, y, color=style['color'],
                             linestyle='-',
-                            label=tel + ' max')
-                    y = psf[tel]['1d_min']
-                    ax.plot(x, y, color=style['color'],
-                            linestyle='--',
-                            label=tel + ' min')
-                    # y = psf[tel]['1d_abs_mean']
-                    # ax.plot(x, y, color=style['color'],
-                    #         linestyle='-',
-                    #         label=tel + ' mean')
+                            label=label + ' mean')
                     # y = psf[tel]['1d_rms']
                     # ax.plot(x, y, color=style['color'],
-                    #         linestyle='-',
-                    #         label=tel + ' rms')
+                    #         linestyle=':',
+                    #         label=label + ' rms')
                     idx += 1
 
-        ax.legend(loc='best', fontsize='x-small', ncol=4)
+        ax.legend(loc='best', fontsize='x-small')
         ax.set_xlabel('lm distance')
-        ax.set_ylabel('PSF peak, average, and rms')
+        ax.set_ylabel('PSF mean')
         ax.set_xlim(0, x.max())
-        # ax.set_ylim(1e-3, 0.15)
+        ax.set_ylim(4e-4, 4e-2)
         # ax.set_ylim(1e-3, 0.02)
-        ax.set_ylim(-0.02, 0.02)
-        # ax.set_yscale('log')
+        # ax.set_ylim(-0.02, 0.02)
+        ax.set_yscale('log')
         ax.grid()
-        fig.savefig(join(results_dir, 'compare_range_%s.png' %
+        fig.savefig(join(results_dir, 'compare_mean_%s.png' %
                          '_'.join(unwrap_levels)))
         # plt.show()
         plt.close(fig)

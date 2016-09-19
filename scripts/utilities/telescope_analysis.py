@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm, PowerNorm, SymLogNorm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import numpy as np
+import re
 from numpy.matlib import repmat
 import os
 from os.path import join
@@ -169,6 +170,15 @@ class TelescopeAnalysis(telescope.Telescope):
             ax.set_xlim(-xy_lim, xy_lim)
             ax.set_ylim(-xy_lim, xy_lim)
         if filename is not None:
+            label = ''
+            if 'ska1_v5' in filename:
+                label = 'SKA1 v5'
+            if 'model' in filename:
+                label = 'Model ' + str(
+                    re.search(r'\d+',
+                              os.path.basename(filename)).group())
+            ax.text(0.02, 0.95, label, weight='bold',
+                    transform=ax.transAxes)
             fig.savefig(filename)
         if show:
             plt.show()
@@ -438,6 +448,15 @@ class TelescopeAnalysis(telescope.Telescope):
             ax.set_xlabel('l')
             ax.set_ylabel('m')
             if filename_root:
+                label = ''
+                if 'ska1_v5' in filename_root:
+                    label = 'SKA1 v5'
+                if 'model' in filename_root:
+                    label = 'Model ' + str(
+                        re.search(r'\d+',
+                                  os.path.basename(filename_root)).group())
+                ax.text(0.02, 0.95, label, color='white', weight='bold',
+                        transform=ax.transAxes)
                 plt.savefig('%s_2d.png' % filename_root)
             else:
                 plt.show()

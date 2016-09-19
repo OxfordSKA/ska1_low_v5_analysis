@@ -64,7 +64,7 @@ def main():
     # Plot UVGAP as a function of difference in cable cost
     # for each model series.
     keuro_cost_per_km = 1
-    _, ax = plt.subplots(figsize=(8, 8))
+    fig, ax = plt.subplots(figsize=(8, 8))
     for i_model in range(num_models):
         x = []
         y = []
@@ -78,7 +78,9 @@ def main():
     ax.legend()
     ax.set_xlabel('Additional cost, thousands of Euros (worst case)')
     ax.set_ylabel('UVGAP Ratio')
+    ax.set_ylim((0, 1))
     plt.show()
+    fig.savefig('uvgap_ratio_cost.png')
 
 
 if __name__ == '__main__':

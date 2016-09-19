@@ -27,6 +27,7 @@ def analyse_v5(out_dir='TEMP_results', obs_length_h=0, num_times=1,
     tel.add_ska1_v5(r_max=outer_radius)
     tel.obs_length_h = obs_length_h
     tel.num_times = num_times
+    tel.dec_deg = tel.lat_deg
 
     metrics = Metrics(out_dir)
     metrics.analyse_telescope(tel, 0.0, eval_metrics)
@@ -251,13 +252,13 @@ class AnalyseUnwrapV5(object):
         metrics.plot_comparisons()
 
 
-def main():
+if __name__ == '__main__':
     # ====== Options =========================
+    out_dir = 'TEMP_results_0h'
     snapshot = True
-    out_dir = 'TEMP_results_0h_dec0'
-    remove_existing_results = True
+    remove_existing_results = False
     enable_metrics = dict(
-        layout_plot=True,
+        layout_plot=False,
         layout_matlab=False,
         layout_pickle=False,
         layout_enu=False,
@@ -266,13 +267,12 @@ def main():
         cable_length_2=False,
         cable_length_3=False,
         uv_grid=True,
-        uv_hist=False,
+        uv_hist=True,
         mst_network=False,
         psf_rms=False,
-        psf=False,
+        psf=True,
     )
     # ========================================
-
     if snapshot:
         obs_length_h = 0
         num_times = 1
@@ -282,10 +282,10 @@ def main():
 
     pprint(enable_metrics)
 
-    unwrap_v5 = AnalyseUnwrapV5(out_dir=out_dir,
-                                remove_existing_results=remove_existing_results,
-                                obs_length_h=obs_length_h, num_times=num_times,
-                                eval_metrics=enable_metrics)
+    unwrap_v5 = AnalyseUnwrapV5(
+        out_dir=out_dir, remove_existing_results=remove_existing_results,
+        obs_length_h=obs_length_h, num_times=num_times,
+        eval_metrics=enable_metrics)
     unwrap_v5.model01(add_core=True)
     unwrap_v5.model02(add_core=True)
     unwrap_v5.model03(add_core=True)
@@ -294,8 +294,6 @@ def main():
     analyse_v5(out_dir=out_dir, obs_length_h=obs_length_h, num_times=num_times,
                eval_metrics=enable_metrics)
 
-if __name__ == '__main__':
-    main()
-    # Metrics.compare_cum_hist(join('TEMP_results'), log_axis=False)
-    # Metrics.compare_hist(join('TEMP_results'), log_axis=False)
-    # Metrics.compare_psf_1d(join('TEMP_results'))
+    # Metrics.compare_cum_hist(join(out_dir), log_axis=False)
+    # Metrics.compare_hist(join(out_dir), log_axis=False)
+    Metrics.compare_psf_1d(join(out_dir))
