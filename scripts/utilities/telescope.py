@@ -21,6 +21,7 @@ class Telescope(object):
         self.lat_deg = 0
         self.alt_m = 0
         self.station_diameter_m = 35
+        self.station_diameter_m_2 = None
         self.trial_timeout_s = 2.0  # s
         self.num_trials = 5
         self.verbose = False
@@ -68,6 +69,7 @@ class Telescope(object):
 
     def add_tapered_core(self, num_stations, r_max_m, taper_func, **kwargs):
         """Add a tapered core"""
+        print(self.trial_timeout_s)
         if self.seed is None:
             self.seed = np.random.randint(1, 1e8)
         try:
@@ -191,6 +193,7 @@ class Telescope(object):
 
     @staticmethod
     def symmetric_log_spiral(n, r0, r1, b, num_arms, theta0_deg):
+        """Add log spiral arms (each arm identical and rotated.)"""
         x, y = Telescope.log_spiral(n, r0, r1, b)
         d_theta = 360 / num_arms
         x_final = np.zeros(n * num_arms)
@@ -198,6 +201,20 @@ class Telescope(object):
         for arm in range(num_arms):
             x_, y_ = Layout.rotate_coords(
                 x, y, theta0_deg + d_theta * arm)
+            x_final[arm * n:(arm + 1) * n] = x_
+            y_final[arm * n:(arm + 1) * n] = y_
+        return x_final, y_final
+
+    @staticmethod
+    def log_spiral_arms_2(n, r0, r1, b, num_arms, theta0_deg):
+        """Add log spiral arms (constructed from a single spiral)"""
+        x, y = Telescope.log_spiral(n * num_arms, r0, r1, b)
+        d_theta = 360 / num_arms
+        x_final = np.zeros(n * num_arms)
+        y_final = np.zeros(n * num_arms)
+        for arm in range(num_arms):
+            x_, y_ = Layout.rotate_coords(x[arm::num_arms], y[arm::num_arms],
+                                          theta0_deg + d_theta * arm)
             x_final[arm * n:(arm + 1) * n] = x_
             y_final[arm * n:(arm + 1) * n] = y_
         return x_final, y_final
@@ -225,6 +242,13 @@ class Telescope(object):
         keys = self.layouts.keys()
         self.layouts[name + str(len(keys))] = {'x': x, 'y': y}
 
+    def add_log_spiral_2(self, n, r0, r1, b, num_arms, name,
+                         theta0_deg):
+        """Add spiral arms."""
+        x, y = self.log_spiral_arms_2(n, r0, r1, b, num_arms, theta0_deg)
+        keys = self.layouts.keys()
+        self.layouts[name + str(len(keys))] = {'x': x, 'y': y}
+
     def add_circular_arc(self, n, cx, cy, delta_theta):
         r = (cx**2 + cy**2)**0.5
         t = degrees(atan2(cy, cx))
@@ -233,6 +257,14 @@ class Telescope(object):
         keys = self.layouts.keys()
         self.layouts['circular_arc' + str(len(keys))] = {
             'x': x, 'y': y, 'cx': cx, 'cy': cy}
+
+    def add_ring(self, n, r, delta_theta=0):
+        t_inc = 360 / n
+        t = np.arange(n) * t_inc + delta_theta
+        x = r * np.cos(np.radians(t))
+        y = r * np.sin(np.radians(t))
+        keys = self.layouts.keys()
+        self.layouts['ring' + str(len(keys))] = dict(x=x, y=y)
 
     def add_circular_arc_perturbed(self, n, cx, cy, delta_theta, r0, r1,
                                    perturb_r0, perturb_r1):
@@ -378,10 +410,17 @@ class Telescope(object):
             Telescope.cluster_centres_ska_v5(r_min, r_max)
 
         # Loop over clusters and extract stations within a 90 m radius.
+        # num_clusters = 0
+        # r_min = 1e99
+        # r_max = 0
         for cx, cy in zip(cluster_x, cluster_y):
             dr = ((x - cx)**2 + (y - cy)**2)**0.5
             idx = np.where(dr <= cluster_radius)
             tx, ty, tz = x[idx], y[idx], z[idx]
+            # num_clusters += tx.size
+            # r_ = (tx**2 + ty**2)**0.5
+            # r_min = min(r_min, r_.min())
+            # r_max = max(r_max, r_.max())
             if tx.size > 0:
                 keys = self.layouts.keys()
                 self.layouts['ska1_v5_cluster' + str(len(keys))] = {
@@ -390,8 +429,13 @@ class Telescope(object):
                 x = np.delete(x, idx)
                 y = np.delete(y, idx)
                 z = np.delete(z, idx)
-
+        # print(num_clusters)
+        # print(r_min)
+        # print(r_max)
         if x.size > 0:
+            # print(x.size)
+            # r_ = (x**2 + y**2)**0.5
+            # print(r_.max())
             # Add any remaining stations that were not assigned to a cluster.
             self.layouts['ska1_v5'] = {'x': x, 'y': y, 'z': z,
                                        'r_min': r_min, 'r_max': r_max}
@@ -462,6 +506,16 @@ class Telescope(object):
                 ax.add_artist(c)
 
             if show_decorations:
+                if self.station_diameter_m_2 is not None:
+                    for xy in zip(x_, y_):
+                        radius = self.station_diameter_m_2 / 2
+                        c = Circle(xy, radius=radius, fill=filled, color='0.8')
+                        ax.add_artist(c)
+
+                for xy in zip(x_, y_):
+                    c = Circle(xy, radius=radius, fill=filled, color=colour)
+                    ax.add_artist(c)
+
                 if 'r_min' in layout and layout['r_min'] is not None:
                     ax.add_artist(Circle((0, 0), layout['r_min'], fill=False,
                                          linestyle='--', color='0.5', lw=0.5,
@@ -511,7 +565,8 @@ class Telescope(object):
         for r in plot_radii:
             color = r[1] if isinstance(r, tuple) else 'r'
             radius = r[0] if isinstance(r, tuple) else r
-            ax.add_artist(plt.Circle((0, 0), radius, fill=False, color=color))
+            ax.add_artist(plt.Circle((0, 0), radius, fill=False, color=color,
+                          alpha=0.5))
 
         if xy_lim:
             ax.set_xlim(-xy_lim, xy_lim)

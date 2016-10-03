@@ -734,6 +734,7 @@ class TelescopeAnalysis(telescope.Telescope):
         return total_distance, cluster_distance
 
     def __plot_clustering(self, cx, cy, x, y, plot_r, filename=None):
+        """Plot clustering between cluster centres cx, cy and positions x, y"""
         cable_length = self.__get_cable_lengths(cx, cy, x, y)[0] / 1e3
         fig, ax = plt.subplots()
         for xy in zip(x, y):
@@ -741,9 +742,19 @@ class TelescopeAnalysis(telescope.Telescope):
                                      fill=False))
         cluster_size = x.size // cx.size
         for j in range(cx.size):
+            overlength_count = 0
             for i in range(cluster_size):
-                ax.plot([cx[j], x[j * cluster_size + i]],
-                        [cy[j], y[j * cluster_size + i]], ':', color='0.5')
+                x_ = cx[j] - x[j * cluster_size + i]
+                y_ = cy[j] - y[j * cluster_size + i]
+                link_length = (x_**2 + y_**2)**0.5
+                if link_length > 1e3:
+                    overlength_count += 1
+                    ax.plot([cx[j], x[j * cluster_size + i]],
+                            [cy[j], y[j * cluster_size + i]], '-', color='c')
+                # else:
+                #     ax.plot([cx[j], x[j * cluster_size + i]],
+                #             [cy[j], y[j * cluster_size + i]], ':', color='0.5')
+            ax.text(cx[j], cy[j], ('%i' % overlength_count))
         ax.plot(cx, cy, 'r+')
         ax.set_aspect('equal')
         ax.text(0.05, 0.95, 'Total: %.2f km' % cable_length,
@@ -757,6 +768,7 @@ class TelescopeAnalysis(telescope.Telescope):
             fig.savefig(filename)
         else:
             plt.show()
+        plt.show()
         plt.close(fig)
 
     def eval_cable_length_3(self, plot_filename=None, plot_r=None):
@@ -832,7 +844,7 @@ class TelescopeAnalysis(telescope.Telescope):
 
         final_index_list = index_list[:, 0]
         self.__plot_clustering(cx, cy, x[final_index_list], y[final_index_list],
-                               7e3, plot_filename)
+                               7.5e3, plot_filename)
         return cable_lengths[0]
 
 

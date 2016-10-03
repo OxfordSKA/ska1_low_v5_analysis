@@ -408,7 +408,7 @@ class Layout(object):
         }
 
         # FIXME(BM) only store the trials for the last point...
-        trials = np.ones((int(1e5), 2))
+        trials = np.ones((int(1e7), 2))
         t0 = time.time()
         n_generated = n
         num_tries, num_tries_last, max_tries, total_tries = 0, 0, 0, 0
@@ -485,6 +485,7 @@ class Layout(object):
                 break
 
         if n_generated < n:
+            # print(total_tries, max_tries, n_generated, n)
             x, y = x[:n_generated], y[:n_generated]
 
         # FIXME(BM) rename to tries for last point (used to plot if failed to see how hard the last point was pushed...)
@@ -526,6 +527,7 @@ class Layout(object):
         all_info = dict()
         t0 = time.time()
         for t in range(num_trials):
+            print('.', end='')
             np.random.seed(seed0 + t)
             x, y, info = Layout.rand_uniform_2d_tapered_(
                 n, r_max, min_sep, taper_func, trial_timeout, r_min, **kwargs)
@@ -542,7 +544,7 @@ class Layout(object):
                 return layout
             else:
                 max_generated = max(max_generated, x.shape[0])
-
+        print('')
         layout.info = all_info
         raise RuntimeError('Failed to generate enough points. '
                            'max generated: %i / %i.' % (max_generated, n))

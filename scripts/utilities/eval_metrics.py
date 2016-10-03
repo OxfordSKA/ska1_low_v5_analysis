@@ -88,8 +88,14 @@ class Metrics(object):
         # -------- Layout plot ------------------------------------------------
         if metrics_list['layout_plot']:
             filename = join(self.out_dir, '%s_stations.png' % tel.name)
-            tel.plot_layout(filename=filename, xy_lim=7e3,
-                            show_decorations=False)
+            args = dict()
+            if isinstance(metrics_list['layout_plot'], dict):
+                args = metrics_list['layout_plot']
+            if 'xy_lim' not in args:
+                args['xy_lim'] = 7.5e3
+            if 'show_decorations' not in args:
+                args['show_decorations'] = False
+            tel.plot_layout(filename=filename, **args)
 
         # -------- iantconfig files -------------------------------------------
         if metrics_list['layout_iantconfig']:
@@ -100,19 +106,20 @@ class Metrics(object):
         if metrics_list['cable_length_1']:
             filename = join(self.out_dir, '%s_cables_1.png' % tel.name)
             l_ = tel.eval_cable_length(plot=True, plot_filename=filename,
-                                       plot_r=7e3)
+                                       plot_r=7.5e3)
             self.cable_length[tel_r] = l_
 
         # -------- Cluster cable length with attempt at better clustering -----
         if metrics_list['cable_length_2']:
             filename = join(self.out_dir, '%s_cables_2.png' % tel.name)
             l_ = tel.eval_cable_length_2(plot=True, plot_filename=filename,
-                                         plot_r=7e3)
+                                         plot_r=7.5e3)
             self.cable_length_2[tel_r] = l_
 
+        # -------- Genetic algorithm for clustering ---------------------------
         if metrics_list['cable_length_3']:
             filename = join(self.out_dir, '%s_cables.png' % tel.name)
-            l_ = tel.eval_cable_length_3(plot_filename=filename, plot_r=7e3)
+            l_ = tel.eval_cable_length_3(plot_filename=filename, plot_r=7.5e3)
             self.cable_length_3[tel_r] = l_
             # print('  * cable_length = %.2f km' % (l_/1e3))
 
@@ -122,11 +129,16 @@ class Metrics(object):
             tel.plot_grid(filename, xy_lim=13e3)
 
         # -------- Generate and plot the uv histograms ------------------------
-        if metrics_list['uv_hist']:
+        type = 'uv_hist'
+        if metrics_list[type]:
             tel.gen_uvw_coords()
             num_bins = int((13e3 - tel.station_diameter_m) //
                            tel.station_diameter_m)
-            # num_bins = 100
+            if isinstance(metrics_list[type], dict):
+                if 'num_bins' in metrics_list[type]:
+                    num_bins = metrics_list[type]['num_bins']
+
+            # Log histograms
             filename = join(self.out_dir, '%s_uv_hist_log.png' % tel.name)
             tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=True,
                         bar=True, b_min=tel.station_diameter_m / 2,
@@ -140,6 +152,7 @@ class Metrics(object):
                 hist_bins=tel.hist_bins,
                 cum_hist_n=tel.cum_hist_n)
 
+            # Lin histograms
             filename = join(self.out_dir, '%s_uv_hist_lin.png' % tel.name)
             tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=False,
                         bar=True, b_min=tel.station_diameter_m / 2,
@@ -166,6 +179,10 @@ class Metrics(object):
             self.psf_rms[tel.name] = dict()
             self.psf_rms[tel.name]['x'] = tel.psf_rms_r_x
             self.psf_rms[tel.name]['y'] = tel.psf_rms_r
+
+        # -------- Generate and plot UVGAP -----------------------------------
+        if metrics_list['uv_gap']:
+            tel.uvgap()
 
         # -------- Generate and plot PSF -----------------------------------
         if metrics_list['psf']:
@@ -481,50 +498,126 @@ class Metrics(object):
 
     @staticmethod
     def compare_hist(results_dir, log_axis=False):
+        """Compare histograms for several models found in the same results
+        folder.
+        """
         plot_style = [
             {'color': 'k', 'marker': 'none', 'lw': 1.5},
-            {'color': 'c', 'marker': 'none', 'lw': 1.5},
-            {'color': 'r', 'marker': 'none', 'lw': 1.5},
-            {'color': 'y', 'marker': 'none', 'lw': 1.5}
+            {'color': 'r', 'marker': 'none', 'lw': 1.5}
         ]
         if log_axis:
             axis_type = 'log'
         else:
             axis_type = 'lin'
 
-        fig, ax = plt.subplots(figsize=(8, 6))
-        fig.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95)
-        idx = 0
-        models = ['ska1_v5', 'model01', 'model02', 'model03']
         unwrap_levels = ['r08']
-        # models = ['ska1_v5', 'model01']
-        for model in models:
-            # Load saved psf results.
-            filename = join(results_dir, '%s_uv_hist.p' % model)
-            psf = pickle.load(open(filename, 'rb'))
 
-            # Plot comparison of PSF profiles.
-            for tel in psf:
-                if tel == 'ska1_v5' or any(s in tel for s in unwrap_levels):
-                    print(tel)
-                    style = plot_style[idx % len(plot_style)]
-                    x = psf[tel][axis_type]['hist_x']
-                    y = psf[tel][axis_type]['hist_n']
-                    ax.plot(x, y, color=style['color'],
-                            linestyle='-',
-                            label=tel + ' max')
-                    idx += 1
+        for i in range(1, 6):
+            models = ['ska1_v5', 'model%02i' % i]
+            fig, ax = plt.subplots(figsize=(8, 6))
+            fig.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95)
+            idx = 0
+            for model in models:
+                # Load saved psf results.
+                filename = join(results_dir, '%s_uv_hist.p' % model)
+                print('-- Loading: %s' % filename)
+                psf = pickle.load(open(filename, 'rb'))
 
-        ax.legend(loc='best', fontsize='small', ncol=1)
-        ax.set_xlabel('Baseline length (m)')
-        ax.set_ylabel('Number of baselines per bin')
-        # ax.set_xlim(0, x.max())
-        # ax.set_ylim(0, 1.05)
-        if log_axis:
-            ax.set_yscale('log')
-            ax.set_xscale('log')
-        ax.grid()
-        fig.savefig(join(results_dir, 'compare_hist_%s_%s.png' %
-                         (axis_type, '_'.join(unwrap_levels))))
-        plt.show()
+                # Plot comparison of PSF profiles.
+                for tel in psf:
+                    if tel == 'ska1_v5' or any(s in tel for s in unwrap_levels):
+                        style = plot_style[idx % len(plot_style)]
+                        x = psf[tel][axis_type]['hist_x']
+                        y = psf[tel][axis_type]['hist_n']
+                        cut_idx = np.argmax(x > 5e3)
+                        x = x[:cut_idx]
+                        y = y[:cut_idx]
+                        ax.plot(x, y, color=style['color'],
+                                linestyle='-',
+                                label=tel + ' max')
+                        idx += 1
+
+            ax.legend(loc='best', fontsize='small', ncol=1)
+            ax.set_xlabel('Baseline length (m)')
+            ax.set_ylabel('Number of baselines per bin')
+            ax.set_xlim(10, 12e3)
+            # ax.set_ylim(500, ax.get_ylim()[1])
+            if log_axis:
+                ax.set_yscale('log')
+                ax.set_xscale('log')
+            ax.grid()
+            fig.savefig(join(results_dir, 'compare_hist_%s_%s_%s.png' %
+                             (axis_type, '_'.join(unwrap_levels), models[1])))
+            # plt.show()
+            plt.close(fig)
+
+    @staticmethod
+    def compare_hist_2(results_dir_root):
+        """Compare pairs of histograms for snapshots and 4 hour observations"""
+        plot_style = [
+            {'color': 'k', 'marker': 'none', 'lw': 1.5},
+            {'color': 'r', 'marker': 'none', 'lw': 1.5}
+        ]
+        unwrap_levels = ['r08']
+
+        fig, axes = plt.subplots(figsize=(8, 10), nrows=5, ncols=2, sharex=True,
+                                 sharey=False)
+        fig.subplots_adjust(left=0.1, bottom=0.08, right=0.98, top=0.98,
+                            hspace=0.05, wspace=0.15)
+
+        print(axes.shape)
+
+        results_dirs = [results_dir_root + '_0h', results_dir_root + '_4h']
+
+        fig.text(0.5, 0.02, r'Baseline length (m)', ha='center')
+        fig.text(0.01, 0.5, r'Baseline count per bin', va='center',
+                 rotation='vertical')
+
+        # Loop over models
+        for i in range(5):
+            models = ['ska1_v5', 'model%02i' % (i + 1)]
+            # Loop over 0h or 4h
+            for j in range(2):
+                idx = 0
+                ax = axes[i, j]
+                for model in models:
+                    # Load saved psf results.
+                    filename = join(results_dirs[j], '%s_uv_hist.p' % model)
+                    print('-- Loading: %s' % filename)
+                    hist = pickle.load(open(filename, 'rb'))
+                    # Plot comparison of PSF profiles.
+                    for tel in hist:
+                        if tel == 'ska1_v5' or any(s in tel for s in unwrap_levels):
+                            style = plot_style[idx % len(plot_style)]
+                            x = hist[tel]['log']['hist_x']
+                            y = hist[tel]['log']['hist_n']
+                            cut_idx = np.argmax(x > 5e3)
+                            x = x[:cut_idx]
+                            y = y[:cut_idx]
+                            ax.plot(x, y, color=style['color'],
+                                    linestyle='-',
+                                    label=tel + ' max')
+                            idx += 1
+                length_str = 'snapshot' if j == 0 else '4 hours'
+                ax.text(0.02, 0.95, ('SKA1 v5 vs. Model %i\n' % (i + 1)) + length_str,
+                        weight='bold',
+                        ha='left', va='top', transform=ax.transAxes,
+                        fontsize='small')
+                # ax.legend(loc='best', fontsize='small', ncol=1)
+                # ax.set_xlabel('Baseline length (m)')
+                # ax.set_ylabel('Number of baselines per bin')
+                ax.set_xlim(10, 1e4)
+                if j == 1:
+                    ax.set_ylim(1.5e3)
+                if j == 0:
+                    ax.set_ylim(5)
+                ax.set_yscale('log')
+                ax.set_xscale('log')
+                # if i == 4:
+                #     ax.set_xlabel('Baseline length (m)')
+                # ax.set_ylabel('Baseline count per bin')
+                ax.grid()
+        plt.show(True)
+        fig.savefig(join('compare_hist_%s.png' %
+                         ('_'.join(unwrap_levels))))
         plt.close(fig)
