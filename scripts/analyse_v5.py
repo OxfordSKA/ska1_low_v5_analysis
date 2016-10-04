@@ -446,6 +446,9 @@ class AnalyseUnwrapV5(object):
 
         tel = SKA1_low_analysis(name)
         tel.station_diameter_m = 40
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
 
         # Core
         core_radius_m = 480
@@ -466,7 +469,7 @@ class AnalyseUnwrapV5(object):
         ring_radii = ring_radii[1:]
 
         # Arms
-        arm_r0 = 1700 + core_radius_m / 2
+        arm_r0 = ring_r5 + core_radius_m / 2
         arm_r1 = 6400
 
         # ============== Core
@@ -475,6 +478,7 @@ class AnalyseUnwrapV5(object):
                              taper_r_profile, **args)
         print('final seed =', tel.layouts['tapered_core']['info']['final_seed'])
         print(tel.seed)
+        # tel.add_ska1_v5(r_max=500)
 
         # ============== Rings
         # TODO(BM) rotate every other ring so radii dont align
@@ -491,9 +495,11 @@ class AnalyseUnwrapV5(object):
         tel.station_diameter_m = 35
         tel.plot_layout(show_decorations=True, plot_radii=[500, 1.7e3, 6.4e3])
 
-
-
-
+        metrics.analyse_telescope(tel, 0,
+                                  self.eval_metrics)
+        metrics.save_results(name)
+        # metrics.plot_cable_length_compare()
+        metrics.plot_comparisons()
 
 
 if __name__ == '__main__':
@@ -508,10 +514,10 @@ if __name__ == '__main__':
         layout_matlab=False,
         layout_pickle=False,
         layout_enu=False,
-        layout_iantconfig=False,
+        layout_iantconfig=True,
         cable_length_1=False,
         cable_length_2=False,
-        cable_length_3=True,
+        cable_length_3=False,
         uv_grid=False,
         uv_hist=False,
         mst_network=False,
