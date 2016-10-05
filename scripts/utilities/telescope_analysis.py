@@ -438,7 +438,7 @@ class TelescopeAnalysis(telescope.Telescope):
                               vmax=1.0, clip=False)
             # opts = dict(interpolation='nearest', origin='lower', cmap='gray_r',
             #             extent=extent, norm=norm)
-            opts = dict(interpolation='nearest', origin='lower', cmap='inferno',
+            opts = dict(interpolation='nearest', origin='lower', cmap='gray_r',
                         extent=extent, norm=norm)
             im = ax.imshow(psf, **opts)
             divider = make_axes_locatable(ax)
