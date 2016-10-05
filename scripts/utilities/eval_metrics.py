@@ -396,8 +396,9 @@ class Metrics(object):
         fig.subplots_adjust(left=0.1,  bottom=0.1, right=0.95, top=0.95)
         idx = 0
         # models = ['ska1_v5', 'model01', 'model02', 'model03']
-        models = ['ska1_v5',
-                  'model01', 'model02', 'model03', 'model04', 'model05']
+        # models = ['ska1_v5',
+        #           'model01', 'model02', 'model03', 'model04', 'model05']
+        models = ['ska1_v5', 'model07']
         unwrap_levels = ['r08']
         for model in models:
             # Load saved psf results.
@@ -512,7 +513,7 @@ class Metrics(object):
 
         unwrap_levels = ['r08']
 
-        for i in range(1, 6):
+        for i in range(7, 8):
             models = ['ska1_v5', 'model%02i' % i]
             fig, ax = plt.subplots(figsize=(8, 6))
             fig.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95)
@@ -574,10 +575,10 @@ class Metrics(object):
                  rotation='vertical')
 
         # Loop over models
-        for i in range(5):
+        for i in range(7, 8):
             models = ['ska1_v5', 'model%02i' % (i + 1)]
             # Loop over 0h or 4h
-            for j in range(2):
+            for j in range(1):
                 idx = 0
                 ax = axes[i, j]
                 for model in models:

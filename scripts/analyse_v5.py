@@ -32,6 +32,7 @@ def analyse_v5(out_dir='TEMP_results', obs_length_h=0, num_times=1,
     metrics = Metrics(out_dir)
     metrics.analyse_telescope(tel, 0.0, eval_metrics)
     metrics.save_results(name)
+    return tel
 
 
 class AnalyseUnwrapV5(object):
@@ -444,7 +445,7 @@ class AnalyseUnwrapV5(object):
             values[r < taper_r_min] = 1.0
             return values
 
-        tel = SKA1_low_analysis(name)
+        tel = SKA1_low_analysis(name + '_r08')
         tel.station_diameter_m = 40
         tel.obs_length_h = self.obs_length_h
         tel.num_times = self.num_times
@@ -465,7 +466,8 @@ class AnalyseUnwrapV5(object):
         ring_radii = np.logspace(np.log10(ring_r0),
                                  np.log10(ring_r5),
                                  num_rings + 1)
-        print(ring_radii)
+        print('ring radii   =', ring_radii)
+        print('ring spacing = ', np.diff(ring_radii))
         ring_radii = ring_radii[1:]
 
         # Arms
@@ -477,11 +479,10 @@ class AnalyseUnwrapV5(object):
         tel.add_tapered_core(224 + 6, core_radius_m,
                              taper_r_profile, **args)
         print('final seed =', tel.layouts['tapered_core']['info']['final_seed'])
-        print(tel.seed)
         # tel.add_ska1_v5(r_max=500)
 
         # ============== Rings
-        # TODO(BM) rotate every other ring so radii dont align
+        # TODO(BM) rotate every other ring so radii don't align
         for i, r in enumerate(ring_radii):
             tel.add_ring(21, r, delta_theta=(360/(21 * 2)) * (i%2))
 
@@ -489,41 +490,40 @@ class AnalyseUnwrapV5(object):
         tel.add_log_spiral_2(24, arm_r0, arm_r1, 0.515, 3, 'inner_arms', 0)
 
         x, _, _ = tel.get_coords_enu()
-        print(x.size)
+        print('total stations =', x.size)
 
         # Plotting layout
-        tel.station_diameter_m = 35
-        tel.plot_layout(show_decorations=True, plot_radii=[500, 1.7e3, 6.4e3])
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
 
-        metrics.analyse_telescope(tel, 0,
-                                  self.eval_metrics)
         metrics.save_results(name)
         # metrics.plot_cable_length_compare()
         metrics.plot_comparisons()
+        return tel
 
 
 if __name__ == '__main__':
     # ====== Options =========================
-    out_dir = 'TEMP_results_0h'
     snapshot = True
+    out_dir = b'TEMP_results_0h' if snapshot else b'TEMP_results_4h'
     remove_existing_results = False
     r_values = [8]  # List of radii to unpack to (or None for all)
     enable_metrics = dict(
         #layout_plot=dict(xy_lim=50e3, plot_radii=[0.5e3, 6.4e3, 40e3]),
-        layout_plot=False,
+        # layout_plot=True,
+        layout_plot=dict(show_decorations=True, xy_lim=1.7e3, plot_radii=[500, 1.7e3, 6.4e3]),
         layout_matlab=False,
         layout_pickle=False,
         layout_enu=False,
-        layout_iantconfig=True,
+        layout_iantconfig=False,
         cable_length_1=False,
         cable_length_2=False,
         cable_length_3=False,
-        uv_grid=False,
-        uv_hist=False,
+        uv_grid=True,
+        uv_hist=True,
         mst_network=False,
         psf_rms=False,
         uv_gap=False,
-        psf=False,
+        psf=True,
     )
     # ========================================
     if snapshot:
@@ -545,12 +545,24 @@ if __name__ == '__main__':
     # unwrap_v5.model04(add_core=True, r_values=r_values)
     # unwrap_v5.model05(add_core=True, r_values=r_values)
     # unwrap_v5.model06(add_core=True, r_values=r_values)
-    unwrap_v5.model07(add_core=True)
-    # analyse_v5(out_dir=out_dir, obs_length_h=obs_length_h, num_times=num_times,
-    #            eval_metrics=enable_metrics)
+    tel_v6 = unwrap_v5.model07(add_core=True)
+    tel_v5 = analyse_v5(out_dir=out_dir, obs_length_h=obs_length_h,
+                        num_times=num_times, eval_metrics=enable_metrics)
+
+    import matplotlib.pyplot as plt
+
+    x, y, _ = tel_v5.get_coords_enu()
+    fig, ax = plt.subplots(figsize=(8, 8))
+    for xy in zip(x, y):
+        ax.add_artist(plt.Circle(xy, 35/2, filled=False, color='k'))
+    x, y, _ = tel_v6.get_coords_enu()
+
+    plt.show()
+    plt.close(fig)
+
 
     # Metrics.compare_cum_hist(join(out_dir), log_axis=False)
-    # Metrics.compare_hist(join(out_dir), log_axis=True)
+    Metrics.compare_hist(join(out_dir), log_axis=True)
     # Metrics.compare_cum_hist(join(out_dir), log_axis=False)
-    # Metrics.compare_psf_1d(join(out_dir))
+    Metrics.compare_psf_1d(join(out_dir))
     # Metrics.compare_hist_2('TEMP_results')
