@@ -164,6 +164,8 @@ class AnalyseUnwrapV5(object):
         """Model03 == replace clusters with radial arcs and log spirals"""
         # Initialise metrics class
         metrics = Metrics(self.out_dir)
+        print (self.cluster_r)
+        print (self.core_radius)
 
         # Loop over cluster radii
         for i in range(self.cluster_r.size):
@@ -460,34 +462,43 @@ class AnalyseUnwrapV5(object):
         tel.seed = 24183655
 
         # Inner rings
-        num_rings = 4
-        ring_r0 = core_radius_m
+        num_rings = 5
+        num_per_ring = 17
+        ring_r0 = 580
         ring_r5 = 1700
         ring_radii = np.logspace(np.log10(ring_r0),
                                  np.log10(ring_r5),
-                                 num_rings + 1)
+                                 num_rings)
         print('ring radii   =', ring_radii)
         print('ring spacing = ', np.diff(ring_radii))
-        ring_radii = ring_radii[1:]
 
         # Arms
         arm_r0 = ring_r5 + core_radius_m / 2
+        arm_r0 = 1805
+        arm_r0 = ring_r5 + core_radius_m / 2
+        arm_r1 = 7135
         arm_r1 = 6400
 
         # ============== Core
-        args = dict(amps=taylor_win(n_taylor, sll), taper_r_min=0.50)
-        tel.add_tapered_core(224 + 6, core_radius_m,
-                             taper_r_profile, **args)
-        print('final seed =', tel.layouts['tapered_core']['info']['final_seed'])
+
+        # args = dict(amps=taylor_win(n_taylor, sll), taper_r_min=0.50)
+        # tel.add_tapered_core(224 + 6, core_radius_m,
+        #                      taper_r_profile, **args)
+        # print('final seed =', tel.layouts['tapered_core']['info']['final_seed'])
         # tel.add_ska1_v5(r_max=500)
+        tel.add_ska1_v5(r_max=500)
 
         # ============== Rings
         # TODO(BM) rotate every other ring so radii don't align
         for i, r in enumerate(ring_radii):
-            tel.add_ring(21, r, delta_theta=(360/(21 * 2)) * (i%2))
+            # tel.add_ring(num_per_ring, r, delta_theta=(360/(num_per_ring * 2)) * (i%2))
+            tel.add_ring(num_per_ring, r, delta_theta=np.random.randint(low=0, high=360))
+            # tel.add_ring(num_per_ring, r, delta_theta=0)
 
         # ============= Spiral arms
-        tel.add_log_spiral_2(24, arm_r0, arm_r1, 0.515, 3, 'inner_arms', 0)
+        tel.add_log_spiral_2(25, arm_r0, arm_r1, 0.515, 3, 'inner_arms', 0)
+        # tel.add_symmetric_log_spiral(25, arm_r0, arm_r1, 0.515, 3,
+        #                              'inner_arms', self.delta_theta_deg_inner)
 
         x, _, _ = tel.get_coords_enu()
         print('total stations =', x.size)
