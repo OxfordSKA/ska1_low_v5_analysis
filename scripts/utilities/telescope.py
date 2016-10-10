@@ -249,6 +249,21 @@ class Telescope(object):
         keys = self.layouts.keys()
         self.layouts[name + str(len(keys))] = {'x': x, 'y': y}
 
+    def add_log_spiral_3(self, n, r0_ref, r0, r1, b, num_arms, theta0_deg):
+        x, y = self.log_spiral_2(n * num_arms, r0_ref, r0, r1, b)
+        d_theta = 360 / num_arms
+        x_final = np.zeros(n * num_arms)
+        y_final = np.zeros(n * num_arms)
+        for arm in range(num_arms):
+            x_, y_ = Layout.rotate_coords(x[arm::num_arms], y[arm::num_arms],
+                                          theta0_deg + d_theta * arm)
+            x_final[arm * n:(arm + 1) * n] = x_
+            y_final[arm * n:(arm + 1) * n] = y_
+        keys = self.layouts.keys()
+        self.layouts['log_spiral_arms' + str(len(keys))] = {
+            'x': x_final, 'y': y_final,
+            'r_min': r0, 'r_max': r1, 'r_ref': r0_ref}
+
     def add_circular_arc(self, n, cx, cy, delta_theta):
         r = (cx**2 + cy**2)**0.5
         t = degrees(atan2(cy, cx))

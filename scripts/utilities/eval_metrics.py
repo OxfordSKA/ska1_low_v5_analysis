@@ -398,7 +398,7 @@ class Metrics(object):
         # models = ['ska1_v5', 'model01', 'model02', 'model03']
         # models = ['ska1_v5',
         #           'model01', 'model02', 'model03', 'model04', 'model05']
-        models = ['ska1_v5', 'model07']
+        models = ['ska1_v5', 'model07', 'model03', 'model08']
         unwrap_levels = ['r08']
         for model in models:
             # Load saved psf results.
@@ -513,7 +513,7 @@ class Metrics(object):
 
         unwrap_levels = ['r08']
 
-        for i in range(7, 8):
+        for i in [3, 7, 8]:
             models = ['ska1_v5', 'model%02i' % i]
             fig, ax = plt.subplots(figsize=(8, 6))
             fig.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95)
@@ -541,7 +541,7 @@ class Metrics(object):
             ax.legend(loc='best', fontsize='small', ncol=1)
             ax.set_xlabel('Baseline length (m)')
             ax.set_ylabel('Number of baselines per bin')
-            ax.set_xlim(10, 12e3)
+            ax.set_xlim(10, 14e3)
             # ax.set_ylim(500, ax.get_ylim()[1])
             if log_axis:
                 ax.set_yscale('log')

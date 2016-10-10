@@ -445,7 +445,8 @@ class AnalyseUnwrapV5(object):
             idx = np.round(((r - taper_r_min) / (1 - taper_r_min)) * (amps.size - 1))
             values = np.asarray(amps[idx.astype(np.int)])
             values[r < taper_r_min] = 1.0
-            return values
+            # return values
+            return 1.0
 
         tel = SKA1_low_analysis(name + '_r08')
         tel.station_diameter_m = 40
@@ -455,11 +456,10 @@ class AnalyseUnwrapV5(object):
 
         # Core
         core_radius_m = 480
-        sll = -24
+        sll = -26
         n_taylor = 10000
         tel.num_trials = 10
         tel.trial_timeout_s = 30.0
-        tel.seed = 24183655
 
         # Inner rings
         num_rings = 5
@@ -473,30 +473,142 @@ class AnalyseUnwrapV5(object):
         print('ring spacing = ', np.diff(ring_radii))
 
         # Arms
+        # arm_r0 = 1805
         arm_r0 = ring_r5 + core_radius_m / 2
-        arm_r0 = 1805
-        arm_r0 = ring_r5 + core_radius_m / 2
-        arm_r1 = 7135
+        # arm_r1 = 7135
         arm_r1 = 6400
 
         # ============== Core
-
-        # args = dict(amps=taylor_win(n_taylor, sll), taper_r_min=0.50)
-        # tel.add_tapered_core(224 + 6, core_radius_m,
+        # tel.seed = 74383209
+        # args = dict(amps=taylor_win(n_taylor, sll), taper_r_min=0.5)
+        # tel.add_tapered_core(224 + 2, 460,
         #                      taper_r_profile, **args)
         # print('final seed =', tel.layouts['tapered_core']['info']['final_seed'])
-        # tel.add_ska1_v5(r_max=500)
         tel.add_ska1_v5(r_max=500)
+        tel.layouts['ska1_v5']['x'] *= 40/35
+        tel.layouts['ska1_v5']['y'] *= 40/35
 
         # ============== Rings
         # TODO(BM) rotate every other ring so radii don't align
+        np.random.seed(1)
         for i, r in enumerate(ring_radii):
             # tel.add_ring(num_per_ring, r, delta_theta=(360/(num_per_ring * 2)) * (i%2))
-            tel.add_ring(num_per_ring, r, delta_theta=np.random.randint(low=0, high=360))
+            tel.add_ring(num_per_ring, r, delta_theta=np.random.randint(low=0,
+                                                                        high=360))
             # tel.add_ring(num_per_ring, r, delta_theta=0)
 
         # ============= Spiral arms
-        tel.add_log_spiral_2(25, arm_r0, arm_r1, 0.515, 3, 'inner_arms', 0)
+        # tel.add_log_spiral_2(25, arm_r0, arm_r1, 0.515, 3, 'inner_arms', 0)
+        tel.add_log_spiral_3(25, self.start_inner, arm_r0, arm_r1, 0.515,
+                             self.num_arms, self.theta0_deg)
+
+        # # ============= Add outer arms
+        # coords = np.loadtxt(join('utilities', 'data', 'v5_enu.txt'))
+        # x, y, z = coords[:, 0], coords[:, 1], coords[:, 2]
+        # r = (x**2 + y**2)**0.5
+        # idx = np.where(r >= 6.5e3)
+        # x, y, z = x[idx], y[idx], z[idx]
+        # tel.layouts['outer_arms'] = dict(x=x, y=y, z=z)
+        # # tel.add_ska1_v5(6400, 9e50)
+        # # =============
+
+        # tel.add_symmetric_log_spiral(25, arm_r0, arm_r1, 0.515, 3,
+        #                              'inner_arms', self.delta_theta_deg_inner)
+
+        x, _, _ = tel.get_coords_enu()
+        print('total stations =', x.size)
+
+        # Plotting layout
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        # tel.plot_layout()
+
+        metrics.save_results(name)
+        # metrics.plot_cable_length_compare()
+        metrics.plot_comparisons()
+        return tel
+
+    def model08(self, name='model08', add_core=True):
+        """Proposed SKA v6 configuration option 1
+
+        4 rings of 21 stations (84 total)
+            r0 = 500m, r5 = 1700m with no ring at r0
+        72 station arms from r0 = 1700m with no point at 1700 to r21 at 6.4 km
+         (ie 6 stations symmmetric about 6.4km)
+           Note(BM) might have to shrink this a bit to match 1km LV reticulation
+        core of 224 + 6 stations (uniform or tapered up to 500m)
+        """
+        metrics = Metrics(self.out_dir)
+
+        # TODO(BM) hybrid of model1 with a custom generated core
+        # and avoiding cable lengths > 1km in arm clusters.
+        # For the log spiral arms also generate from a single arm and rotate
+        # with stride 3 to generate arms.  (put 162 - 18? in arms) and
+        # (224 + 18 in the core) to recover some short baselines.
+        from math import log, exp
+        import matplotlib.pyplot as plt
+
+        def taper_r_profile(r, amps, taper_r_min=0):
+            """Nearest neighbour matching. FIXME(BM) double check this"""
+            r = np.asarray(r)
+            idx = np.round(
+                ((r - taper_r_min) / (1 - taper_r_min)) * (amps.size - 1))
+            values = np.asarray(amps[idx.astype(np.int)])
+            values[r < taper_r_min] = 1.0
+            return values
+            # return 1.0
+
+        tel = SKA1_low_analysis(name + '_r08')
+        tel.station_diameter_m = 40
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+
+        # Core
+        core_radius_m = 480
+        sll = -24
+        n_taylor = 10000
+        tel.num_trials = 2
+        tel.trial_timeout_s = 30.0
+
+        # Inner rings
+        num_rings = 5
+        num_per_ring = 17
+        ring_r0 = 580
+        ring_r5 = 1700
+        ring_radii = np.logspace(np.log10(ring_r0),
+                                 np.log10(ring_r5),
+                                 num_rings)
+        print('ring radii   =', ring_radii)
+        print('ring spacing = ', np.diff(ring_radii))
+
+        # Arms
+        # arm_r0 = 1805
+        arm_r0 = ring_r5 + core_radius_m / 2
+        # arm_r1 = 7135
+        arm_r1 = 6400
+
+        # ============== Core
+        tel.seed = 74383209
+        args = dict(amps=taylor_win(n_taylor, sll), taper_r_min=0.30)
+        tel.add_tapered_core(224 + 2, 510,
+                             taper_r_profile, **args)
+        print('final seed =', tel.layouts['tapered_core']['info']['final_seed'])
+        # tel.add_ska1_v5(r_max=500)
+
+        # ============== Rings
+        # TODO(BM) rotate every other ring so radii don't align
+        np.random.seed(1)
+        for i, r in enumerate(ring_radii):
+            # tel.add_ring(num_per_ring, r, delta_theta=(360/(num_per_ring * 2)) * (i%2))
+            tel.add_ring(num_per_ring, r, delta_theta=np.random.randint(low=0,
+                                                                        high=360))
+            # tel.add_ring(num_per_ring, r, delta_theta=0)
+
+        # ============= Spiral arms
+        # tel.add_log_spiral_2(25, arm_r0, arm_r1, 0.515, 3, 'inner_arms', 0)
+        tel.add_log_spiral_3(25, self.start_inner, arm_r0, arm_r1, 0.515,
+                             self.num_arms, self.theta0_deg)
+
         # tel.add_symmetric_log_spiral(25, arm_r0, arm_r1, 0.515, 3,
         #                              'inner_arms', self.delta_theta_deg_inner)
 
@@ -515,17 +627,18 @@ class AnalyseUnwrapV5(object):
 if __name__ == '__main__':
     # ====== Options =========================
     snapshot = True
-    out_dir = b'TEMP_results_0h' if snapshot else b'TEMP_results_4h'
+    root = 'TEMP_results_v2'
+    out_dir = b'%s_0h' % root if snapshot else b'%s_4h' % root
     remove_existing_results = False
     r_values = [8]  # List of radii to unpack to (or None for all)
     enable_metrics = dict(
         #layout_plot=dict(xy_lim=50e3, plot_radii=[0.5e3, 6.4e3, 40e3]),
         # layout_plot=True,
-        layout_plot=dict(show_decorations=True, xy_lim=1.7e3, plot_radii=[500, 1.7e3, 6.4e3]),
+        layout_plot=dict(show_decorations=True, xy_lim=1e3, plot_radii=[500, 1.7e3, 6.4e3]),
         layout_matlab=False,
         layout_pickle=False,
-        layout_enu=False,
-        layout_iantconfig=False,
+        layout_enu=True,
+        layout_iantconfig=True,
         cable_length_1=False,
         cable_length_2=False,
         cable_length_3=False,
@@ -556,24 +669,23 @@ if __name__ == '__main__':
     # unwrap_v5.model04(add_core=True, r_values=r_values)
     # unwrap_v5.model05(add_core=True, r_values=r_values)
     # unwrap_v5.model06(add_core=True, r_values=r_values)
-    tel_v6 = unwrap_v5.model07(add_core=True)
-    tel_v5 = analyse_v5(out_dir=out_dir, obs_length_h=obs_length_h,
-                        num_times=num_times, eval_metrics=enable_metrics)
+    # tel_07 = unwrap_v5.model07(add_core=True)
+    tel_08 = unwrap_v5.model08(add_core=True)
+    # tel_v5 = analyse_v5(out_dir=out_dir, obs_length_h=obs_length_h,
+    #                     num_times=num_times, eval_metrics=enable_metrics)
 
-    import matplotlib.pyplot as plt
-
-    x, y, _ = tel_v5.get_coords_enu()
-    fig, ax = plt.subplots(figsize=(8, 8))
-    for xy in zip(x, y):
-        ax.add_artist(plt.Circle(xy, 35/2, filled=False, color='k'))
-    x, y, _ = tel_v6.get_coords_enu()
-
-    plt.show()
-    plt.close(fig)
-
+    # import matplotlib.pyplot as plt
+    # x, y, _ = tel_v5.get_coords_enu()
+    # fig, ax = plt.subplots(figsize=(8, 8))
+    # plt.plot(x, y, 'r+')
+    # x, y, _ = tel_v6.get_coords_enu()
+    # for xy in zip(x, y):
+    #     ax.add_artist(plt.Circle(xy, 35/2, fill=False, color='k'))
+    # plt.show()
+    # plt.close(fig)
 
     # Metrics.compare_cum_hist(join(out_dir), log_axis=False)
     Metrics.compare_hist(join(out_dir), log_axis=True)
-    # Metrics.compare_cum_hist(join(out_dir), log_axis=False)
+    #Metrics.compare_cum_hist(join(out_dir), log_axis=False)
     Metrics.compare_psf_1d(join(out_dir))
     # Metrics.compare_hist_2('TEMP_results')

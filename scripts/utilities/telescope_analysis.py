@@ -529,6 +529,9 @@ class TelescopeAnalysis(telescope.Telescope):
             else:
                 plt.show()
             plt.close(fig)
+            from astropy.io import fits
+            fits.writeto('TEMP_PSF.fits', psf)
+
 
     def eval_cable_length(self, plot=False, plot_filename=None, plot_r=None):
         """Get cable lengths using simple direct links to cluster centres."""
