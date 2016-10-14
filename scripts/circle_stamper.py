@@ -53,15 +53,18 @@ def main2():
     # Randall's points
     radii = [800, 1250, 1700]
     num_in_ring = numpy.array([12, 24, 36])
+    alpha = 0.2
 
     # Odd
+    # radii = [900, 1700]
     radii = [900, 1700]
-    radii = [1000, 1700]
-    num_in_ring = 2 * numpy.array([29, 43])
+    num_in_ring = 2 * numpy.array([27, 45])
+    alpha = 0.1
 
     # Even
     # radii = [900, 1700]
     # num_in_ring = numpy.array([28, 44])
+    # alpha = 0.2
     for i_radius in range(len(radii)):
         current_radius = radii[i_radius]
         delta_theta = 2 * math.pi / num_in_ring[i_radius]
@@ -70,7 +73,7 @@ def main2():
             y = current_radius * math.sin(i * delta_theta)
             ax.add_artist(
                 plt.Circle((x, y), core_radius,
-                           fill=True, color='r', alpha=0.1, lw=0))
+                           fill=True, color='r', alpha=alpha, lw=0))
 
     plot_limit = max_radius * 1.1 + 2 * core_radius
     ax.set_xlim(-plot_limit, plot_limit)
