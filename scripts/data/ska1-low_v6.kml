@@ -1,0 +1,3078 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+<name></name>
+<Placemark>
+<name>Antenna 0</name>
+<Point>
+<coordinates>116.834737,-26.86176265</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 1</name>
+<Point>
+<coordinates>116.8343479,-26.86159644</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 2</name>
+<Point>
+<coordinates>116.835312,-26.86155337</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 3</name>
+<Point>
+<coordinates>116.834763,-26.8612559</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 4</name>
+<Point>
+<coordinates>116.8344671,-26.860949</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 5</name>
+<Point>
+<coordinates>116.8351962,-26.86090596</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 6</name>
+<Point>
+<coordinates>116.8641578,-26.85878638</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 7</name>
+<Point>
+<coordinates>116.8636118,-26.85870573</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 8</name>
+<Point>
+<coordinates>116.8638422,-26.85834256</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 9</name>
+<Point>
+<coordinates>116.8646104,-26.85829023</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 10</name>
+<Point>
+<coordinates>116.8636347,-26.85805442</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 11</name>
+<Point>
+<coordinates>116.864304,-26.85797238</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 12</name>
+<Point>
+<coordinates>116.8672037,-26.90680842</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 13</name>
+<Point>
+<coordinates>116.8667743,-26.90652934</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 14</name>
+<Point>
+<coordinates>116.8662076,-26.9064666</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 15</name>
+<Point>
+<coordinates>116.867125,-26.90629883</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 16</name>
+<Point>
+<coordinates>116.8667425,-26.90614079</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 17</name>
+<Point>
+<coordinates>116.8663362,-26.90612697</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 18</name>
+<Point>
+<coordinates>116.940107,-26.83064115</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 19</name>
+<Point>
+<coordinates>116.939288,-26.83061408</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 20</name>
+<Point>
+<coordinates>116.9397301,-26.83051691</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 21</name>
+<Point>
+<coordinates>116.9393098,-26.83025638</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 22</name>
+<Point>
+<coordinates>116.9399653,-26.83021912</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 23</name>
+<Point>
+<coordinates>116.9396629,-26.83002686</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 24</name>
+<Point>
+<coordinates>116.9922308,-26.79902753</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 25</name>
+<Point>
+<coordinates>116.9916854,-26.79866794</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 26</name>
+<Point>
+<coordinates>116.9920467,-26.79863887</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 27</name>
+<Point>
+<coordinates>116.9926349,-26.79850701</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 28</name>
+<Point>
+<coordinates>116.9919176,-26.79821447</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 29</name>
+<Point>
+<coordinates>116.9925273,-26.79820244</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 30</name>
+<Point>
+<coordinates>117.0158553,-26.69732308</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 31</name>
+<Point>
+<coordinates>117.0155857,-26.69708932</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 32</name>
+<Point>
+<coordinates>117.0162506,-26.69691401</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 33</name>
+<Point>
+<coordinates>117.0156028,-26.69673287</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 34</name>
+<Point>
+<coordinates>117.0159899,-26.69667955</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 35</name>
+<Point>
+<coordinates>117.0151679,-26.69667462</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 36</name>
+<Point>
+<coordinates>117.100829,-26.69055465</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 37</name>
+<Point>
+<coordinates>117.1003891,-26.6903964</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 38</name>
+<Point>
+<coordinates>117.1014387,-26.69031598</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 39</name>
+<Point>
+<coordinates>117.1005957,-26.69008286</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 40</name>
+<Point>
+<coordinates>117.1009833,-26.68998655</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 41</name>
+<Point>
+<coordinates>117.1006047,-26.68975122</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 42</name>
+<Point>
+<coordinates>116.6934695,-26.86364931</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 43</name>
+<Point>
+<coordinates>116.6936478,-26.86332062</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 44</name>
+<Point>
+<coordinates>116.6940414,-26.8632896</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 45</name>
+<Point>
+<coordinates>116.6933203,-26.86314134</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 46</name>
+<Point>
+<coordinates>116.6937033,-26.86286846</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 47</name>
+<Point>
+<coordinates>116.693211,-26.8628041</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 48</name>
+<Point>
+<coordinates>116.6668406,-26.89933803</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 49</name>
+<Point>
+<coordinates>116.6672185,-26.89931543</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 50</name>
+<Point>
+<coordinates>116.6674163,-26.89901224</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 51</name>
+<Point>
+<coordinates>116.6662461,-26.89899685</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 52</name>
+<Point>
+<coordinates>116.6667468,-26.89886652</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 53</name>
+<Point>
+<coordinates>116.6667284,-26.8985372</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 54</name>
+<Point>
+<coordinates>116.6218064,-26.86551445</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 55</name>
+<Point>
+<coordinates>116.6212842,-26.86537575</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 56</name>
+<Point>
+<coordinates>116.6209029,-26.86524551</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 57</name>
+<Point>
+<coordinates>116.6215552,-26.8651459</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 58</name>
+<Point>
+<coordinates>116.6213157,-26.86482903</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 59</name>
+<Point>
+<coordinates>116.6217023,-26.86470894</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 60</name>
+<Point>
+<coordinates>116.6546554,-26.94980009</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 61</name>
+<Point>
+<coordinates>116.6543058,-26.94974251</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 62</name>
+<Point>
+<coordinates>116.6546706,-26.9494506</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 63</name>
+<Point>
+<coordinates>116.6541233,-26.94929655</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 64</name>
+<Point>
+<coordinates>116.6550115,-26.94917777</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 65</name>
+<Point>
+<coordinates>116.6544362,-26.94914638</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 66</name>
+<Point>
+<coordinates>116.6724458,-27.01275791</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 67</name>
+<Point>
+<coordinates>116.672175,-27.01249101</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 68</name>
+<Point>
+<coordinates>116.6726368,-27.01237148</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 69</name>
+<Point>
+<coordinates>116.6730042,-27.01226492</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 70</name>
+<Point>
+<coordinates>116.6721149,-27.0121376</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 71</name>
+<Point>
+<coordinates>116.6726141,-27.01183359</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 72</name>
+<Point>
+<coordinates>116.7350932,-27.064051</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 73</name>
+<Point>
+<coordinates>116.7346521,-27.06377204</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 74</name>
+<Point>
+<coordinates>116.7350836,-27.06373297</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 75</name>
+<Point>
+<coordinates>116.7355048,-27.06359146</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 76</name>
+<Point>
+<coordinates>116.7345242,-27.06347706</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 77</name>
+<Point>
+<coordinates>116.7350736,-27.06318188</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 78</name>
+<Point>
+<coordinates>116.7249639,-27.1277451</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 79</name>
+<Point>
+<coordinates>116.7244788,-27.12761172</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 80</name>
+<Point>
+<coordinates>116.7253562,-27.12752396</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 81</name>
+<Point>
+<coordinates>116.72481,-27.12735838</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 82</name>
+<Point>
+<coordinates>116.7243436,-27.12729381</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 83</name>
+<Point>
+<coordinates>116.7250609,-27.12713489</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 84</name>
+<Point>
+<coordinates>116.7629117,-26.75105893</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 85</name>
+<Point>
+<coordinates>116.7625575,-26.75091742</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 86</name>
+<Point>
+<coordinates>116.7622003,-26.75086269</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 87</name>
+<Point>
+<coordinates>116.7629698,-26.75068538</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 88</name>
+<Point>
+<coordinates>116.7626113,-26.7505664</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 89</name>
+<Point>
+<coordinates>116.7623293,-26.75031413</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 90</name>
+<Point>
+<coordinates>116.8051831,-26.72196954</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 91</name>
+<Point>
+<coordinates>116.804825,-26.72182196</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 92</name>
+<Point>
+<coordinates>116.8052278,-26.72161204</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 93</name>
+<Point>
+<coordinates>116.8048879,-26.72149799</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 94</name>
+<Point>
+<coordinates>116.8056073,-26.72145067</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 95</name>
+<Point>
+<coordinates>116.8051392,-26.7210817</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 96</name>
+<Point>
+<coordinates>116.7246455,-26.71301029</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 97</name>
+<Point>
+<coordinates>116.7254415,-26.71294601</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 98</name>
+<Point>
+<coordinates>116.7249871,-26.71276996</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 99</name>
+<Point>
+<coordinates>116.7253592,-26.71246997</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 100</name>
+<Point>
+<coordinates>116.7244722,-26.71244078</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 101</name>
+<Point>
+<coordinates>116.7250109,-26.71240162</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 102</name>
+<Point>
+<coordinates>116.6800136,-26.68502194</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 103</name>
+<Point>
+<coordinates>116.68042,-26.68492442</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 104</name>
+<Point>
+<coordinates>116.6797942,-26.68475295</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 105</name>
+<Point>
+<coordinates>116.6802073,-26.68455895</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 106</name>
+<Point>
+<coordinates>116.6798236,-26.68435075</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 107</name>
+<Point>
+<coordinates>116.6802394,-26.68422371</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 108</name>
+<Point>
+<coordinates>116.6251835,-26.66182297</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 109</name>
+<Point>
+<coordinates>116.6254968,-26.66167166</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 110</name>
+<Point>
+<coordinates>116.6252045,-26.66138529</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 111</name>
+<Point>
+<coordinates>116.6248273,-26.66136125</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 112</name>
+<Point>
+<coordinates>116.6254442,-26.6610729</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 113</name>
+<Point>
+<coordinates>116.624883,-26.66097569</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 114</name>
+<Point>
+<coordinates>116.5451252,-26.70516682</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 115</name>
+<Point>
+<coordinates>116.5456485,-26.70502359</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 116</name>
+<Point>
+<coordinates>116.5447999,-26.70481708</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 117</name>
+<Point>
+<coordinates>116.545211,-26.70474727</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 118</name>
+<Point>
+<coordinates>116.5455289,-26.70460178</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 119</name>
+<Point>
+<coordinates>116.5448255,-26.70440634</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 120</name>
+<Point>
+<coordinates>116.4524529,-26.60137603</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 121</name>
+<Point>
+<coordinates>116.4531277,-26.60115535</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 122</name>
+<Point>
+<coordinates>116.4525616,-26.60097952</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 123</name>
+<Point>
+<coordinates>116.4530302,-26.60081559</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 124</name>
+<Point>
+<coordinates>116.4522037,-26.60076504</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 125</name>
+<Point>
+<coordinates>116.4525903,-26.60061774</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 126</name>
+<Point>
+<coordinates>116.7487056,-26.83071613</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 127</name>
+<Point>
+<coordinates>116.7521821,-26.83541352</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 128</name>
+<Point>
+<coordinates>116.7573157,-26.83866691</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 129</name>
+<Point>
+<coordinates>116.7634128,-26.84003677</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 130</name>
+<Point>
+<coordinates>116.7696499,-26.83933804</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 131</name>
+<Point>
+<coordinates>116.7751841,-26.8366651</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 132</name>
+<Point>
+<coordinates>116.779268,-26.83237908</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 133</name>
+<Point>
+<coordinates>116.78135,-26.82705897</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 134</name>
+<Point>
+<coordinates>116.7811492,-26.82142336</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 135</name>
+<Point>
+<coordinates>116.778693,-26.81623338</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 136</name>
+<Point>
+<coordinates>116.7743134,-26.81218984</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 137</name>
+<Point>
+<coordinates>116.7686018,-26.80983872</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 138</name>
+<Point>
+<coordinates>116.7623295,-26.80949743</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 139</name>
+<Point>
+<coordinates>116.7563432,-26.81121205</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 140</name>
+<Point>
+<coordinates>116.7514512,-26.8147511</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 141</name>
+<Point>
+<coordinates>116.748314,-26.81963675</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 142</name>
+<Point>
+<coordinates>116.7473556,-26.82520928</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 143</name>
+<Point>
+<coordinates>116.7610651,-26.8360485</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 144</name>
+<Point>
+<coordinates>116.7658545,-26.83638002</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 145</name>
+<Point>
+<coordinates>116.770454,-26.83513692</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 146</name>
+<Point>
+<coordinates>116.7742421,-26.83248713</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 147</name>
+<Point>
+<coordinates>116.7767072,-26.8287886</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 148</name>
+<Point>
+<coordinates>116.7775165,-26.8245409</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 149</name>
+<Point>
+<coordinates>116.7765609,-26.82031775</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 150</name>
+<Point>
+<coordinates>116.7739695,-26.81668947</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 151</name>
+<Point>
+<coordinates>116.7700926,-26.81414601</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 152</name>
+<Point>
+<coordinates>116.7654535,-26.81303078</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 153</name>
+<Point>
+<coordinates>116.7606787,-26.81349438</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 154</name>
+<Point>
+<coordinates>116.7564128,-26.8154742</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 155</name>
+<Point>
+<coordinates>116.7532319,-26.81870293</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 156</name>
+<Point>
+<coordinates>116.7515656,-26.8227446</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 157</name>
+<Point>
+<coordinates>116.7516391,-26.82705339</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 158</name>
+<Point>
+<coordinates>116.7534426,-26.8310474</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 159</name>
+<Point>
+<coordinates>116.7567328,-26.83418715</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 160</name>
+<Point>
+<coordinates>116.7675347,-26.81619885</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 161</name>
+<Point>
+<coordinates>116.7638947,-26.81577403</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 162</name>
+<Point>
+<coordinates>116.7603295,-26.8165576</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 163</name>
+<Point>
+<coordinates>116.7573204,-26.81844376</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 164</name>
+<Point>
+<coordinates>116.7552739,-26.82117782</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 165</name>
+<Point>
+<coordinates>116.7544662,-26.82439058</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 166</name>
+<Point>
+<coordinates>116.7550067,-26.82764814</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 167</name>
+<Point>
+<coordinates>116.7568223,-26.83051056</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 168</name>
+<Point>
+<coordinates>116.7596681,-26.83259119</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 169</name>
+<Point>
+<coordinates>116.7631595,-26.833609</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 170</name>
+<Point>
+<coordinates>116.7668251,-26.83342649</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 171</name>
+<Point>
+<coordinates>116.7701695,-26.83206832</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 172</name>
+<Point>
+<coordinates>116.7727412,-26.82971795</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 173</name>
+<Point>
+<coordinates>116.7741926,-26.82669286</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 174</name>
+<Point>
+<coordinates>116.774328,-26.82340165</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 175</name>
+<Point>
+<coordinates>116.7731291,-26.8202888</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 176</name>
+<Point>
+<coordinates>116.7707579,-26.81777471</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 177</name>
+<Point>
+<coordinates>116.7600692,-26.83033255</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 178</name>
+<Point>
+<coordinates>116.762624,-26.8313729</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 179</name>
+<Point>
+<coordinates>116.7654253,-26.83151496</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 180</name>
+<Point>
+<coordinates>116.7680945,-26.83073955</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 181</name>
+<Point>
+<coordinates>116.7702713,-26.82915142</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 182</name>
+<Point>
+<coordinates>116.7716615,-26.82696507</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 183</name>
+<Point>
+<coordinates>116.7720774,-26.82447581</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 184</name>
+<Point>
+<coordinates>116.771463,-26.82201984</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 185</name>
+<Point>
+<coordinates>116.7699013,-26.81992883</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 186</name>
+<Point>
+<coordinates>116.7676032,-26.81848516</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 187</name>
+<Point>
+<coordinates>116.764879,-26.81788378</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 188</name>
+<Point>
+<coordinates>116.7620967,-26.8182059</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 189</name>
+<Point>
+<coordinates>116.7596319,-26.81940802</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 190</name>
+<Point>
+<coordinates>116.7578175,-26.82132781</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 191</name>
+<Point>
+<coordinates>116.7568986,-26.82370602</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 192</name>
+<Point>
+<coordinates>116.7569992,-26.82622148</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 193</name>
+<Point>
+<coordinates>116.7581059,-26.82853446</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 194</name>
+<Point>
+<coordinates>116.7691077,-26.82157173</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 195</name>
+<Point>
+<coordinates>116.7675247,-26.82027431</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 196</name>
+<Point>
+<coordinates>116.7655261,-26.81957757</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 197</name>
+<Point>
+<coordinates>116.763382,-26.8195756</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 198</name>
+<Point>
+<coordinates>116.7613819,-26.82026865</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 199</name>
+<Point>
+<coordinates>116.7597959,-26.82156315</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 200</name>
+<Point>
+<coordinates>116.7588381,-26.82328428</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 201</name>
+<Point>
+<coordinates>116.758638,-26.8251996</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 202</name>
+<Point>
+<coordinates>116.7592226,-26.82705044</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 203</name>
+<Point>
+<coordinates>116.7605129,-26.82858683</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 204</name>
+<Point>
+<coordinates>116.7623349,-26.82960126</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 205</name>
+<Point>
+<coordinates>116.7644422,-26.8299567</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 206</name>
+<Point>
+<coordinates>116.7665504,-26.82960514</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 207</name>
+<Point>
+<coordinates>116.7683746,-26.82859407</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 208</name>
+<Point>
+<coordinates>116.7696685,-26.82706006</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 209</name>
+<Point>
+<coordinates>116.7702573,-26.8252103</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 210</name>
+<Point>
+<coordinates>116.7700616,-26.82329462</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 211</name>
+<Point>
+<coordinates>116.7656959,-26.82616213</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 212</name>
+<Point>
+<coordinates>116.7638444,-26.82390208</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 213</name>
+<Point>
+<coordinates>116.7652199,-26.82526649</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 214</name>
+<Point>
+<coordinates>116.7631025,-26.82522622</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 215</name>
+<Point>
+<coordinates>116.7647773,-26.8246256</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 216</name>
+<Point>
+<coordinates>116.7642328,-26.82304955</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 217</name>
+<Point>
+<coordinates>116.7642587,-26.82409112</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 218</name>
+<Point>
+<coordinates>116.7643703,-26.82511158</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 219</name>
+<Point>
+<coordinates>116.7655744,-26.82412009</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 220</name>
+<Point>
+<coordinates>116.7629315,-26.82423299</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 221</name>
+<Point>
+<coordinates>116.7634497,-26.82421895</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 222</name>
+<Point>
+<coordinates>116.7660855,-26.82346334</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 223</name>
+<Point>
+<coordinates>116.764434,-26.82567182</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 224</name>
+<Point>
+<coordinates>116.7648241,-26.82542328</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 225</name>
+<Point>
+<coordinates>116.7639977,-26.82458089</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 226</name>
+<Point>
+<coordinates>116.76235,-26.82468264</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 227</name>
+<Point>
+<coordinates>116.7648536,-26.82389246</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 228</name>
+<Point>
+<coordinates>116.7660333,-26.82406202</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 229</name>
+<Point>
+<coordinates>116.7639692,-26.82518608</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 230</name>
+<Point>
+<coordinates>116.7649743,-26.8249436</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 231</name>
+<Point>
+<coordinates>116.7661303,-26.82456892</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 232</name>
+<Point>
+<coordinates>116.7664076,-26.82523075</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 233</name>
+<Point>
+<coordinates>116.7652657,-26.82572229</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 234</name>
+<Point>
+<coordinates>116.7639449,-26.82339374</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 235</name>
+<Point>
+<coordinates>116.7655391,-26.82334585</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 236</name>
+<Point>
+<coordinates>116.7635051,-26.82313511</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 237</name>
+<Point>
+<coordinates>116.7645575,-26.82352794</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 238</name>
+<Point>
+<coordinates>116.7647429,-26.82638202</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 239</name>
+<Point>
+<coordinates>116.7639194,-26.82581751</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 240</name>
+<Point>
+<coordinates>116.7651615,-26.8235747</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 241</name>
+<Point>
+<coordinates>116.7655796,-26.82548882</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 242</name>
+<Point>
+<coordinates>116.7651775,-26.8229872</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 243</name>
+<Point>
+<coordinates>116.7637741,-26.82626328</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 244</name>
+<Point>
+<coordinates>116.7664875,-26.82408735</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 245</name>
+<Point>
+<coordinates>116.7635732,-26.82539742</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 246</name>
+<Point>
+<coordinates>116.7629533,-26.82581547</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 247</name>
+<Point>
+<coordinates>116.7652621,-26.82465247</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 248</name>
+<Point>
+<coordinates>116.763197,-26.82474328</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 249</name>
+<Point>
+<coordinates>116.7651991,-26.82641603</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 250</name>
+<Point>
+<coordinates>116.762365,-26.82416394</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 251</name>
+<Point>
+<coordinates>116.7635821,-26.82456678</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 252</name>
+<Point>
+<coordinates>116.7665961,-26.82445807</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 253</name>
+<Point>
+<coordinates>116.7623279,-26.82532</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 254</name>
+<Point>
+<coordinates>116.7650416,-26.82433314</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 255</name>
+<Point>
+<coordinates>116.7637493,-26.82664257</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 256</name>
+<Point>
+<coordinates>116.7626395,-26.82374404</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 257</name>
+<Point>
+<coordinates>116.7661076,-26.8259025</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 258</name>
+<Point>
+<coordinates>116.7626087,-26.82497719</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 259</name>
+<Point>
+<coordinates>116.7645825,-26.82273373</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 260</name>
+<Point>
+<coordinates>116.7664695,-26.82569579</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 261</name>
+<Point>
+<coordinates>116.7648189,-26.8232324</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 262</name>
+<Point>
+<coordinates>116.7642184,-26.82614823</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 263</name>
+<Point>
+<coordinates>116.7631868,-26.82369673</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 264</name>
+<Point>
+<coordinates>116.7656619,-26.82448297</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 265</name>
+<Point>
+<coordinates>116.7667313,-26.82487753</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 266</name>
+<Point>
+<coordinates>116.7627309,-26.82551227</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 267</name>
+<Point>
+<coordinates>116.7648979,-26.82592941</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 268</name>
+<Point>
+<coordinates>116.7634101,-26.82598422</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 269</name>
+<Point>
+<coordinates>116.764414,-26.82444769</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 270</name>
+<Point>
+<coordinates>116.7658658,-26.82509463</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 271</name>
+<Point>
+<coordinates>116.7629985,-26.82624787</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 272</name>
+<Point>
+<coordinates>116.7633453,-26.8264584</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 273</name>
+<Point>
+<coordinates>116.7635748,-26.8249937</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 274</name>
+<Point>
+<coordinates>116.7630736,-26.82321345</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 275</name>
+<Point>
+<coordinates>116.763844,-26.82278994</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 276</name>
+<Point>
+<coordinates>116.7643541,-26.82669943</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 277</name>
+<Point>
+<coordinates>116.7627885,-26.8246428</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 278</name>
+<Point>
+<coordinates>116.7655856,-26.8229407</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 279</name>
+<Point>
+<coordinates>116.76573,-26.82369721</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 280</name>
+<Point>
+<coordinates>116.7641936,-26.82368477</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 281</name>
+<Point>
+<coordinates>116.7660719,-26.82551409</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 282</name>
+<Point>
+<coordinates>116.7664051,-26.82368991</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 283</name>
+<Point>
+<coordinates>116.7648915,-26.82674109</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 284</name>
+<Point>
+<coordinates>116.7625325,-26.82582826</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 285</name>
+<Point>
+<coordinates>116.7654736,-26.82497225</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 286</name>
+<Point>
+<coordinates>116.7666724,-26.8263833</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 287</name>
+<Point>
+<coordinates>116.7667323,-26.82676355</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 288</name>
+<Point>
+<coordinates>116.7622904,-26.82229899</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 289</name>
+<Point>
+<coordinates>116.765972,-26.826839</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 290</name>
+<Point>
+<coordinates>116.7612261,-26.82372357</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 291</name>
+<Point>
+<coordinates>116.7653602,-26.82771786</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 292</name>
+<Point>
+<coordinates>116.7629317,-26.82694292</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 293</name>
+<Point>
+<coordinates>116.7676874,-26.82328829</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 294</name>
+<Point>
+<coordinates>116.7625644,-26.82669249</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 295</name>
+<Point>
+<coordinates>116.7667464,-26.82291964</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 296</name>
+<Point>
+<coordinates>116.7634749,-26.82719424</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 297</name>
+<Point>
+<coordinates>116.761812,-26.82557159</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 298</name>
+<Point>
+<coordinates>116.7650765,-26.82726871</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 299</name>
+<Point>
+<coordinates>116.7627641,-26.82259065</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 300</name>
+<Point>
+<coordinates>116.7611171,-26.82415185</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 301</name>
+<Point>
+<coordinates>116.7625562,-26.82717255</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 302</name>
+<Point>
+<coordinates>116.7613688,-26.82453504</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 303</name>
+<Point>
+<coordinates>116.7630783,-26.82180883</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 304</name>
+<Point>
+<coordinates>116.7676562,-26.82601498</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 305</name>
+<Point>
+<coordinates>116.7618341,-26.82409023</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 306</name>
+<Point>
+<coordinates>116.7615063,-26.82307081</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 307</name>
+<Point>
+<coordinates>116.7655319,-26.82243768</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 308</name>
+<Point>
+<coordinates>116.7674813,-26.82421677</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 309</name>
+<Point>
+<coordinates>116.7658067,-26.82737004</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 310</name>
+<Point>
+<coordinates>116.7657743,-26.82652234</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 311</name>
+<Point>
+<coordinates>116.7637154,-26.82186055</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 312</name>
+<Point>
+<coordinates>116.7632722,-26.82248305</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 313</name>
+<Point>
+<coordinates>116.7672443,-26.82577807</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 314</name>
+<Point>
+<coordinates>116.7663785,-26.8222438</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 315</name>
+<Point>
+<coordinates>116.7639572,-26.82233733</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 316</name>
+<Point>
+<coordinates>116.7617887,-26.82271556</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 317</name>
+<Point>
+<coordinates>116.7672322,-26.82373648</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 318</name>
+<Point>
+<coordinates>116.7619552,-26.82510197</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 319</name>
+<Point>
+<coordinates>116.766025,-26.8220672</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 320</name>
+<Point>
+<coordinates>116.7650688,-26.82202391</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 321</name>
+<Point>
+<coordinates>116.7623618,-26.82616532</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 322</name>
+<Point>
+<coordinates>116.764569,-26.82726582</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 323</name>
+<Point>
+<coordinates>116.7632117,-26.82754169</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 324</name>
+<Point>
+<coordinates>116.7619306,-26.82322368</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 325</name>
+<Point>
+<coordinates>116.7612722,-26.82592916</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 326</name>
+<Point>
+<coordinates>116.7625916,-26.82337129</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 327</name>
+<Point>
+<coordinates>116.7662543,-26.82643736</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 328</name>
+<Point>
+<coordinates>116.7642128,-26.82162727</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 329</name>
+<Point>
+<coordinates>116.7670239,-26.82321699</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 330</name>
+<Point>
+<coordinates>116.7668953,-26.82544012</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 331</name>
+<Point>
+<coordinates>116.7617877,-26.82359653</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 332</name>
+<Point>
+<coordinates>116.7645957,-26.82200787</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 333</name>
+<Point>
+<coordinates>116.7664847,-26.82324162</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 334</name>
+<Point>
+<coordinates>116.7676787,-26.82483275</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 335</name>
+<Point>
+<coordinates>116.7621427,-26.82679528</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 336</name>
+<Point>
+<coordinates>116.76728,-26.82637699</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 337</name>
+<Point>
+<coordinates>116.76167,-26.82676571</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 338</name>
+<Point>
+<coordinates>116.7619853,-26.82645224</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 339</name>
+<Point>
+<coordinates>116.7613319,-26.82551082</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 340</name>
+<Point>
+<coordinates>116.7639868,-26.82754237</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 341</name>
+<Point>
+<coordinates>116.7670361,-26.82407189</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 342</name>
+<Point>
+<coordinates>116.7663923,-26.8270072</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 343</name>
+<Point>
+<coordinates>116.7671616,-26.82270323</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 344</name>
+<Point>
+<coordinates>116.765508,-26.82189009</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 345</name>
+<Point>
+<coordinates>116.7612425,-26.8251259</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 346</name>
+<Point>
+<coordinates>116.7679584,-26.82542389</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 347</name>
+<Point>
+<coordinates>116.7623745,-26.82276627</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 348</name>
+<Point>
+<coordinates>116.7647477,-26.82150614</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 349</name>
+<Point>
+<coordinates>116.7629329,-26.82224217</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 350</name>
+<Point>
+<coordinates>116.7619677,-26.82606404</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 351</name>
+<Point>
+<coordinates>116.7671585,-26.82679451</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 352</name>
+<Point>
+<coordinates>116.7642101,-26.8270993</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 353</name>
+<Point>
+<coordinates>116.7663979,-26.82737195</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 354</name>
+<Point>
+<coordinates>116.7678476,-26.8243953</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 355</name>
+<Point>
+<coordinates>116.7669699,-26.82607546</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 356</name>
+<Point>
+<coordinates>116.766436,-26.82262022</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 357</name>
+<Point>
+<coordinates>116.7673229,-26.82462112</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 358</name>
+<Point>
+<coordinates>116.7644017,-26.82236807</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 359</name>
+<Point>
+<coordinates>116.7667764,-26.82242357</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 360</name>
+<Point>
+<coordinates>116.7668133,-26.82360228</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 361</name>
+<Point>
+<coordinates>116.7608895,-26.82448039</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 362</name>
+<Point>
+<coordinates>116.7607716,-26.82561331</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 363</name>
+<Point>
+<coordinates>116.7692363,-26.82537137</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 364</name>
+<Point>
+<coordinates>116.7600421,-26.82595094</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 365</name>
+<Point>
+<coordinates>116.7651875,-26.82067366</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 366</name>
+<Point>
+<coordinates>116.7654471,-26.82851033</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 367</name>
+<Point>
+<coordinates>116.7625148,-26.82829217</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 368</name>
+<Point>
+<coordinates>116.7639783,-26.82837847</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 369</name>
+<Point>
+<coordinates>116.7689187,-26.82619805</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 370</name>
+<Point>
+<coordinates>116.7605068,-26.82665012</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 371</name>
+<Point>
+<coordinates>116.7639656,-26.82042955</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 372</name>
+<Point>
+<coordinates>116.761501,-26.82242644</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 373</name>
+<Point>
+<coordinates>116.7681193,-26.8270427</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 374</name>
+<Point>
+<coordinates>116.7668498,-26.82813455</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 375</name>
+<Point>
+<coordinates>116.7692076,-26.82456854</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 376</name>
+<Point>
+<coordinates>116.7654809,-26.82094254</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 377</name>
+<Point>
+<coordinates>116.7661431,-26.82772179</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 378</name>
+<Point>
+<coordinates>116.7606019,-26.82358528</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 379</name>
+<Point>
+<coordinates>116.7682524,-26.82609241</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 380</name>
+<Point>
+<coordinates>116.7604633,-26.82318797</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 381</name>
+<Point>
+<coordinates>116.7664429,-26.82796436</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 382</name>
+<Point>
+<coordinates>116.7660164,-26.82819704</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 383</name>
+<Point>
+<coordinates>116.7645729,-26.82905447</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 384</name>
+<Point>
+<coordinates>116.7675314,-26.8272293</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 385</name>
+<Point>
+<coordinates>116.7624586,-26.82102651</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 386</name>
+<Point>
+<coordinates>116.7608847,-26.82265242</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 387</name>
+<Point>
+<coordinates>116.7632865,-26.82846086</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 388</name>
+<Point>
+<coordinates>116.7607345,-26.8248991</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 389</name>
+<Point>
+<coordinates>116.7644769,-26.82087515</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 390</name>
+<Point>
+<coordinates>116.7681699,-26.82333821</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 391</name>
+<Point>
+<coordinates>116.7682301,-26.82405862</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 392</name>
+<Point>
+<coordinates>116.7609425,-26.82325877</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 393</name>
+<Point>
+<coordinates>116.7670937,-26.82111671</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 394</name>
+<Point>
+<coordinates>116.7620155,-26.82838396</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 395</name>
+<Point>
+<coordinates>116.761514,-26.82714452</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 396</name>
+<Point>
+<coordinates>116.7606783,-26.8240858</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 397</name>
+<Point>
+<coordinates>116.7683888,-26.82562744</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 398</name>
+<Point>
+<coordinates>116.7687784,-26.82469982</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 399</name>
+<Point>
+<coordinates>116.7685575,-26.82320781</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 400</name>
+<Point>
+<coordinates>116.7690802,-26.82405775</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 401</name>
+<Point>
+<coordinates>116.7649354,-26.82816363</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 402</name>
+<Point>
+<coordinates>116.7610518,-26.82753365</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 403</name>
+<Point>
+<coordinates>116.7636056,-26.82064889</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 404</name>
+<Point>
+<coordinates>116.7619803,-26.82774132</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 405</name>
+<Point>
+<coordinates>116.766841,-26.82140473</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 406</name>
+<Point>
+<coordinates>116.7674363,-26.82199448</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 407</name>
+<Point>
+<coordinates>116.7645559,-26.82803094</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 408</name>
+<Point>
+<coordinates>116.7687968,-26.82531355</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 409</name>
+<Point>
+<coordinates>116.7605768,-26.8222711</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 410</name>
+<Point>
+<coordinates>116.7673223,-26.82536053</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 411</name>
+<Point>
+<coordinates>116.7632579,-26.82895034</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 412</name>
+<Point>
+<coordinates>116.7636043,-26.82802599</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 413</name>
+<Point>
+<coordinates>116.7597497,-26.82468815</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 414</name>
+<Point>
+<coordinates>116.7654147,-26.82888176</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 415</name>
+<Point>
+<coordinates>116.7603688,-26.82456628</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 416</name>
+<Point>
+<coordinates>116.7655075,-26.82811287</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 417</name>
+<Point>
+<coordinates>116.7661761,-26.82039503</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 418</name>
+<Point>
+<coordinates>116.7657018,-26.8202479</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 419</name>
+<Point>
+<coordinates>116.766237,-26.82094143</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 420</name>
+<Point>
+<coordinates>116.7658354,-26.82114907</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 421</name>
+<Point>
+<coordinates>116.7658449,-26.82066268</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 422</name>
+<Point>
+<coordinates>116.7665811,-26.82070712</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 423</name>
+<Point>
+<coordinates>116.7594636,-26.82551953</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 424</name>
+<Point>
+<coordinates>116.760274,-26.82553979</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 425</name>
+<Point>
+<coordinates>116.7595995,-26.82505079</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 426</name>
+<Point>
+<coordinates>116.7594016,-26.82601535</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 427</name>
+<Point>
+<coordinates>116.7590858,-26.82572952</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 428</name>
+<Point>
+<coordinates>116.7599512,-26.82528523</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 429</name>
+<Point>
+<coordinates>116.7681086,-26.82825993</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 430</name>
+<Point>
+<coordinates>116.767695,-26.82807374</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 431</name>
+<Point>
+<coordinates>116.7677415,-26.82757413</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 432</name>
+<Point>
+<coordinates>116.7673268,-26.82826665</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 433</name>
+<Point>
+<coordinates>116.7680177,-26.82785018</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 434</name>
+<Point>
+<coordinates>116.7672243,-26.82788292</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 435</name>
+<Point>
+<coordinates>116.7538711,-26.81000821</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 436</name>
+<Point>
+<coordinates>116.7517809,-26.81028127</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 437</name>
+<Point>
+<coordinates>116.7496267,-26.81075126</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 438</name>
+<Point>
+<coordinates>116.7474272,-26.8114327</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 439</name>
+<Point>
+<coordinates>116.7452036,-26.81233907</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 440</name>
+<Point>
+<coordinates>116.7429795,-26.81348262</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 441</name>
+<Point>
+<coordinates>116.7407808,-26.81487405</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 442</name>
+<Point>
+<coordinates>116.738636,-26.81652227</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 443</name>
+<Point>
+<coordinates>116.7365756,-26.81843404</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 444</name>
+<Point>
+<coordinates>116.7346324,-26.82061377</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 445</name>
+<Point>
+<coordinates>116.7328409,-26.82306315</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 446</name>
+<Point>
+<coordinates>116.7312377,-26.82578088</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 447</name>
+<Point>
+<coordinates>116.7298606,-26.8287624</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 448</name>
+<Point>
+<coordinates>116.7287488,-26.83199959</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 449</name>
+<Point>
+<coordinates>116.7279424,-26.8354805</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 450</name>
+<Point>
+<coordinates>116.7274817,-26.83918911</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 451</name>
+<Point>
+<coordinates>116.7274074,-26.84310512</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 452</name>
+<Point>
+<coordinates>116.7277597,-26.84720372</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 453</name>
+<Point>
+<coordinates>116.7285778,-26.85145542</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 454</name>
+<Point>
+<coordinates>116.7298995,-26.85582596</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 455</name>
+<Point>
+<coordinates>116.7317606,-26.86027619</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 456</name>
+<Point>
+<coordinates>116.7341942,-26.86476203</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 457</name>
+<Point>
+<coordinates>116.7372299,-26.86923453</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 458</name>
+<Point>
+<coordinates>116.7408933,-26.87363987</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 459</name>
+<Point>
+<coordinates>116.7452056,-26.87791958</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 460</name>
+<Point>
+<coordinates>116.7559457,-26.84079784</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 461</name>
+<Point>
+<coordinates>116.7573282,-26.8422716</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 462</name>
+<Point>
+<coordinates>116.7589346,-26.84368947</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 463</name>
+<Point>
+<coordinates>116.760769,-26.84502915</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 464</name>
+<Point>
+<coordinates>116.7628329,-26.84626698</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 465</name>
+<Point>
+<coordinates>116.7651255,-26.84737812</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 466</name>
+<Point>
+<coordinates>116.7676431,-26.84833664</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 467</name>
+<Point>
+<coordinates>116.7703793,-26.84911581</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 468</name>
+<Point>
+<coordinates>116.7733239,-26.84968826</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 469</name>
+<Point>
+<coordinates>116.7764638,-26.85002628</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 470</name>
+<Point>
+<coordinates>116.779782,-26.85010207</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 471</name>
+<Point>
+<coordinates>116.7832576,-26.8498881</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 472</name>
+<Point>
+<coordinates>116.7868659,-26.84935742</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 473</name>
+<Point>
+<coordinates>116.7905781,-26.84848407</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 474</name>
+<Point>
+<coordinates>116.7943613,-26.84724346</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 475</name>
+<Point>
+<coordinates>116.7981781,-26.84561282</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 476</name>
+<Point>
+<coordinates>116.8019874,-26.84357163</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 477</name>
+<Point>
+<coordinates>116.8057437,-26.8411021</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 478</name>
+<Point>
+<coordinates>116.8093976,-26.83818965</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 479</name>
+<Point>
+<coordinates>116.8128957,-26.83482344</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 480</name>
+<Point>
+<coordinates>116.8161814,-26.8309968</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 481</name>
+<Point>
+<coordinates>116.8191946,-26.82670782</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 482</name>
+<Point>
+<coordinates>116.8218721,-26.8219598</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 483</name>
+<Point>
+<coordinates>116.8241487,-26.81676176</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 484</name>
+<Point>
+<coordinates>116.8259569,-26.81112889</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 485</name>
+<Point>
+<coordinates>116.784477,-26.82270096</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 486</name>
+<Point>
+<coordinates>116.7851553,-26.82084052</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 487</name>
+<Point>
+<coordinates>116.7856599,-26.81883652</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 488</name>
+<Point>
+<coordinates>116.7859671,-26.81669787</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 489</name>
+<Point>
+<coordinates>116.7860535,-26.81443594</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 490</name>
+<Point>
+<coordinates>116.7858955,-26.8120647</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 491</name>
+<Point>
+<coordinates>116.7854701,-26.80960083</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 492</name>
+<Point>
+<coordinates>116.7847553,-26.80706379</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 493</name>
+<Point>
+<coordinates>116.78373,-26.80447588</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 494</name>
+<Point>
+<coordinates>116.7823746,-26.80186222</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 495</name>
+<Point>
+<coordinates>116.7806716,-26.79925083</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 496</name>
+<Point>
+<coordinates>116.7786055,-26.79667252</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 497</name>
+<Point>
+<coordinates>116.7761638,-26.79416086</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 498</name>
+<Point>
+<coordinates>116.7733368,-26.79175202</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 499</name>
+<Point>
+<coordinates>116.7701185,-26.78948467</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 500</name>
+<Point>
+<coordinates>116.766507,-26.78739974</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 501</name>
+<Point>
+<coordinates>116.7625044,-26.78554016</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 502</name>
+<Point>
+<coordinates>116.758118,-26.7839506</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 503</name>
+<Point>
+<coordinates>116.7533602,-26.7826771</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 504</name>
+<Point>
+<coordinates>116.7482489,-26.78176669</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 505</name>
+<Point>
+<coordinates>116.742808,-26.7812669</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 506</name>
+<Point>
+<coordinates>116.7370677,-26.78122531</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 507</name>
+<Point>
+<coordinates>116.7310647,-26.78168894</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 508</name>
+<Point>
+<coordinates>116.7248427,-26.7827037</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 509</name>
+<Point>
+<coordinates>116.7184523,-26.78431371</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 510</name>
+<Point>
+<coordinates>116.7603847,-26.82724146</coordinates>
+</Point>
+</Placemark>
+<Placemark>
+<name>Antenna 511</name>
+<Point>
+<coordinates>116.760138,-26.82408655</coordinates>
+</Point>
+</Placemark>
+</Document>
+</kml>

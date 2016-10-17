@@ -69,7 +69,6 @@ class Telescope(object):
 
     def add_tapered_core(self, num_stations, r_max_m, taper_func, **kwargs):
         """Add a tapered core"""
-        print(self.trial_timeout_s)
         if self.seed is None:
             self.seed = np.random.randint(1, 1e8)
         try:

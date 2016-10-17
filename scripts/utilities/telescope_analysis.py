@@ -102,7 +102,6 @@ class TelescopeAnalysis(telescope.Telescope):
         if self.uu_m is None:
             self.gen_uvw_coords()
         b_max = self.r_uv_m.max()
-
         grid_size = int(ceil(b_max / self.grid_cell_size_m)) * 2 + \
                     self.station_diameter_m
         if grid_size % 2 == 1:
@@ -187,6 +186,25 @@ class TelescopeAnalysis(telescope.Telescope):
         else:
             return fig
 
+    def plot_uv_scatter(self, filename=None, show=False, plot_radii=[],
+                        xy_lim=None):
+        if self.uu_m is None:
+            self.gen_uvw_coords()
+
+        uu = self.uu_m
+        vv = self.vv_m
+        print('plotting uv scatter ...')
+        fig, ax = plt.subplots(figsize=(8, 8))
+        # ax.plot(uu, vv, '+', color='k', ms=4, alpha=0.2)
+        for xy in zip(uu, vv):
+            ax.add_artist(plt.Circle(xy, self.station_diameter_m / 1.5,
+                                     alpha=0.05, fill=True, lw=0, color='k'))
+        ax.set_xlim(-xy_lim, xy_lim)
+        ax.set_ylim(-xy_lim, xy_lim)
+        fig.savefig(filename)
+        plt.close(fig)
+        print('done')
+
     def uv_hist(self, num_bins=100, b_min=None, b_max=None, make_plot=True,
                 log_bins=True, bar=False, filename=None):
         if self.uu_m is None:
@@ -215,6 +233,41 @@ class TelescopeAnalysis(telescope.Telescope):
                 ax.set_xscale('log')
             ax.set_xlabel('baseline length (m)')
             ax.set_ylabel('Number of baselines per bin')
+            ax.set_xlim(0, b_max * 1.1)
+            ax.grid()
+            if filename is not None:
+                fig.savefig(filename)
+            else:
+                plt.show()
+            plt.close(fig)
+
+    def layout_hist(self, num_bins=100, b_min=None, b_max=None, make_plot=True,
+                    log_bins=True, bar=False, filename=None):
+        x, y, z = self.get_coords_enu()
+        r = (x**2 + y**2)**0.5
+        b_max = r.max() if b_max is None else b_max
+        b_min = r.min() if b_min is None else b_min
+
+        if log_bins:
+            bins = np.logspace(log10(b_min), log10(b_max), num_bins + 1)
+        else:
+            bins = np.linspace(b_min, b_max, num_bins + 1)
+
+        self.hist_n, _ = np.histogram(r, bins=bins, density=False)
+        self.hist_x = (bins[1:] + bins[:-1]) / 2
+        self.hist_bins = bins
+
+        if make_plot:
+            fig, ax = plt.subplots(figsize=(8, 8))
+            if bar:
+                ax.bar(self.hist_x, self.hist_n, width=np.diff(bins),
+                       alpha=0.8, align='center', lw=0, color='0.2')
+            else:
+                ax.plot(self.hist_x, self.hist_n)
+            if log_bins:
+                ax.set_xscale('log')
+            ax.set_xlabel('Distance from core (m)')
+            ax.set_ylabel('Number of stations per bin')
             ax.set_xlim(0, b_max * 1.1)
             ax.grid()
             if filename is not None:
@@ -471,12 +524,12 @@ class TelescopeAnalysis(telescope.Telescope):
             psf_1d = self.psf.flatten()[idx_sorted]
             psf_hwhm = (wavelength / (r_lm[-1] * 2.0)) / 2
 
-            fig, ax = plt.subplots(figsize=(8, 8))
-            ax.plot(r_lm, psf_1d, 'k.', ms=2, alpha=0.1)
-            ax.set_xscale('log')
-            ax.set_yscale('log')
-            fig.savefig('TEST_psf1d.png')
-            plt.close(fig)
+            # fig, ax = plt.subplots(figsize=(8, 8))
+            # ax.plot(r_lm, psf_1d, 'k.', ms=2, alpha=0.1)
+            # ax.set_xscale('log')
+            # ax.set_yscale('log')
+            # fig.savefig('TEST_psf1d.png')
+            # plt.close(fig)
 
             psf_1d_mean = np.zeros(num_bins)
             psf_1d_abs_mean = np.zeros(num_bins)
@@ -529,8 +582,9 @@ class TelescopeAnalysis(telescope.Telescope):
             else:
                 plt.show()
             plt.close(fig)
-            from astropy.io import fits
-            fits.writeto('TEMP_PSF.fits', psf)
+
+            # from astropy.io import fits
+            # fits.writeto('TEMP_PSF.fits', psf)
 
 
     def eval_cable_length(self, plot=False, plot_filename=None, plot_r=None):
@@ -854,6 +908,9 @@ class TelescopeAnalysis(telescope.Telescope):
 class SKA1_low_analysis(TelescopeAnalysis):
     def __init__(self, name=''):
         TelescopeAnalysis.__init__(self, name)
-        self.lon_deg = 116.63128900
-        self.lat_deg = -26.69702400
+        # Value of array centre from SKA-TEL-SKO-0000422 rev 02 (2016-05-31)
+        self.lon_deg = 116.7644482
+        self.lat_deg = -26.82472208
+        # self.lon_deg = 0
+        # self.lat_deg = 89.9
 

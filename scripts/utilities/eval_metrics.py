@@ -24,6 +24,14 @@ def round_down(x):
     return int(10**floor(log10(x)))
 
 
+def _get_option(options, name, default):
+    value = default
+    if isinstance(options, dict):
+        if name in options:
+            value = options[name]
+    return value
+
+
 class Metrics(object):
     def __init__(self, out_dir):
         if not isdir(out_dir):
@@ -72,25 +80,29 @@ class Metrics(object):
         self.tel_r.append(tel_r)
 
         # -------- ENU layout file --------------------------------------------
-        if metrics_list['layout_enu']:
+        _key = 'layout_end'
+        if _key in metrics_list and metrics_list[_key]:
             tel.save_enu(join(self.out_dir, '%s_enu.txt' % tel.name))
 
         # -------- MATLAB layout file ----------------------------------------
-        if metrics_list['layout_matlab']:
+        _key = 'layout_matlab'
+        if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s_layout.mat' % tel.name)
             Metrics.__write_matlab_clusters(tel, filename)
 
         # -------- Layout pickle file -----------------------------------------
-        if metrics_list['layout_pickle']:
+        _key = 'layout_pickle'
+        if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s_layout.p' % tel.name)
             tel.save_pickle(filename)
 
         # -------- Layout plot ------------------------------------------------
-        if metrics_list['layout_plot']:
+        _key = 'layout_plot'
+        if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s_stations.png' % tel.name)
             args = dict()
-            if isinstance(metrics_list['layout_plot'], dict):
-                args = metrics_list['layout_plot']
+            if isinstance(metrics_list[_key], dict):
+                args = metrics_list[_key]
             if 'xy_lim' not in args:
                 args['xy_lim'] = 7.5e3
             if 'show_decorations' not in args:
@@ -98,74 +110,136 @@ class Metrics(object):
             tel.plot_layout(filename=filename, **args)
 
         # -------- iantconfig files -------------------------------------------
-        if metrics_list['layout_iantconfig']:
+        _key = 'layout_iantconfig'
+        if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s' % tel.name)
             tel.save_iantconfig(filename)
 
         # -------- Simplistic cluster cable length assignment -----------------
-        if metrics_list['cable_length_1']:
+        _key = 'cable_length_1'
+        if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s_cables_1.png' % tel.name)
             l_ = tel.eval_cable_length(plot=True, plot_filename=filename,
                                        plot_r=7.5e3)
             self.cable_length[tel_r] = l_
 
         # -------- Cluster cable length with attempt at better clustering -----
-        if metrics_list['cable_length_2']:
+        _key = 'cable_length_2'
+        if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s_cables_2.png' % tel.name)
             l_ = tel.eval_cable_length_2(plot=True, plot_filename=filename,
                                          plot_r=7.5e3)
             self.cable_length_2[tel_r] = l_
 
         # -------- Genetic algorithm for clustering ---------------------------
-        if metrics_list['cable_length_3']:
+        _key = 'cable_length_3'
+        if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s_cables.png' % tel.name)
             l_ = tel.eval_cable_length_3(plot_filename=filename, plot_r=7.5e3)
             self.cable_length_3[tel_r] = l_
             # print('  * cable_length = %.2f km' % (l_/1e3))
 
         # -------- Generate and plot the uv grid ------------------------------
-        if metrics_list['uv_grid']:
-            filename = join(self.out_dir, '%s_uv_grid.png' % tel.name)
-            tel.plot_grid(filename, xy_lim=13e3)
+        _key = 'uv_grid'
+        if _key in metrics_list and metrics_list[_key]:
+            args = metrics_list[_key]
+            tel.grid_cell_size_m = _get_option(args, 'grid_cellsize_m',
+                                               tel.station_diameter_m)
+            if 'xy_lim' in args:
+                for xy_lim in args['xy_lim']:
+                    filename = join(self.out_dir, '%s_uv_grid_%03.1fkm.png'
+                                    % (tel.name, xy_lim / 1e3))
+                    tel.plot_grid(filename, xy_lim=xy_lim)
+            else:
+                xy_lim = 13e3
+                filename = join(self.out_dir, '%s_uv_grid_%03.1fkm.png'
+                                % (tel.name, xy_lim / 1e3))
+                tel.plot_grid(filename, xy_lim=xy_lim)
 
-        # -------- Generate and plot the uv histograms ------------------------
-        type = 'uv_hist'
-        if metrics_list[type]:
+        # -------- Generate and plot the uv grid -----------------------------
+        _key = 'uv_scatter'
+        if _key in metrics_list and metrics_list[_key]:
+            filename = join(self.out_dir, '%s_uv_scatter.png' % tel.name)
+            tel.plot_uv_scatter(filename, xy_lim=4e3)
+
+        # -------- Generate and plot the uv histograms (LOG) ------------------
+        _key = 'uv_hist_log'
+        if _key in metrics_list and metrics_list[_key]:
+            args = metrics_list[_key]
+            b_max = _get_option(args, 'b_max', 13e3)
             tel.gen_uvw_coords()
-            num_bins = int((13e3 - tel.station_diameter_m) //
+            num_bins = int((b_max - tel.station_diameter_m) //
                            tel.station_diameter_m)
-            if isinstance(metrics_list[type], dict):
-                if 'num_bins' in metrics_list[type]:
-                    num_bins = metrics_list[type]['num_bins']
+            num_bins = min(num_bins, 200)
+            num_bins = _get_option(args, 'num_bins', num_bins)
+            b_min = _get_option(args, 'b_min', tel.station_diameter_m / 2)
 
             # Log histograms
-            filename = join(self.out_dir, '%s_uv_hist_log.png' % tel.name)
+            filename = join(self.out_dir, '%s_uv_hist_log_%05.1fkm.png' %
+                            (tel.name, b_max / 1e3))
             tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=True,
-                        bar=True, b_min=tel.station_diameter_m / 2,
-                        b_max=13e3)
-            filename = join(self.out_dir, '%s_uv_cum_hist_log.png' % tel.name)
-            tel.uv_cum_hist(filename, log_x=True)
-            self.uv_hist[tel.name] = dict(log=dict())
+                        bar=True, b_min=b_min, b_max=b_max)
+            filename = join(self.out_dir, '%s_uv_cum_hist_log_%05.1fkm.png' %
+                            (tel.name, b_max / 1e3))
+            if _get_option(args, 'cum_hist', False):
+                tel.uv_cum_hist(filename, log_x=True)
+            if not self.uv_hist:
+                self.uv_hist[tel.name] = dict()
             self.uv_hist[tel.name]['log'] = dict(
                 hist_n=tel.hist_n,
                 hist_x=tel.hist_x,
                 hist_bins=tel.hist_bins,
                 cum_hist_n=tel.cum_hist_n)
 
+        # -------- Generate and plot the uv histograms (LINEAR) ---------------
+        _key = 'uv_hist_lin'
+        if _key in metrics_list and metrics_list[_key]:
+            args = metrics_list[_key]
+            b_max = _get_option(args, 'b_max', 13e3)
+            tel.gen_uvw_coords()
+            num_bins = int((b_max - tel.station_diameter_m) //
+                           tel.station_diameter_m)
+            num_bins = min(num_bins, 200)
+            num_bins = _get_option(args, 'num_bins', num_bins)
+            b_min = _get_option(args, 'b_min', tel.station_diameter_m / 2)
+
             # Lin histograms
-            filename = join(self.out_dir, '%s_uv_hist_lin.png' % tel.name)
+            filename = join(self.out_dir, '%s_uv_hist_lin_%05.1fkm.png' %
+                            (tel.name, b_max / 1e3))
             tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=False,
-                        bar=True, b_min=tel.station_diameter_m / 2,
-                        b_max=13e3)
-            filename = join(self.out_dir, '%s_uv_cum_hist_lin.png' % tel.name)
-            tel.uv_cum_hist(filename, log_x=False)
-            self.uv_hist[tel.name]['lin'] = dict(hist_n=tel.hist_n,
-                                                 hist_x=tel.hist_x,
-                                                 hist_bins=tel.hist_bins,
-                                                 cum_hist_n=tel.cum_hist_n)
+                        bar=True, b_min=b_min, b_max=b_max)
+            filename = join(self.out_dir, '%s_uv_cum_hist_lin_%05.1fkm.png' %
+                            (tel.name, b_max / 1e3))
+            if _get_option(args, 'cum_hist', False):
+                tel.uv_cum_hist(filename, log_x=True)
+            if not self.uv_hist:
+                self.uv_hist[tel.name] = dict()
+            self.uv_hist[tel.name]['lin_%05.1fkm' % (b_max / 1e3)] = dict(
+                hist_n=tel.hist_n, hist_x=tel.hist_x, hist_bins=tel.hist_bins,
+                cum_hist_n=tel.cum_hist_n)
+
+        # -------- Generate and plot the uv histograms (LINEAR) ---------------
+        _key = 'layout_hist_lin'
+        if _key in metrics_list and metrics_list[_key]:
+            args = metrics_list[_key]
+            b_max = _get_option(args, 'b_max', 13e3)
+            tel.gen_uvw_coords()
+            num_bins = int((b_max - tel.station_diameter_m) //
+                           tel.station_diameter_m)
+            num_bins = min(num_bins, 200)
+            num_bins = _get_option(args, 'num_bins', num_bins)
+            b_min = _get_option(args, 'b_min', tel.station_diameter_m / 2)
+            filename = join(self.out_dir, '%s_layout_hist_lin_%05.1fkm.png' %
+                            (tel.name, b_max / 1e3))
+            tel.layout_hist(num_bins=num_bins, filename=filename,
+                            log_bins=False, bar=True, b_min=b_min, b_max=b_max)
+            # filename = join(self.out_dir, '%s_layout_cum_hist_lin_%05.1fkm.png' %
+            #                 (tel.name, b_max / 1e3))
+            # tel.layout_cum_hist(filename, log_x=False)
 
         # -------- Generate and plot MST network ------------------------------
-        if metrics_list['mst_network']:
+        _key = 'mst_network'
+        if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s_network.png' % tel.name)
             tel.network_graph()
             tel.plot_network(filename, plot_r=7e3)
@@ -174,18 +248,21 @@ class Metrics(object):
             tel.plot_network_2(filename, plot_r=7e3)
 
         # -------- Generate and plot PSFRMS -----------------------------------
-        if metrics_list['psf_rms']:
+        _key = 'psf_rms'
+        if _key in metrics_list and metrics_list[_key]:
             tel.eval_psf_rms_r(num_bins=20, b_min=500, b_max=10000)
             self.psf_rms[tel.name] = dict()
             self.psf_rms[tel.name]['x'] = tel.psf_rms_r_x
             self.psf_rms[tel.name]['y'] = tel.psf_rms_r
 
         # -------- Generate and plot UVGAP -----------------------------------
-        if metrics_list['uv_gap']:
+        _key = 'uv_gap'
+        if _key in metrics_list and metrics_list[_key]:
             tel.uvgap()
 
         # -------- Generate and plot PSF -----------------------------------
-        if metrics_list['psf']:
+        _key = 'psf'
+        if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s_psf' % tel.name)
             tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
                          fov_deg=5.0, im_size=2048, num_bins=400)
