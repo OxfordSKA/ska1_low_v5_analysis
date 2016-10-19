@@ -80,7 +80,7 @@ class Metrics(object):
         self.tel_r.append(tel_r)
 
         # -------- ENU layout file --------------------------------------------
-        _key = 'layout_end'
+        _key = 'layout_enu'
         if _key in metrics_list and metrics_list[_key]:
             tel.save_enu(join(self.out_dir, '%s_enu.txt' % tel.name))
 
@@ -99,15 +99,16 @@ class Metrics(object):
         # -------- Layout plot ------------------------------------------------
         _key = 'layout_plot'
         if _key in metrics_list and metrics_list[_key]:
-            filename = join(self.out_dir, '%s_stations.png' % tel.name)
-            args = dict()
-            if isinstance(metrics_list[_key], dict):
-                args = metrics_list[_key]
-            if 'xy_lim' not in args:
-                args['xy_lim'] = 7.5e3
-            if 'show_decorations' not in args:
-                args['show_decorations'] = False
-            tel.plot_layout(filename=filename, **args)
+            xy_lims = _get_option(metrics_list[_key], 'xy_lims', list())
+            # metrics_list[_key].pop('xy_lims', None)
+            for xy_lim in xy_lims:
+                filename = join(self.out_dir, '%s_stations_%05.1fkm.png' %
+                                (tel.name, xy_lim / 1e3))
+                tel.plot_layout(filename=filename, xy_lim=xy_lim,
+                                **metrics_list[_key])
+            if not xy_lims:
+                filename = join(self.out_dir, '%s_stations.png' % tel.name)
+                tel.plot_layout(filename=filename, **metrics_list[_key])
 
         # -------- iantconfig files -------------------------------------------
         _key = 'layout_iantconfig'
@@ -170,7 +171,7 @@ class Metrics(object):
             tel.gen_uvw_coords()
             num_bins = int((b_max - tel.station_diameter_m) //
                            tel.station_diameter_m)
-            num_bins = min(num_bins, 200)
+            num_bins = min(num_bins, 500)
             num_bins = _get_option(args, 'num_bins', num_bins)
             b_min = _get_option(args, 'b_min', tel.station_diameter_m / 2)
 
@@ -199,18 +200,20 @@ class Metrics(object):
             tel.gen_uvw_coords()
             num_bins = int((b_max - tel.station_diameter_m) //
                            tel.station_diameter_m)
-            num_bins = min(num_bins, 200)
+            num_bins = min(num_bins, 500)
             num_bins = _get_option(args, 'num_bins', num_bins)
             b_min = _get_option(args, 'b_min', tel.station_diameter_m / 2)
 
             # Lin histograms
             filename = join(self.out_dir, '%s_uv_hist_lin_%05.1fkm.png' %
                             (tel.name, b_max / 1e3))
+            make_plot = _get_option(args, 'make_plot', True)
             tel.uv_hist(num_bins=num_bins, filename=filename, log_bins=False,
-                        bar=True, b_min=b_min, b_max=b_max)
-            filename = join(self.out_dir, '%s_uv_cum_hist_lin_%05.1fkm.png' %
-                            (tel.name, b_max / 1e3))
+                        bar=True, b_min=b_min, b_max=b_max, make_plot=make_plot)
             if _get_option(args, 'cum_hist', False):
+                filename = join(self.out_dir,
+                                '%s_uv_cum_hist_lin_%05.1fkm.png' %
+                                (tel.name, b_max / 1e3))
                 tel.uv_cum_hist(filename, log_x=True)
             if not self.uv_hist:
                 self.uv_hist[tel.name] = dict()
@@ -265,7 +268,7 @@ class Metrics(object):
         if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s_psf' % tel.name)
             tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
-                         fov_deg=5.0, im_size=2048, num_bins=400)
+                         fov_deg=5.0, im_size=2048, num_bins=512)
             self.psf[tel.name] = dict()
             # self.psf[tel.name]['image'] = tel.psf
             self.psf[tel.name]['fov'] = tel.psf_fov_deg

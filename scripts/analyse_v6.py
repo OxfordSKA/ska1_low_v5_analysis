@@ -17,23 +17,25 @@ def analyse_v5(out_dir='TEMP_results', obs_length_h=0, num_times=1,
                eval_metrics=dict()):
     """Generate and analyse reference v5 layout."""
     # -------------- Options --------------------------------------------------
-    name = 'ska1_v5'  # Name of the telescope model (prefix in file names)
-    outer_radius = 6400 + 90
+    name = 'v5_baseline'  # Name of the telescope model (prefix in file names)
+    # outer_radius = 6400 + 90
     # -------------------------------------------------------------------------
     if not isdir(out_dir):
         makedirs(out_dir)
 
     # Current SKA1 V5 design.
     tel = SKA1_low_analysis(name)
-    tel.add_ska1_v5(r_max=outer_radius)
+    # tel.add_ska1_v5(r_max=outer_radius)
+    tel.add_ska1_v5()
     tel.obs_length_h = obs_length_h
     tel.num_times = num_times
     tel.dec_deg = tel.lat_deg
 
     metrics = Metrics(out_dir)
     metrics.analyse_telescope(tel, 0.0, eval_metrics)
-    metrics.save_results(name)
-    return tel
+    # metrics.save_results(name)
+    print(tel.name, tel.num_stations())
+    return tel, metrics
 
 
 class AnalyseUnwrapV5(object):
@@ -125,6 +127,7 @@ class AnalyseUnwrapV5(object):
                 continue
             # Create the telescope model (v5 core & clusters not being replaced)
             tel = self._add_v5_core_clusters(name, i, add_core)
+            tel.add_ska1_v5(r_min=6450)
 
             # Loop over cluster radii we are replacing
             for j in range(i + 1):
@@ -314,8 +317,8 @@ class AnalyseUnwrapV5(object):
 
         # ============== Core
         tel.add_ska1_v5(r_max=500)
-        tel.layouts['ska1_v5']['x'] *= 40/35
-        tel.layouts['ska1_v5']['y'] *= 40/35
+        tel.layouts['ska1_v5']['x'] *= 40 / 35
+        tel.layouts['ska1_v5']['y'] *= 40 / 35
 
         # ============== Rings
         np.random.seed(1)
@@ -450,61 +453,17 @@ class AnalyseUnwrapV5(object):
         metrics.plot_comparisons()
         return tel
 
-    def model09(self, name='model09'):
-        metrics = Metrics(self.out_dir)
-
-        tel = SKA1_low_analysis(name + '_r08')
-        tel.station_diameter_m = 35
-        tel.obs_length_h = self.obs_length_h
-        tel.num_times = self.num_times
-        tel.dec_deg = tel.lat_deg
-        core_radius_m = 500
-        num_stations = 224
-        sll = -35
+    @staticmethod
+    def _add_core_01(tel, num_stations=224, core_radius_m=510, sll=-28):
         n_taylor = 10000
-        tel.num_trials = 2
-        tel.trial_timeout_s = 30.0
-        tel.seed = 74383209
-        args = dict(amps=taylor_win(n_taylor, sll), taper_r_min=0.30)
+        tel.num_trials = 4
+        tel.trial_timeout_s = 45.0
+        tel.seed = 40011245
+        args = dict(amps=taylor_win(n_taylor, sll), taper_r_min=0.0)
         tel.add_tapered_core(num_stations, core_radius_m,
                              AnalyseUnwrapV5._taper_r_profile, **args)
-
-        radii = [800, 1250, 1700]
-        number = [12, 24, 36]
-        for rn in zip(radii, number):
-            tel.add_ring(rn[1], rn[0], 0)
-
-        metrics.analyse_telescope(tel, 0, self.eval_metrics)
-
-        return tel, metrics
-
-    def model10(self, name='model10'):
-        metrics = Metrics(self.out_dir)
-
-        tel = SKA1_low_analysis(name + '_r08')
-        tel.station_diameter_m = 35
-        tel.obs_length_h = self.obs_length_h
-        tel.num_times = self.num_times
-        tel.dec_deg = tel.lat_deg
-        core_radius_m = 500
-        num_stations = 224
-        sll = -35
-        n_taylor = 10000
-        tel.num_trials = 2
-        tel.trial_timeout_s = 30.0
-        tel.seed = 74383209
-        args = dict(amps=taylor_win(n_taylor, sll), taper_r_min=0.30)
-        tel.add_tapered_core(num_stations, core_radius_m,
-                             AnalyseUnwrapV5._taper_r_profile, **args)
-
-        radii = [900, 1700]
-        number = [27, 45]
-        for rn in zip(radii, number):
-            tel.add_ring(rn[1], rn[0], 0)
-
-        metrics.analyse_telescope(tel, 0, self.eval_metrics)
-
-        return tel, metrics
+        # print('seed =', tel.seed)
+        return tel
 
     def core(self, name='core'):
         metrics = Metrics(self.out_dir)
@@ -513,37 +472,258 @@ class AnalyseUnwrapV5(object):
         tel.obs_length_h = self.obs_length_h
         tel.num_times = self.num_times
         tel.dec_deg = tel.lat_deg
-        core_radius_m = 500
-        num_stations = 224
-        sll = -35
-        n_taylor = 10000
-        tel.num_trials = 2
-        tel.trial_timeout_s = 30.0
-        tel.seed = 74383209
-        args = dict(amps=taylor_win(n_taylor, sll), taper_r_min=0.5)
-        tel.add_tapered_core(num_stations, core_radius_m,
-                             AnalyseUnwrapV5._taper_r_profile, **args)
+        tel = self._add_core_01(tel)
         # tel.add_uniform_core(num_stations, core_radius_m)
         metrics.analyse_telescope(tel, 0, self.eval_metrics)
         return tel, metrics
+
+    def model09a(self, name='v6_09a-v5_rw_rings'):
+        """v5 with RandallW 3 ring scheme"""
+        metrics = Metrics(self.out_dir)
+        tel = SKA1_low_analysis(name)
+        tel.station_diameter_m = 35
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+        radii = [800, 1250, 1700]
+        number = [12, 24, 36]
+        for rn in zip(radii, number):
+            tel.add_ring(rn[1], rn[0], 0)
+        tel.add_ska1_v5(r_min=1750)
+        tel.add_ska1_v5(r_max=500)
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        return tel, metrics
+
+    def model09b(self, name='v6_09b-core01_rw_rings_v5'):
+        """new core + RandallW 3 ring scheme + v5 arms"""
+        metrics = Metrics(self.out_dir)
+        tel = SKA1_low_analysis(name)
+        tel.station_diameter_m = 35
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+        tel = self._add_core_01(tel)
+        radii = [800, 1250, 1700]
+        number = [12, 24, 36]
+        for rn in zip(radii, number):
+            tel.add_ring(rn[1], rn[0], 0)
+        tel.add_ska1_v5(r_min=1750)
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        return tel, metrics
+
+    def model09c(self, name='v6_09c-core01_rw_rings_spiral_v5'):
+        """new core + RandallW 3 ring scheme + v5 arms"""
+        metrics = Metrics(self.out_dir)
+        tel = SKA1_low_analysis(name)
+        tel.station_diameter_m = 35
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+        tel = self._add_core_01(tel)
+        radii = [800, 1250, 1700]
+        number = [12, 24, 36]
+        for rn in zip(radii, number):
+            tel.add_ring(rn[1], rn[0], 0)
+        arm_r0, arm_r1 = 1900, 6400
+        tel.add_log_spiral_3(25 + 5, self.start_inner, arm_r0, arm_r1, 0.515,
+                             self.num_arms, self.theta0_deg)
+        # tel.add_ska1_v5(r_min=6450)
+        # tel.add_ska1_v5(r_min=10e3)
+        print(name, tel.num_stations())
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        return tel, metrics
+
+    def model09d(self, name='v6_09d-v5_core_rw_rings_spiral_v5'):
+        """v5 core + RandallW 3 ring scheme + our spiral"""
+        metrics = Metrics(self.out_dir)
+        tel = SKA1_low_analysis(name)
+        tel.station_diameter_m = 35
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+        tel.add_ska1_v5(r_max=500)
+        radii = [800, 1250, 1700]
+        number = [12, 24, 36]
+        for rn in zip(radii, number):
+            tel.add_ring(rn[1], rn[0], 0)
+        arm_r0, arm_r1 = 1900, 6400
+        tel.add_log_spiral_3(25 + 5, self.start_inner, arm_r0, arm_r1, 0.515,
+                             self.num_arms, self.theta0_deg)
+        tel.add_ska1_v5(r_min=6450)
+        # tel.add_ska1_v5(r_min=10e3)
+        print(name, tel.num_stations())
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        return tel, metrics
+
+    def model10(self, name='v6_10-core01_2rings_v5'):
+        """2 ring scheme v5 after 1.7km"""
+        metrics = Metrics(self.out_dir)
+        tel = SKA1_low_analysis(name)
+        tel.station_diameter_m = 35
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+        tel = self._add_core_01(tel)
+        radii = [900, 1700]
+        number = [27, 45]
+        for rn in zip(radii, number):
+            tel.add_ring(rn[1], rn[0], 0)
+        tel.add_ska1_v5(r_min=1750)
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        return tel, metrics
+
+    def model11(self, name='v6_11-core01_3rings_v5'):
+        """altered version of RW 3 ring scheme in an attempt to improve
+        uniform uv coverage. v5 after 1.7km
+        """
+        metrics = Metrics(self.out_dir)
+        tel = SKA1_low_analysis(name)
+        tel.station_diameter_m = 35
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+        tel = self._add_core_01(tel)
+        # radii = [800, 1250, 1700]  # RW values
+        radii = [900, 1200, 1700]
+        number = [12+5, 24+1, 36-6]
+        assert(int(np.sum(number)) == 72)
+        for rn in zip(radii, number):
+            tel.add_ring(rn[1], rn[0], 0)
+        tel.add_ska1_v5(r_min=1750)
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        return tel, metrics
+
+    def model12(self, name='v6_12-core01_3rings_spiral_v5'):
+        """altered version of RW 3 ring scheme in an attempt to improve
+        uniform uv coverage. v5 after 1.7km
+        """
+        metrics = Metrics(self.out_dir)
+        tel = SKA1_low_analysis(name)
+        tel.station_diameter_m = 35
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+        tel = self._add_core_01(tel)
+        # radii = [800, 1250, 1700]  # RW values
+        radii = [900, 1200, 1700]
+        number = [12 + 5, 24 + 1, 36 - 6]
+        assert (int(np.sum(number)) == 72)
+        for rn in zip(radii, number):
+            tel.add_ring(rn[1], rn[0], 0)
+        tel.add_ska1_v5(r_min=6450)
+
+        # ============= Spiral arms
+        arm_r0, arm_r1 = 1800, 6400
+        tel.add_log_spiral_3(25, self.start_inner, arm_r0, arm_r1, 0.515,
+                             self.num_arms, self.theta0_deg)
+        print(tel.num_stations())
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        return tel, metrics
+
+    def model13(self, name='v6_13-core01_3rings_spiral_v5'):
+        """altered version of RW 3 ring scheme in an attempt to improve
+        uniform uv coverage. v5 after 1.7km
+        """
+        metrics = Metrics(self.out_dir)
+        tel = SKA1_low_analysis(name)
+        tel.station_diameter_m = 35
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+        tel = self._add_core_01(tel)
+        # radii = [800, 1250, 1700]  # RW values
+        radii = [900, 1200, 1700]
+        # number = [12 + 5, 24 + 1, 36 - 6]
+        number = [12 + 5 - 1 + 2, 24 + 1 - 2, 36 - 6 - 3 - 2]
+        assert (int(np.sum(number)) == 72 - 6)
+        for rn in zip(radii, number):
+            tel.add_ring(rn[1], rn[0], 0)
+        tel.add_ska1_v5(r_min=6450)
+
+        # ============= Spiral arms
+        arm_r0, arm_r1 = 1800, 6400
+        tel.add_log_spiral_3(25 + 2 + 5, self.start_inner, arm_r0, arm_r1, 0.515,
+                             self.num_arms, self.theta0_deg)
+        assert(tel.num_stations() == 512)
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        return tel, metrics
+
+    def model14(self, name='v6_14-core01_3rings_spiral_v5'):
+        """altered version of RW 3 ring scheme in an attempt to improve
+        uniform uv coverage. v5 after 1.7km
+        """
+        metrics = Metrics(self.out_dir)
+        tel = SKA1_low_analysis(name)
+        tel.station_diameter_m = 35
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+        tel = self._add_core_01(tel)
+        # tel.add_ska1_v5(r_max=500)
+        # radii = [800, 1250, 1700]  # RW values
+        radii = [750, 1200, 1700]
+        number = [25, 27, 17]
+        for rn in zip(radii, number):
+            tel.add_ring(rn[1], rn[0], 0)
+        # tel.add_ska1_v5(r_min=6450)
+
+        # ============= Spiral arms
+        arm_r0, arm_r1 = 1800, 6400
+        tel.add_log_spiral_3(25 + 6, self.start_inner, arm_r0, arm_r1,
+                             0.515, self.num_arms, self.theta0_deg)
+        # assert(tel.num_stations() == 512)
+        print(tel.name, tel.num_stations())
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        return tel, metrics
+
+    def model15(self, name='v6_15-core01_3rings_spiral_v5'):
+        """altered version of RW 3 ring scheme in an attempt to improve
+        uniform uv coverage. v5 after 1.7km
+        """
+        metrics = Metrics(self.out_dir)
+        tel = SKA1_low_analysis(name)
+        tel.station_diameter_m = 35
+        tel.obs_length_h = self.obs_length_h
+        tel.num_times = self.num_times
+        tel.dec_deg = tel.lat_deg
+        tel = self._add_core_01(tel)
+        # tel.add_ska1_v5(r_max=500)
+        # radii = [800, 1250, 1700]  # RW values
+        radii = [750, 1200, 1700]
+        number = [21, 27, 21]
+        for rn in zip(radii, number):
+            tel.add_ring(rn[1], rn[0], 0)
+        tel.add_ska1_v5(r_min=6450)
+
+        # ============= Spiral arms
+        arm_r0, arm_r1 = 1900, 6400
+        tel.add_log_spiral_3(25 + 6, self.start_inner, arm_r0, arm_r1,
+                             0.515, self.num_arms, self.theta0_deg)
+        # assert(tel.num_stations() == 512)
+        print(tel.name, tel.num_stations())
+        metrics.analyse_telescope(tel, 0, self.eval_metrics)
+        return tel, metrics
+
 
 if __name__ == '__main__':
     # ====== Options =========================
     snapshot = True
     root = 'TEMP_results_v6'
-    remove_existing_results = True
+    remove_existing_results = False
     r_values = [8]  # List of radii to unpack to (or None for all)
+    b_max_hist = 10e3
     enable_metrics = dict(
-        layout_plot=False,  # dict(show_decorations=True, xy_lim=2e3,
-                            # plot_radii=[500, 1.7e3, 6.4e3]),
-        uv_grid=dict(xy_lim=[4e3], grid_cellsize_m=35),
-        uv_scatter=dict(alpha=0.1),
-        layout_hist_lin=dict(b_min=0, b_max=500, num_bins=30),
-        uv_hist_lin=dict(b_min=0, b_max=4e3, num_bins=100),
+        layout_plot=dict(show_decorations=False, xy_lims=[2e3, 7.5e3, 20e3],
+                         plot_radii=[500, 800, 1250, 1.7e3, 6.4e3]),
+        uv_grid=False,  # dict(xy_lim=[2e3, 4e3, 10e3], grid_cellsize_m=35/2),
+        uv_scatter=False,  # dict(alpha=0.1),
+        layout_hist_lin=False,  # dict(b_min=0, b_max=500, num_bins=30),
+        uv_hist_lin=False,  # dict(b_min=0, b_max=b_max_hist, num_bins=400,
+                           # make_plot=False),
         uv_hist_log=False,  # dict(b_min=10, b_max=2.5e3, num_bins=100),
         psf=False,
-        layout_enu=False,
-        layout_iantconfig=False
+        layout_enu=True,
+        layout_iantconfig=True
     )
     # ========================================
     if snapshot:
@@ -556,36 +736,138 @@ if __name__ == '__main__':
 
     pprint(enable_metrics)
 
+    results = list()
     unwrap_v5 = AnalyseUnwrapV5(
         out_dir=out_dir, remove_existing_results=remove_existing_results,
         obs_length_h=obs_length_h, num_times=num_times,
         eval_metrics=enable_metrics)
-    # tel_03, m03 = unwrap_v5.model03(add_core=True, r_values=r_values)
+    results.append(analyse_v5(out_dir=out_dir, obs_length_h=obs_length_h,
+                              num_times=num_times, eval_metrics=enable_metrics))
+    # results.append(unwrap_v5.model03(add_core=True, r_values=r_values))
     # tel_07 = unwrap_v5.model07(add_core=True)
     # tel_08 = unwrap_v5.model08(add_core=True)
-    tel_09, m09 = unwrap_v5.model09()
-    tel_10, m10 = unwrap_v5.model10()
+    # results.append(unwrap_v5.model09a())
+    # results.append(unwrap_v5.model09b())
+    # results.append(unwrap_v5.model09c())
+    results.append(unwrap_v5.model09d())
+    # results.append(unwrap_v5.model10())
+    # results.append(unwrap_v5.model11())
+    # results.append(unwrap_v5.model12())
+    # results.append(unwrap_v5.model13())
+    # results.append(unwrap_v5.model14())
+    results.append(unwrap_v5.model15())
     # _, _ = unwrap_v5.core()
 
-    # tel_v5 = analyse_v5(out_dir=out_dir, obs_length_h=obs_length_h,
-    #                     num_times=num_times, eval_metrics=enable_metrics)
+    # for i, result in enumerate(results):
+    #     print(i, result.num_stations())
 
-    hist_compare_ = False
-    if hist_compare_:
-        import matplotlib.pyplot as plt
-        fig, ax = plt.subplots(figsize=(8, 8))
-        _hist = m09.uv_hist['model09_r08']['lin_002.5km']
-        x = _hist['hist_x']
-        y = _hist['hist_n']
-        ax.plot(x, y, label='09 (RW)')
-        _hist = m10.uv_hist['model10_r08']['lin_002.5km']
-        x = _hist['hist_x']
-        y = _hist['hist_n']
-        ax.plot(x, y, label='10')
+
+
+    _psf_compare = False
+    _hist_compare = False
+    import matplotlib.pyplot as plt
+    if _hist_compare:
+        fig, ax = plt.subplots(figsize=(14, 6))
+        fig.subplots_adjust(left=0.05, right=0.98, bottom=0.1, top=0.98)
+        _key = 'lin_%05.1fkm' % (b_max_hist / 1e3)
+        for i, result in enumerate(results):
+            tel_name = result[0].name
+            _hist = result[1].uv_hist[tel_name][_key]
+            x = _hist['hist_x']
+            y = _hist['hist_n']
+            ax.plot(x, y, label=tel_name)
+        for x_ in [800, 1250, 1700]:
+            ax.plot([x_, x_], ax.get_ylim(), 'k--')
+        for x_ in [900, 1300, 1700]:
+            ax.plot([x_, x_], ax.get_ylim(), 'g:')
         ax.legend(loc='best')
-        plt.show()
+        ax.set_xlabel('Baseline length (m)')
+        ax.set_ylabel('Baselines per bin')
+        ax.grid()
+        fig.savefig(join(out_dir, 'AAA_compare_hist.png'))
+        plt.close(fig)
 
-    # coords_v6 = np.loadtxt()
+    psf_min = 1e-4
+    psf_max = 0.5
+    if _psf_compare:
+        fig, ax = plt.subplots(figsize=(14, 6))
+        fig.subplots_adjust(left=0.05, right=0.98, bottom=0.1, top=0.98)
+        for i, result in enumerate(results):
+            tel_name = result[0].name
+            _psf = result[1].psf[tel_name]
+            print(_psf.keys())
+            # print(_psf['fov'])
+            x = _psf['1d_r']
+            y = _psf['1d_abs_mean']
+            ax.plot(x, y, label=tel_name)
+        ax.legend(loc='best')
+        ax.set_xlabel('')
+        ax.set_ylabel('')
+        ax.grid()
+        ax.set_ylim(psf_min, psf_max)
+        ax.set_yscale('log')
+        fig.savefig(join(out_dir, 'AAA_compare_psf_abs_mean.png'))
+        plt.close(fig)
+
+        if _psf_compare:
+            fig, ax = plt.subplots(figsize=(14, 6))
+            fig.subplots_adjust(left=0.05, right=0.98, bottom=0.1, top=0.98)
+            for i, result in enumerate(results):
+                tel_name = result[0].name
+                _psf = result[1].psf[tel_name]
+                x = _psf['1d_r']
+                y = _psf['1d_abs_max']
+                ax.plot(x, y, label=tel_name)
+            ax.plot([0.007, 0.007], ax.get_ylim(), 'k--')
+            ax.plot([0.006, 0.006], ax.get_ylim(), 'k--')
+            ax.plot(ax.get_xlim(), [0.005, 0.005], 'k--')
+            ax.legend(loc='best')
+            ax.set_xlabel('')
+            ax.set_ylabel('')
+            ax.grid()
+            ax.set_ylim(psf_min, psf_max)
+            ax.set_yscale('log')
+            fig.savefig(join(out_dir, 'AAA_compare_psf_abs_max.png'))
+            plt.close(fig)
+
+            if _psf_compare:
+                fig, ax = plt.subplots(figsize=(14, 6))
+                fig.subplots_adjust(left=0.05, right=0.98, bottom=0.1, top=0.98)
+                for i, result in enumerate(results):
+                    tel_name = result[0].name
+                    _psf = result[1].psf[tel_name]
+                    x = _psf['1d_r']
+                    y = _psf['1d_rms']
+                    ax.plot(x, y, label=tel_name)
+                ax.legend(loc='best')
+                ax.set_xlabel('')
+                ax.set_ylabel('')
+                ax.grid()
+                ax.set_ylim(psf_min, psf_max)
+                ax.set_yscale('log')
+                fig.savefig(join(out_dir, 'AAA_compare_psf_rms.png'))
+                plt.close(fig)
+
+            if _psf_compare:
+                fig, ax = plt.subplots(figsize=(14, 6))
+                fig.subplots_adjust(left=0.05, right=0.98, bottom=0.1,
+                                    top=0.98)
+                for i, result in enumerate(results):
+                    tel_name = result[0].name
+                    _psf = result[1].psf[tel_name]
+                    x = _psf['1d_r']
+                    y = _psf['1d_max']
+                    ax.plot(x, y, label=tel_name)
+                ax.legend(loc='best')
+                ax.set_xlabel('')
+                ax.set_ylabel('')
+                ax.grid()
+                ax.set_ylim(1e-6, psf_max)
+                ax.set_yscale('log')
+                fig.savefig(join(out_dir, 'AAA_compare_psf_max.png'))
+                plt.close(fig)
+
+                # coords_v6 = np.loadtxt()
 
     # import matplotlib.pyplot as plt
     # x, y, _ = tel_v5.get_coords_enu()

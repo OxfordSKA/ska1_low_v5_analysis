@@ -479,7 +479,10 @@ class TelescopeAnalysis(telescope.Telescope):
         vv = self.vv_m / wavelength
         ww = self.ww_m / wavelength
         amp = np.ones_like(uu, dtype='c8')
-        psf = Imager.make_image(uu, vv, ww, amp, fov_deg, grid_size)
+        # _r = (uu**2 + vv**2)**0.5 * wavelength
+        # amp[_r <= 1e3] = 0.0
+        psf = Imager.make_image(uu, vv, ww, amp, fov_deg, grid_size,
+                                weighting='Natural')
         extent = Imager.image_extent_lm(fov_deg, grid_size)
         self.psf = psf
         self.psf_fov_deg = fov_deg

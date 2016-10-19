@@ -12,6 +12,7 @@ from matplotlib.pyplot import Circle
 import numpy as np
 import pickle
 from .layout import Layout
+from collections import OrderedDict
 
 
 class Telescope(object):
@@ -26,7 +27,7 @@ class Telescope(object):
         self.num_trials = 5
         self.verbose = False
         self.seed = None
-        self.layouts = dict()
+        self.layouts = OrderedDict()
         self.clusters = {'cx': np.array([]), 'cy': np.array([])}
 
     def clear_layouts(self):
@@ -227,6 +228,13 @@ class Telescope(object):
         t_min = log(r0 / r0_ref) / b
         return degrees(t_max - t_min)
 
+    def _get_key(self, key_root):
+        count = 0
+        for name in self.layouts:
+            if name.startswith(key_root):
+                count += 1
+        return '%s_%03i' % (key_root, count)
+
     def add_log_spiral(self, n, r0, r1, b, num_arms, theta0_deg=0.0):
         """Add spiral arms by rotating a single spiral of n positions"""
         x, y = self.log_spiral(n, r0, r1, b)
@@ -268,8 +276,7 @@ class Telescope(object):
         t = degrees(atan2(cy, cx))
         x, y = self.circular_arc(n, r, delta_theta)
         x, y = Layout.rotate_coords(x, y, t)
-        keys = self.layouts.keys()
-        self.layouts['circular_arc' + str(len(keys))] = {
+        self.layouts[self._get_key('circular_arc')] = {
             'x': x, 'y': y, 'cx': cx, 'cy': cy}
 
     def add_ring(self, n, r, delta_theta=0):
@@ -277,8 +284,7 @@ class Telescope(object):
         t = np.arange(n) * t_inc + delta_theta
         x = r * np.cos(np.radians(t))
         y = r * np.sin(np.radians(t))
-        keys = self.layouts.keys()
-        self.layouts['ring' + str(len(keys))] = dict(x=x, y=y)
+        self.layouts[self._get_key('ring')] = dict(x=x, y=y)
 
     def add_circular_arc_perturbed(self, n, cx, cy, delta_theta, r0, r1,
                                    perturb_r0, perturb_r1):
@@ -286,7 +292,6 @@ class Telescope(object):
         t = degrees(atan2(cy, cx))
         x, y = self.circular_arc(n, r, delta_theta)
         x, y = Layout.rotate_coords(x, y, t)
-
         # Linear scaling
         # scale = perturb_r0 + (perturb_r1 - perturb_r0) * ((r - r0) / (r1 - r0))
         # Log scaling
@@ -301,8 +306,7 @@ class Telescope(object):
             rt = np.random.rand() * scale
             x[i] += rt * cos(t)
             y[i] += rt * sin(t)
-        keys = self.layouts.keys()
-        self.layouts['circular_arc' + str(len(keys))] = {
+        self.layouts[self._get_key('circular_arc_p')] = {
             'x': x, 'y': y, 'cx': cx, 'cy': cy}
 
     def add_random_profile(self, n, cx, cy, r0, r1, num_selected):
@@ -424,9 +428,6 @@ class Telescope(object):
             Telescope.cluster_centres_ska_v5(r_min, r_max)
 
         # Loop over clusters and extract stations within a 90 m radius.
-        # num_clusters = 0
-        # r_min = 1e99
-        # r_max = 0
         for cx, cy in zip(cluster_x, cluster_y):
             dr = ((x - cx)**2 + (y - cy)**2)**0.5
             idx = np.where(dr <= cluster_radius)
@@ -436,23 +437,24 @@ class Telescope(object):
             # r_min = min(r_min, r_.min())
             # r_max = max(r_max, r_.max())
             if tx.size > 0:
-                keys = self.layouts.keys()
-                self.layouts['ska1_v5_cluster' + str(len(keys))] = {
+                cluster_count = 0
+                for name in self.layouts:
+                    if name.startswith('ska1_v5_cluster'):
+                        cluster_count += 1
+                self.layouts['ska1_v5_cluster_%03i' % cluster_count] = {
                     'x': tx, 'y': ty, 'z': tz, 'cx': cx, 'cy': cy,
                     'cr': cluster_radius, 'r_min': r_min, 'r_max': r_max}
                 x = np.delete(x, idx)
                 y = np.delete(y, idx)
                 z = np.delete(z, idx)
-        # print(num_clusters)
-        # print(r_min)
-        # print(r_max)
         if x.size > 0:
-            # print(x.size)
-            # r_ = (x**2 + y**2)**0.5
-            # print(r_.max())
             # Add any remaining stations that were not assigned to a cluster.
-            self.layouts['ska1_v5'] = {'x': x, 'y': y, 'z': z,
-                                       'r_min': r_min, 'r_max': r_max}
+            count = 0
+            for name in self.layouts:
+                if name.startswith('ska1_v5') and not '_cluster' in name:
+                    count += 1
+            key_ = 'ska1_v5_%03i' % count
+            self.layouts[key_] = dict(x=x, y=y, z=z, r_min=r_min, r_max=r_max)
 
     def num_stations(self):
         if not self.layouts:
@@ -497,7 +499,7 @@ class Telescope(object):
 
     def plot_layout(self, filename=None, mpl_ax=None,
                     show_decorations=False, plot_radii=[],
-                    xy_lim=None, color='k'):
+                    xy_lim=None, color='k', **kwargs):
         plot_nearest = False
         if not self.layouts:
             raise RuntimeError('No layout defined, nothing to plot!')
