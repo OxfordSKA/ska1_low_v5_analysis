@@ -40,6 +40,7 @@ def main():
     ax.set_ylim(-plot_limit, plot_limit)
     plt.show()
 
+
 def main2():
     core_radius = 450.0
     max_radius = 1700.0

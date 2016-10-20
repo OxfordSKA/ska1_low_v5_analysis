@@ -186,10 +186,8 @@ class Metrics(object):
                 tel.uv_cum_hist(filename, log_x=True)
             if not self.uv_hist:
                 self.uv_hist[tel.name] = dict()
-            self.uv_hist[tel.name]['log'] = dict(
-                hist_n=tel.hist_n,
-                hist_x=tel.hist_x,
-                hist_bins=tel.hist_bins,
+            self.uv_hist[tel.name]['log_%05.1fkm' % (b_max / 1e3)] = dict(
+                hist_n=tel.hist_n, hist_x=tel.hist_x, hist_bins=tel.hist_bins,
                 cum_hist_n=tel.cum_hist_n)
 
         # -------- Generate and plot the uv histograms (LINEAR) ---------------
@@ -268,7 +266,7 @@ class Metrics(object):
         if _key in metrics_list and metrics_list[_key]:
             filename = join(self.out_dir, '%s_psf' % tel.name)
             tel.eval_psf(filename_root=filename, plot1d=True, plot2d=True,
-                         fov_deg=5.0, im_size=2048, num_bins=512)
+                         fov_deg=5.0, im_size=4096, num_bins=256)
             self.psf[tel.name] = dict()
             # self.psf[tel.name]['image'] = tel.psf
             self.psf[tel.name]['fov'] = tel.psf_fov_deg

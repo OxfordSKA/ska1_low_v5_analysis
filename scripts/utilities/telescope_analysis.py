@@ -490,12 +490,12 @@ class TelescopeAnalysis(telescope.Telescope):
         # --- Plotting ----
         if plot2d:
             fig, ax = plt.subplots(figsize=(8, 8))
-            norm = SymLogNorm(linthresh=0.01, linscale=1.0, vmin=-0.02,
+            norm = SymLogNorm(linthresh=0.005, linscale=1.0, vmin=-0.005,
                               vmax=1.0, clip=False)
-            # opts = dict(interpolation='nearest', origin='lower', cmap='gray_r',
-            #             extent=extent, norm=norm)
-            opts = dict(interpolation='nearest', origin='lower', cmap='gray_r',
+            opts = dict(interpolation='nearest', origin='lower', cmap='inferno',
                         extent=extent, norm=norm)
+            # opts = dict(interpolation='nearest', origin='lower', cmap='gray_r',
+            #             extent=extent)
             im = ax.imshow(psf, **opts)
             divider = make_axes_locatable(ax)
             cax = divider.append_axes("right", size="5%", pad=0.03)
@@ -513,7 +513,7 @@ class TelescopeAnalysis(telescope.Telescope):
                                   os.path.basename(filename_root)).group())
                 ax.text(0.02, 0.95, label, color='white', weight='bold',
                         transform=ax.transAxes)
-                plt.savefig('%s_2d.png' % filename_root)
+                plt.savefig('%s_2d_%.1f.png' % (filename_root, fov_deg))
             else:
                 plt.show()
             plt.close(fig)
@@ -581,7 +581,7 @@ class TelescopeAnalysis(telescope.Telescope):
             ax.set_title('Azimuthally averaged PSF (FoV: %.2f)' % fov_deg)
             ax.legend()
             if filename_root:
-                plt.savefig('%s_1d.png' % filename_root)
+                plt.savefig('%s_1d_%.1f.png' % (filename_root, fov_deg))
             else:
                 plt.show()
             plt.close(fig)

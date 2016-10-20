@@ -41,12 +41,12 @@ class Telescope(object):
 
     def save_iantconfig(self, filename_root):
         """Save the telescope model as an iantconfig layout file"""
-        x, y, _ = self.get_coords_enu()
+        x, y, z = self.get_coords_enu()
         d = np.ones_like(x)  # set to 1 to avoid shadowing in iantconfig
-        coords = np.vstack([d, x, y]).T
-        coords = np.vstack([coords, [0, self.lon_deg, self.lat_deg]])
-        np.savetxt('%s.enu.%ix%i.txt' % (filename_root, x.size, 3),
-                   coords, fmt=b'%-5i %.12f %.12f')
+        coords = np.vstack([d, x, y, z]).T
+        coords = np.vstack([coords, [0, self.lon_deg, self.lat_deg, 0]])
+        np.savetxt('%s.enu.%ix%i.txt' % (filename_root, x.size, 4),
+                   coords, fmt=b'%-5i %.12f %.12f %.12f')
 
     def save_pickle(self, filename):
         """Save the positions and centres as a pickle."""

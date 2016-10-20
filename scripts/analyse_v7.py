@@ -18,7 +18,7 @@ def analyse_v5(out_dir='TEMP_results', obs_length_h=0, num_times=1,
     """V5 baseline layout.
     TODO(BM) move this into analyse v5
     """
-    name = 'v5_baseline'  # Name of the telescope model (prefix in file names)
+    name = 'v5'  # Name of the telescope model (prefix in file names)
     if not isdir(out_dir):
         makedirs(out_dir)
     tel = SKA1_low_analysis(name)
@@ -158,7 +158,7 @@ class AnalyseUnwrapV5(object):
         # print('seed =', tel.seed)
         return tel
 
-    def model15(self, name='v6_15-core01_3rings_spiral_v5'):
+    def model15(self, name='v7'):
         """altered version of RW 3 ring scheme in an attempt to improve
         uniform uv coverage. v5 after 1.7km
         """
@@ -183,22 +183,49 @@ class AnalyseUnwrapV5(object):
         metrics.analyse_telescope(tel, 0, self.eval_metrics)
         return tel, metrics
 
+    @staticmethod
+    def plot_core_profile():
+        def get_taper_profile(taper_func, r, **kwargs):
+            if kwargs is not None:
+                t = taper_func(r, **kwargs)
+            else:
+                t = taper_func(r)
+            return t
+
+        sll = -28
+        n_taylor = 10000
+        r = np.linspace(0, 1, 100)
+        t1 = get_taper_profile(AnalyseUnwrapV5._taper_r_profile, r,
+                               amps=taylor_win(n_taylor, sll), taper_r_min=0.0)
+
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.plot(r, 35 / t1, 'k-', label='v7 core taper profile')
+        ax.set_xlabel('Fractional radius')
+        ax.set_ylabel('Minimum station separation (m)')
+        ax.grid()
+        ax.set_ylim(34)
+        # ax.legend(loc='best')
+        fig.savefig('station_min_dist.png')
+        plt.close(fig)
+
 
 if __name__ == '__main__':
     # ====== Options =========================
     snapshot = True
     root = 'results_v7'
-    remove_existing_results = True
+    remove_existing_results = False
     r_values = [8]  # List of radii to unpack to (or None for all)
-    b_max_hist = 10e3
+    b_max_hist = 80e3
     enable_metrics = dict(
-        layout_plot=dict(show_decorations=False, xy_lims=[2e3, 7.5e3, 20e3]),
-        uv_grid=False,  # dict(xy_lim=[2e3, 4e3, 10e3], grid_cellsize_m=35/2),
-        uv_scatter=False,  # dict(alpha=0.1),
+        layout_plot=False,  # dict(show_decorations=False, xy_lims=[2e3, 7.5e3, 20e3]),
+        uv_grid=False,      # dict(xy_lim=[2e3, 4e3, 10e3], grid_cellsize_m=35),
+        uv_scatter=False,   # dict(alpha=0.1),
         layout_hist_lin=False,  # dict(b_min=0, b_max=500, num_bins=30),
         uv_hist_lin=False,  # dict(b_min=0, b_max=b_max_hist, num_bins=400,
-                           # make_plot=False),
-        uv_hist_log=False,  # dict(b_min=10, b_max=2.5e3, num_bins=100),
+                            # make_plot=True, cum_hist=True),
+        uv_hist_log=False,  # dict(b_min=10, b_max=b_max_hist, num_bins=400,
+                            # cum_hist=False),
         psf=False,
         layout_enu=True,
         layout_iantconfig=True
@@ -212,45 +239,71 @@ if __name__ == '__main__':
         num_times = (obs_length_h * 3600) // 60
     out_dir = b'%s_%.1fh' % (root, obs_length_h)
     pprint(enable_metrics)
+    print('=' * 60)
+    print('=' * 60)
+
+    AnalyseUnwrapV5.plot_core_profile()
+    exit(0)
 
     results = list()
     unwrap_v5 = AnalyseUnwrapV5(
         out_dir=out_dir, remove_existing_results=remove_existing_results,
         obs_length_h=obs_length_h, num_times=num_times,
         eval_metrics=enable_metrics)
-    # results.append(analyse_v5(out_dir=out_dir, obs_length_h=obs_length_h,
-    #                           num_times=num_times, eval_metrics=enable_metrics))
+
+
+    results.append(analyse_v5(out_dir=out_dir, obs_length_h=obs_length_h,
+                              num_times=num_times, eval_metrics=enable_metrics))
     results.append(unwrap_v5.model15())
 
     _psf_compare = False
     _hist_compare = False
+    colors = ['k', 'r']
     import matplotlib.pyplot as plt
     if _hist_compare:
-        fig, ax = plt.subplots(figsize=(14, 6))
-        fig.subplots_adjust(left=0.05, right=0.98, bottom=0.1, top=0.98)
-        _key = 'lin_%05.1fkm' % (b_max_hist / 1e3)
+        # fig, ax = plt.subplots(figsize=(8, 5))
+        # fig.subplots_adjust(left=0.1, right=0.97, bottom=0.1, top=0.97)
+        # _key = 'lin_%05.1fkm' % (b_max_hist / 1e3)
+        # for i, result in enumerate(results):
+        #     tel_name = result[0].name
+        #     _hist = result[1].uv_hist[tel_name][_key]
+        #     print(_hist.keys())
+        #     print(np.diff(_hist['hist_bins'])[0:5])
+        #     x = _hist['hist_x'] / 1e3
+        #     y = _hist['hist_n'] / 1e3
+        #     ax.plot(x, y, label=tel_name, color=colors[i % len(colors)], lw=1.5)
+        # ax.legend(loc='best')
+        # ax.set_xlabel('Baseline length (km)')
+        # ax.set_ylabel(r'Relative visibility density (x $10^{3}$)')
+        # ax.set_xlim(0, b_max_hist / 1e3)
+        # ax.grid()
+        # fig.savefig(join(out_dir, 'AAA_compare_hist.eps'))
+        # plt.close(fig)
+
+        fig, ax = plt.subplots(figsize=(8, 5))
+        fig.subplots_adjust(left=0.1, right=0.97, bottom=0.1, top=0.97)
+        _key = 'log_%05.1fkm' % (b_max_hist / 1e3)
         for i, result in enumerate(results):
             tel_name = result[0].name
+            print(result[1].uv_hist[tel_name].keys())
             _hist = result[1].uv_hist[tel_name][_key]
             x = _hist['hist_x']
             y = _hist['hist_n']
-            ax.plot(x, y, label=tel_name)
-        for x_ in [800, 1250, 1700]:
-            ax.plot([x_, x_], ax.get_ylim(), 'k--')
-        for x_ in [900, 1300, 1700]:
-            ax.plot([x_, x_], ax.get_ylim(), 'g:')
+            ax.plot(x, y, label=tel_name, color=colors[i % len(colors)], lw=1.5)
         ax.legend(loc='best')
         ax.set_xlabel('Baseline length (m)')
-        ax.set_ylabel('Baselines per bin')
+        ax.set_ylabel('Relative visibility density')
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        ax.set_xlim(10, b_max_hist)
+        ax.set_ylim(1e2, 1e6)
         ax.grid()
-        fig.savefig(join(out_dir, 'AAA_compare_hist.png'))
+        fig.savefig(join(out_dir, 'AAA_compare_hist_log.eps'))
         plt.close(fig)
 
-    psf_min = 1e-4
-    psf_max = 0.5
     if _psf_compare:
-        fig, ax = plt.subplots(figsize=(14, 6))
-        fig.subplots_adjust(left=0.05, right=0.98, bottom=0.1, top=0.98)
+        fig, ax = plt.subplots(figsize=(8, 5))
+        fig.subplots_adjust(left=0.1, right=0.97, bottom=0.1, top=0.97)
         for i, result in enumerate(results):
             tel_name = result[0].name
             _psf = result[1].psf[tel_name]
@@ -258,75 +311,74 @@ if __name__ == '__main__':
             # print(_psf['fov'])
             x = _psf['1d_r']
             y = _psf['1d_abs_mean']
-            ax.plot(x, y, label=tel_name)
+            ax.plot(x, y, label=tel_name, color=colors[i % len(colors)], lw=1.5)
         ax.legend(loc='best')
-        ax.set_xlabel('')
-        ax.set_ylabel('')
         ax.grid()
-        ax.set_ylim(psf_min, psf_max)
+        ax.set_ylim(1e-4, 5e-2)
         ax.set_yscale('log')
+        ax.set_ylabel('PSF annular abs. mean')
+        ax.set_xlabel('lm distance')
         fig.savefig(join(out_dir, 'AAA_compare_psf_abs_mean.png'))
         plt.close(fig)
 
-        if _psf_compare:
-            fig, ax = plt.subplots(figsize=(14, 6))
-            fig.subplots_adjust(left=0.05, right=0.98, bottom=0.1, top=0.98)
-            for i, result in enumerate(results):
-                tel_name = result[0].name
-                _psf = result[1].psf[tel_name]
-                x = _psf['1d_r']
-                y = _psf['1d_abs_max']
-                ax.plot(x, y, label=tel_name)
-            ax.plot([0.007, 0.007], ax.get_ylim(), 'k--')
-            ax.plot([0.006, 0.006], ax.get_ylim(), 'k--')
-            ax.plot(ax.get_xlim(), [0.005, 0.005], 'k--')
-            ax.legend(loc='best')
-            ax.set_xlabel('')
-            ax.set_ylabel('')
-            ax.grid()
-            ax.set_ylim(psf_min, psf_max)
-            ax.set_yscale('log')
-            fig.savefig(join(out_dir, 'AAA_compare_psf_abs_max.png'))
-            plt.close(fig)
+        fig, ax = plt.subplots(figsize=(8, 5))
+        fig.subplots_adjust(left=0.1, right=0.97, bottom=0.1, top=0.97)
+        for i, result in enumerate(results):
+            tel_name = result[0].name
+            _psf = result[1].psf[tel_name]
+            x = _psf['1d_r']
+            y = _psf['1d_std']
+            ax.plot(x, y, label=tel_name, color=colors[i % len(colors)], lw=1.5)
+        ax.legend(loc='best')
+        ax.grid()
+        # ax.set_ylim(psf_min, psf_max)
+        ax.set_ylim(1e-4, 1e-2)
+        ax.set_yscale('log')
+        ax.set_ylabel('PSF annular stddev')
+        ax.set_xlabel('lm distance')
+        fig.savefig(join(out_dir, 'AAA_compare_psf_rms.png'))
+        plt.close(fig)
 
-            if _psf_compare:
-                fig, ax = plt.subplots(figsize=(14, 6))
-                fig.subplots_adjust(left=0.05, right=0.98, bottom=0.1, top=0.98)
-                for i, result in enumerate(results):
-                    tel_name = result[0].name
-                    _psf = result[1].psf[tel_name]
-                    x = _psf['1d_r']
-                    y = _psf['1d_rms']
-                    ax.plot(x, y, label=tel_name)
-                ax.legend(loc='best')
-                ax.set_xlabel('')
-                ax.set_ylabel('')
-                ax.grid()
-                ax.set_ylim(psf_min, psf_max)
-                ax.set_yscale('log')
-                fig.savefig(join(out_dir, 'AAA_compare_psf_rms.png'))
-                plt.close(fig)
 
-            if _psf_compare:
-                fig, ax = plt.subplots(figsize=(14, 6))
-                fig.subplots_adjust(left=0.05, right=0.98, bottom=0.1,
-                                    top=0.98)
-                for i, result in enumerate(results):
-                    tel_name = result[0].name
-                    _psf = result[1].psf[tel_name]
-                    x = _psf['1d_r']
-                    y = _psf['1d_max']
-                    ax.plot(x, y, label=tel_name)
-                ax.legend(loc='best')
-                ax.set_xlabel('')
-                ax.set_ylabel('')
-                ax.grid()
-                ax.set_ylim(1e-6, psf_max)
-                ax.set_yscale('log')
-                fig.savefig(join(out_dir, 'AAA_compare_psf_max.png'))
-                plt.close(fig)
+        # fig, ax = plt.subplots(figsize=(8, 5))
+        # fig.subplots_adjust(left=0.1, right=0.97, bottom=0.1, top=0.97)
+        # for i, result in enumerate(results):
+        #     tel_name = result[0].name
+        #     _psf = result[1].psf[tel_name]
+        #     x = _psf['1d_r']
+        #     y = _psf['1d_abs_max']
+        #     ax.plot(x, y, label=tel_name, color=colors[i % len(colors)], lw=1.5)
+        # # ax.plot([0.007, 0.007], ax.get_ylim(), 'k--')
+        # # ax.plot([0.006, 0.006], ax.get_ylim(), 'k--')
+        # # ax.plot(ax.get_xlim(), [0.005, 0.005], 'k--')
+        # ax.legend(loc='best')
+        # ax.grid()
+        # ax.set_ylim(psf_min, psf_max)
+        # ax.set_yscale('log')
+        # ax.set_ylabel('PSF annular abs. max')
+        # ax.set_xlabel('lm distance')
+        # fig.savefig(join(out_dir, 'AAA_compare_psf_abs_max.png'))
+        # plt.close(fig)
 
-                # coords_v6 = np.loadtxt()
+
+        # fig, ax = plt.subplots(figsize=(8, 5))
+        # fig.subplots_adjust(left=0.1, right=0.97, bottom=0.1, top=0.97)
+        # for i, result in enumerate(results):
+        #     tel_name = result[0].name
+        #     _psf = result[1].psf[tel_name]
+        #     x = _psf['1d_r']
+        #     y = _psf['1d_max']
+        #     ax.plot(x, y, label=tel_name, color=colors[i % len(colors)], lw=1.5)
+        # ax.legend(loc='best')
+        # ax.grid()
+        # ax.set_ylim(1e-6, psf_max)
+        # ax.set_yscale('log')
+        # ax.set_ylabel('PSF annular max')
+        # ax.set_xlabel('lm distance')
+        # fig.savefig(join(out_dir, 'AAA_compare_psf_max.png'))
+        # plt.close(fig)
+
+    # coords_v6 = np.loadtxt()
 
     # import matplotlib.pyplot as plt
     # x, y, _ = tel_v5.get_coords_enu()
